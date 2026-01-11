@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+/* 
+  ARREL - V3 VISUAL SYSTEM 
+  Theme: Clinical Modernism / High-Tech Wellness
+*/
+
+:root {
+  /* --- PALETA BASE (CLINICAL DARK) --- */
+  --bg-void: #050505;       /* Fons principal (Pàgina) */
+  --bg-surface: #0F0F10;    /* Targetes / Panells */
+  --bg-elevated: #1A1A1C;   /* Elements flotants / Modals */
+  --bg-highlight: #2A2A2E;  /* Hovers / Inputs */
+
+  /* --- TIPOGRAFIA --- */
+  --text-primary: #F2F2F5;   /* Títols, Text principal */
+  --text-secondary: #A0A0A5; /* Subtítols, icones no actives */
+  --text-tertiary: #52525A;  /* Detalls, placeholders */
+  --text-inverse: #000000;   /* Text sobre botons clars */
+
+  /* --- ACCENTS (DATA VIZ & ACTIONS) --- */
+  --accent-primary: #33FF57;      /* Acció Principal (Green) */
+  --accent-primary-dim: rgba(51, 255, 87, 0.15);
+
+  --accent-blue: #3B82F6;         /* Informació / Mental */
+  --accent-purple: #A855F7;       /* Identitat / Espiritual */
+  --accent-orange: #F97316;       /* Energia */
+  --accent-red: #EF4444;          /* Alerta / Error */
+
+  /* --- BORDERS --- */
+  --border-subtle: #1F1F22;
+  --border-strong: #333336;
+  --border-focus: #55555A;
+
+  /* --- METRICS --- */
+  --app-max-width: 480px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* --- FONTS --- */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    font-family: var(--font-sans);
+    letter-spacing: -0.025em;
+    /* tracking-tight */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 500;
+    letter-spacing: -0.05em;
+    /* tracking-tightest */
+    color: var(--text-primary);
+  }
+
+  /* Remove default tap highlights on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+
+  /* CARD STYLES */
+  .card {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    /* Somewhat sharp */
+    padding: 1.5rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card:active {
+    transform: scale(0.99);
+  }
+
+  /* BUTTON STYLES */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-radius: 0.5rem;
+    user-select: none;
+
+    height: 48px;
+    /* Touch target size */
+    padding: 0 1.5rem;
+    font-size: 0.9375rem;
+    /* 15px */
+    letter-spacing: -0.01em;
+  }
+
+  .btn-primary {
+    background-color: var(--text-primary);
+    color: var(--bg-void);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--text-secondary);
+  }
+
+  .btn-ghost:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-elevated);
+  }
+
+  .animate-float-delayed {
+    animation: float 6s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-text-shimmer {
+    background-size: 200% auto;
+    animation: shimmer 5s linear infinite;
+  }
+
+  @keyframes slideUpFade {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up-fade {
+    animation: slideUpFade 0.8s ease-out forwards;
+  }
+  
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+
+  /* INPUTS */
+  .input-field {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-field:focus {
+    border-color: var(--text-secondary);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glass-panel {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
