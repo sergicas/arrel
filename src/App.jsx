@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Layout from './layout/Layout';
 import PublicLayout from './layout/PublicLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Spinner from './components/Spinner';
-import Loading from './components/Loading';
+import BrandLoader from './components/BrandLoader';
 import PageTransition from './components/PageTransition';
 import { AnimatePresence } from 'framer-motion';
 
@@ -31,7 +30,7 @@ const Legal = lazy(() => import('./pages/Legal'));
 // Protected Route Wrapper
 const PrivateRoute = ({ children }) => {
   const { session, isGuest, loading } = useAuth();
-  if (loading) return <Spinner />;
+  if (loading) return <BrandLoader text="Verificant sessió..." />;
   if (!session && !isGuest) return <Navigate to="/login" replace />;
   return children;
 };
@@ -57,49 +56,49 @@ const AnimatedRoutes = () => {
         {/* Public Routes with Layout */}
         <Route element={<PageTransition><PublicLayout /></PageTransition>}>
           <Route path="/" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader text="Carregant Inici..." />}>
               <Landing />
             </Suspense>
           } />
           <Route path="/com-funciona" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <ComFunciona />
             </Suspense>
           } />
           <Route path="/ciencia" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Ciencia />
             </Suspense>
           } />
           <Route path="/manifest" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Manifest />
             </Suspense>
           } />
           <Route path="/recursos" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Recursos />
             </Suspense>
           } />
 
           {/* Legal Routes */}
           <Route path="/privacitat" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Legal section="privacitat" />
             </Suspense>
           } />
           <Route path="/termes" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Legal section="termes" />
             </Suspense>
           } />
           <Route path="/cookies" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Legal section="cookies" />
             </Suspense>
           } />
           <Route path="/contacte" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Legal section="contacte" />
             </Suspense>
           } />
@@ -108,21 +107,21 @@ const AnimatedRoutes = () => {
         {/* Standalone Public Routes */}
         <Route path="/diagnosis" element={
           <PageTransition>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader text="Preparant diagnòstic..." />}>
               <Diagnosis />
             </Suspense>
           </PageTransition>
         } />
         <Route path="/resultats" element={
           <PageTransition>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader text="Calculant resultats..." />}>
               <Resultats />
             </Suspense>
           </PageTransition>
         } />
         <Route path="/login" element={
           <PageTransition>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Login />
             </Suspense>
           </PageTransition>
@@ -131,7 +130,7 @@ const AnimatedRoutes = () => {
         {/* Protected Routes */}
         <Route path="/historic" element={
           <PrivateRoute>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Historic />
             </Suspense>
           </PrivateRoute>
@@ -139,7 +138,7 @@ const AnimatedRoutes = () => {
         {/* Dynamic Day Route - Replaces static ProtocolDia2 */}
         <Route path="/dia/:day" element={
           <PrivateRoute>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <DiaCheckIn />
             </Suspense>
           </PrivateRoute>
@@ -148,37 +147,37 @@ const AnimatedRoutes = () => {
         {/* Protected Layout Routes */}
         <Route element={<PrivateRoute><PageTransition><Layout /></PageTransition></PrivateRoute>}>
           <Route path="/dashboard" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader text="Carregant Espai Personal..." />}>
               <Dashboard />
             </Suspense>
           } />
           <Route path="/protocol" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <DailyProtocol />
             </Suspense>
           } />
           <Route path="/physical" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Physical />
             </Suspense>
           } />
           <Route path="/mental" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Mental />
             </Suspense>
           } />
           <Route path="/emotional" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Emotional />
             </Suspense>
           } />
           <Route path="/social" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Social />
             </Suspense>
           } />
           <Route path="/intellectual" element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<BrandLoader />}>
               <Intellectual />
             </Suspense>
           } />
