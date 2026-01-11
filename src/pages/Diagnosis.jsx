@@ -18,7 +18,7 @@ const Diagnosis = () => {
     const currentQuestion = diagnosisQuestions[currentIndex];
     const progress = ((currentIndex + 1) / diagnosisQuestions.length) * 100;
 
-    const { user } = useAuth();
+    const { user, enterAsGuest } = useAuth();
 
     // AUTO-RESTORE ON MOUNT
     useEffect(() => {
@@ -270,6 +270,7 @@ const Diagnosis = () => {
                     <button
                         onClick={() => {
                             if (window.confirm("Vols creuar el pont i anar al Dashboard sense resultats?")) {
+                                enterAsGuest();
                                 localStorage.removeItem('arrel_quiz_progress');
                                 navigate('/dashboard');
                             }
