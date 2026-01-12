@@ -44,19 +44,7 @@ const RevealOnScroll = ({ children }) => {
     );
 };
 
-const Footer = () => (
-    <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-sm">
-                &copy; {new Date().getFullYear()} Arrel Health. Tots els drets reservats.
-            </div>
-            <div className="flex gap-8 text-sm font-medium">
-                <a href="/privacitat" className="hover:text-white transition-colors">Privacitat</a>
-                <a href="/termes" className="hover:text-white transition-colors">Termes</a>
-            </div>
-        </div>
-    </footer>
-);
+// Footer component removed (delegated to Layout)
 
 // -----------------------------------------------------------------------------
 // MAIN COMPONENT
@@ -181,7 +169,7 @@ export default function Landing() {
                 </div>
             </section>
 
-            <Footer />
+            {/* Footer delegated to PublicLayout */}
         </>
     );
 }
