@@ -1,8 +1,117 @@
-
-import React from 'react';
-import { Microscope, Clock, Zap, Brain, ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Microscope, Clock, Zap, Brain, ArrowLeft, ArrowRight, ExternalLink, Search, Filter } from 'lucide-react';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
+import { glossaryTerms } from '../data/glossaryData';
+
+// Helper to highlight cross-references
+const highlightCrossLinks = (text, terms) => {
+    let parts = [text];
+    terms.forEach(termObj => {
+        const term = termObj.term.split(' (')[0]; // Match "ATP" not "ATP (Adenosina...)"
+        if (term.length < 4) return; // Skip short words to avoid noise
+
+        const newParts = [];
+        parts.forEach(part => {
+            if (typeof part !== 'string') {
+                newParts.push(part);
+                return;
+            }
+            // Simple split, capable of being improved with Regex for case insensitivity
+            const split = part.split(new RegExp(`(${term})`, 'gi'));
+            split.forEach((s, i) => {
+                if (s.toLowerCase() === term.toLowerCase()) {
+                    newParts.push(<span key={term + i} className="font-bold text-purple-600 cursor-help" title="Terme relacionat">{s}</span>);
+                } else {
+                    newParts.push(s);
+                }
+            });
+        });
+        parts = newParts;
+    });
+    return parts;
+};
+
+const GlossarySection = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [activeCategory, setActiveCategory] = useState('Tots');
+
+    const categories = ['Tots', ...new Set(glossaryTerms.map(t => t.category))].sort();
+
+    const filtered = useMemo(() => {
+        return glossaryTerms.filter(item => {
+            const matchesSearch = item.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.def.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesCategory = activeCategory === 'Tots' || item.category === activeCategory;
+            return matchesSearch && matchesCategory;
+        });
+    }, [searchTerm, activeCategory]);
+
+    return (
+        <div className="mb-20">
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
+                Glossari de Termes Clau 📖
+            </h2>
+
+            {/* CONTROLS */}
+            <div className="max-w-3xl mx-auto mb-10 space-y-4">
+                {/* Search */}
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                        type="text"
+                        placeholder="Cerca per concepte (ex: Autofàgia, Cortisol...)"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all shadow-sm"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+                {/* Categories */}
+                <div className="flex flex-wrap justify-center gap-2">
+                    {categories.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setActiveCategory(cat)}
+                            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all
+                                ${activeCategory === cat
+                                    ? 'bg-gray-900 text-white shadow-md'
+                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                                }
+                            `}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* RESULTS */}
+            <div className="grid md:grid-cols-2 gap-6 min-h-[300px] content-start">
+                {filtered.length > 0 ? (
+                    filtered.map((item, i) => (
+                        <div key={i} className="bg-white p-6 rounded-xl border border-gray-100 hover:border-purple-200 transition group hover:shadow-md h-full">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-purple-700 text-lg">{item.term}</h4>
+                                <span className="text-[10px] uppercase tracking-wider text-gray-400 bg-gray-50 px-2 py-1 rounded">
+                                    {item.category}
+                                </span>
+                            </div>
+                            <p className="text-gray-600 text-sm leading-relaxed">
+                                {highlightCrossLinks(item.def, glossaryTerms)}
+                            </p>
+                        </div>
+                    ))
+                ) : (
+                    <div className="col-span-2 text-center py-12 text-gray-400">
+                        <Filter size={48} className="mx-auto mb-4 opacity-20" />
+                        <p>No hem trobat resultats per "{searchTerm}".</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
 const Ciencia = () => {
     return (
@@ -149,29 +258,8 @@ const Ciencia = () => {
                         </div>
                     </div>
 
-
-
                     {/* GLOSSARI CIENTÍFIC (NOU) */}
-                    <div className="mb-20">
-                        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-                            Glossari de Termes Clau 📖
-                        </h2>
-                        <div className="grid md:grid-cols-2 gap-6">
-                            {[
-                                { term: "Autofàgia", def: "Procés de regeneració cel·lular on el cos neteja les cèl·lules danyades. S'activa principalment durant el dejuni i l'exercici intens." },
-                                { term: "Ritme Circadià", def: "El rellotge intern de 24 hores que regula el cicle son-vigília, la digestió i l'alliberament hormonal en resposta a la llum." },
-                                { term: "Adenosina", def: "Neurotransmissor que s'acumula al cervell durant el dia i crea la 'pressió de son'. La cafeïna bloqueja temporalment els seus receptors." },
-                                { term: "ATP (Adenosina Trifosfat)", def: "La moneda energètica de la cèl·lula. Produïda pels mitocondris, és essencial per a qualsevol moviment o pensament." },
-                                { term: "Hormesis", def: "L'efecte beneficiós d'una dosi baixa d'estrès (com sauna, fred o exercici) que enforteix l'organisme davant d'estressors futurs." },
-                                { term: "Neuroplasticitat", def: "Capacitat del sistema nerviós per canviar la seva estructura i funció al llarg de la vida, creant noves connexions neuronals." }
-                            ].map((item, i) => (
-                                <div key={i} className="bg-white p-6 rounded-xl border border-gray-100 hover:border-purple-200 transition">
-                                    <h4 className="font-bold text-purple-700 text-lg mb-2">{item.term}</h4>
-                                    <p className="text-gray-600 text-sm leading-relaxed">{item.def}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <GlossarySection />
 
                     {/* REFERÈNCIES */}
                     <div className="mb-20">
