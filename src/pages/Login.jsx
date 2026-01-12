@@ -64,9 +64,9 @@ const Login = () => {
                         {!loading && <ArrowRight size={16} />}
                     </button>
 
-                    <div className="relative flex py-2 items-center">
+                    <div className="relative flex py-4 items-center">
                         <div className="flex-grow border-t border-gray-200"></div>
-                        <span className="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase tracking-widest">o</span>
+                        <span className="flex-shrink-0 mx-4 text-gray-300 text-xs font-medium uppercase tracking-widest">Opció Ràpida</span>
                         <div className="flex-grow border-t border-gray-200"></div>
                     </div>
 
@@ -76,9 +76,9 @@ const Login = () => {
                             enterAsGuest();
                             navigate('/dashboard');
                         }}
-                        className="w-full h-10 bg-transparent text-gray-500 font-medium uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 hover:text-gray-900 transition-all text-[10px]"
+                        className="w-full h-12 bg-white text-gray-900 border-2 border-gray-100 font-bold uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 hover:border-gray-900 hover:bg-gray-50 transition-all shadow-sm hover:shadow-md"
                     >
-                        Continuar com a convidat
+                        Entrar com a Convidat
                     </button>
                 </form>
 

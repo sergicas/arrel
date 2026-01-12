@@ -153,9 +153,9 @@ export default function Resultats() {
                     {/* CTA / LOCK (Improved Flow) */}
                     {!session && (
                         <div className="mt-8 p-6 bg-gray-50 rounded-2xl border border-gray-200 text-center">
-                            <h3 className="font-bold text-lg text-gray-900 mb-2">Què he de fer ara?</h3>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2">Resultats preparats</h3>
                             <p className="text-gray-500 mb-6 text-sm max-w-md mx-auto">
-                                Tens dues opcions. Pots veure el teu pla d'acció immediatament o guardar els resultats per no perdre'ls.
+                                No et demanarem cap registre. Pots veure el teu pla ara mateix.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
