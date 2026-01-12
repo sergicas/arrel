@@ -146,6 +146,21 @@ const Diagnosis = () => {
         }
     };
 
+    const handleBack = () => {
+        if (currentIndex > 0) {
+            const prevIndex = currentIndex - 1;
+            const prevQuestion = diagnosisQuestions[prevIndex];
+            const prevAnswerIdx = answers[prevIndex];
+            const scoreToDeduct = prevQuestion.options[prevAnswerIdx].score;
+            const variable = prevQuestion.variable;
+
+            // Revert State
+            setScores(prev => ({ ...prev, [variable]: prev[variable] - scoreToDeduct }));
+            setAnswers(prev => prev.slice(0, -1)); // Remove last answer
+            setCurrentIndex(prevIndex);
+        }
+    };
+
     // KEYBOARD NAVIGATION
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -235,6 +250,16 @@ const Diagnosis = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* BACK BUTTON (Top Left) */}
+                {currentIndex > 0 && (
+                    <button
+                        onClick={handleBack}
+                        className="absolute -top-12 left-0 text-gray-400 hover:text-gray-600 flex items-center gap-1 text-sm font-medium transition-colors"
+                    >
+                        <ArrowLeft size={16} /> Enrere
+                    </button>
+                )}
 
                 {/* Question & Options with AnimatePresence */}
                 <AnimatePresence mode='wait'>
