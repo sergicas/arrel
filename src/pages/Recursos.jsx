@@ -3,264 +3,95 @@ import { Play, BookOpen, ExternalLink, Battery, Moon, Coffee, Brain, Clock, Pill
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 
+// Resource Modal Component
+const ResourceModal = ({ resource, onClose }) => {
+    if (!resource) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                onClick={onClose}
+            />
+            <div className="relative bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-200">
+
+                {/* Header Image pattern or solid color */}
+                <div className="h-32 bg-gray-900 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-900 to-blue-900 opacity-90" />
+                    <div className="absolute top-6 left-6 text-white/20">
+                        {React.createElement(resource.icon, { size: 120, strokeWidth: 1 })}
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="absolute top-4 right-4 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 transition-colors"
+                    >
+                        <ExternalLink size={20} className="rotate-45" /> {/* Use X icon ideally, but using existing imports */}
+                    </button>
+                </div>
+
+                <div className="p-8 -mt-12 relative">
+                    {/* Icon Bubble */}
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl shadow-lg text-purple-600 mb-6">
+                        {React.createElement(resource.icon, { size: 40 })}
+                    </div>
+
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="bg-purple-50 text-purple-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-purple-100">
+                            {resource.category}
+                        </span>
+                        <span className="text-gray-400 text-xs font-semibold">
+                            {resource.readTime}
+                        </span>
+                    </div>
+
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                        {resource.title}
+                    </h2>
+
+                    <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                        {resource.summary}
+                    </p>
+
+                    {/* Key Takeaways */}
+                    {resource.takeaways && (
+                        <div className="mb-8 bg-gray-50 rounded-xl p-6 border border-gray-100">
+                            <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <Brain size={18} className="text-purple-600" />
+                                Punts Clau (Takeaways)
+                            </h4>
+                            <ul className="space-y-3">
+                                {resource.takeaways.map((point, idx) => (
+                                    <li key={idx} className="flex items-start gap-3 text-sm text-gray-700">
+                                        <span className="text-green-500 font-bold mt-1">✓</span>
+                                        {point}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    <a
+                        href={resource.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-black transition-all hover:scale-[1.01] shadow-xl shadow-purple-900/10"
+                        onClick={onClose}
+                    >
+                        Llegir l'article complet <ExternalLink size={18} />
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+import { resourcesData } from '../data/resourcesData';
+
 export default function Recursos() {
     const [activeTab, setActiveTab] = useState('all');
+    const [selectedResource, setSelectedResource] = useState(null);
 
-    const resources = [
-        // --- ENERGIA ---
-        {
-            id: 1,
-            title: "Tipología circadiana y salud mental",
-            category: "energia",
-            type: "article",
-            icon: Battery,
-            desc: "Estudi sobre la relació entre els ritmes circadians i la salut mental (SciELO).",
-            readTime: "Estudi",
-            url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0212-97282014000300021"
-        },
-        {
-            id: 101,
-            title: "Glucosa, Fructosa y Metabolismo",
-            category: "energia",
-            type: "article",
-            icon: BookOpen,
-            desc: "Nou estudi sobre l'impacte del sucre en el metabolisme i la salut cardiovascular (CIBER-ISCIII).",
-            readTime: "Article",
-            url: "https://www.ciberisciii.es/noticias/glucosa-o-fructosa-nuevo-estudio-sobre-el-impacto-del-azucar-en-el-metabolismo-y-la-salud-cardiovascular"
-        },
-        {
-            id: 102,
-            title: "Trastornos Mitocondriales",
-            category: "energia",
-            type: "article",
-            icon: ExternalLink,
-            desc: "Informació oficial sobre malalties i disfuncions mitocondrials (MedlinePlus).",
-            readTime: "Guia",
-            url: "https://medlineplus.gov/spanish/mitochondrialdiseases.html"
-        },
-
-        // --- SON ---
-        {
-            id: 4,
-            title: "Higiene del sueño: revisión",
-            category: "son",
-            type: "article",
-            icon: Moon,
-            desc: "Revisió sobre coneixements i hàbits d'higiene del son en estudiants (SciELO).",
-            readTime: "Revisió",
-            url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S1699-695X2017000300170"
-        },
-        {
-            id: 201,
-            title: "Ritmos circadianos y rendimiento",
-            category: "son",
-            type: "article",
-            icon: BookOpen,
-            desc: "Estudi sobre l'impacte dels ritmes de son en el rendiment acadèmic (SciELO).",
-            readTime: "Estudi",
-            url: "http://www.scielo.org.co/scielo.php?script=sci_arttext&pid=S1692-72732006000200016"
-        },
-        {
-            id: 202,
-            title: "Yoga Nidra: Cambios Cerebrales",
-            category: "son",
-            type: "article",
-            icon: ExternalLink,
-            desc: "Primer estudi d'imatge cerebral sobre la connectivitat funcional durant el Yoga Nidra (IIT Delhi).",
-            readTime: "Estudi",
-            url: "https://home.iitd.ac.in/show.php?id=237&in_sections=Press"
-        },
-
-        // --- NUTRICIÓ ---
-        {
-            id: 3,
-            title: "Ayuno intermitente: escenarios clínicos",
-            category: "nutricio",
-            type: "article",
-            icon: Coffee,
-            desc: "Efectes del dejuni intermitent en diversos escenaris clínics (SciELO).",
-            readTime: "Revisió",
-            url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0212-16112024000100026"
-        },
-        {
-            id: 301,
-            title: "Ayuno intermitente y metabolismo",
-            category: "nutricio",
-            type: "article",
-            icon: BookOpen,
-            desc: "El dejuni intermitent i els seus efectes metabòlics en adults (Dialnet).",
-            readTime: "Paper",
-            url: "https://dialnet.unirioja.es/descarga/articulo/9149710.pdf"
-        },
-        {
-            id: 302,
-            title: "Ayuno intermitente en la mujer",
-            category: "nutricio",
-            type: "article",
-            icon: Coffee,
-            desc: "Efectes cardiometabòlics del dejuni intermitent en dones (SciELO).",
-            readTime: "Estudi",
-            url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0212-16112023000700008"
-        },
-
-        // --- ATENCIÓ ---
-        {
-            id: 2,
-            title: "Potenciar la atención y concentración",
-            category: "atencio",
-            type: "article",
-            icon: Brain,
-            desc: "Com millorar l'atenció i la concentració en l'estudi (Formación Ninja).",
-            readTime: "Guia",
-            url: "https://formacion.ninja/blog/atencion-concentracion-estudio"
-        },
-        {
-            id: 401,
-            title: "Neurociencia de la concentración",
-            category: "atencio",
-            type: "article",
-            icon: BookOpen,
-            desc: "7 formes eficaces de recolzar la concentració segons la neurociència (CogniFit).",
-            readTime: "Article",
-            url: "https://blog.cognifit.com/es/7-formas-eficaces-de-apoyar-la-concentracion-segun-la-neurociencia/"
-        },
-        {
-            id: 402,
-            title: "La Capacidad de Mantener la Atención",
-            category: "atencio",
-            type: "article",
-            icon: Brain,
-            desc: "Psicologia positiva aplicada a la capacitat de mantenir l'atenció (IEPP).",
-            readTime: "Article",
-            url: "https://www.iepp.es/concentracion/"
-        },
-
-        // --- TEMPS / LONGEVITAT ---
-        {
-            id: 5,
-            title: "Vivir más y mejor: Longevidad",
-            category: "temps",
-            type: "article",
-            icon: Clock,
-            desc: "Què diu la ciència sobre la longevitat? (Clínic Barcelona).",
-            readTime: "Article",
-            url: "https://www.clinicbarcelona.org/noticias/vivir-mas-y-mejor-que-dice-la-ciencia-sobre-la-longevidad"
-        },
-        {
-            id: 501,
-            title: "Estilo de vida y envejecimiento",
-            category: "temps",
-            type: "article",
-            icon: BookOpen,
-            desc: "El 70% de l'envelliment depèn de l'estil de vida, segons experts (Infobae).",
-            readTime: "Article",
-            url: "https://www.infobae.com/generacion-silver/2025/10/17/el-70-del-envejecimiento-depende-del-estilo-de-vida-advierte-una-experta-en-longevidad/"
-        },
-        {
-            id: 502,
-            title: "Biomarcadores epigenéticos",
-            category: "temps",
-            type: "article",
-            icon: BookOpen,
-            desc: "Predicció de l'envelliment i risc de malalties (gTt-VIH).",
-            readTime: "Article",
-            url: "https://www.gtt-vih.org/publicaciones/la-noticia-del-dia/31-10-25/"
-        },
-
-        // --- SUPLEMENTS ---
-        {
-            id: 601,
-            title: "Magnesio y salud cardiovascular",
-            category: "suplements",
-            type: "article",
-            icon: Pill,
-            desc: "Revisió sistemàtica sobre nivells de magnesi i malaltia cardiovascular (REC).",
-            readTime: "Revisió",
-            url: "https://www.reccardioclinics.org/es-niveles-magnesio-enfermedad-cardiovascular-revision-articulo-S2605153220300856"
-        },
-        {
-            id: 602,
-            title: "Creatina y rendimiento cognitivo",
-            category: "suplements",
-            type: "article",
-            icon: Pill,
-            desc: "La creatina millora el rendiment i redueix la fatiga per falta de son (ICNS).",
-            readTime: "Article",
-            url: "https://www.icns.es/noticia_la_creatina_mejora_rendimiento_cognitivo_fatiga_privacion_sueno"
-        },
-        {
-            id: 603,
-            title: "Riesgos y beneficios del NMN",
-            category: "suplements",
-            type: "article",
-            icon: BookOpen,
-            desc: "Anàlisi basada en evidència sobre el potenciador del NAD (NutritionFacts).",
-            readTime: "Video",
-            url: "https://nutritionfacts.org/es/video/riesgos-y-beneficios-de-la-nicotinamida-mononucleotida-na-potenciadora-del-nad/"
-        },
-        {
-            id: 604,
-            title: "Omega-3 i Salut Cerebral",
-            category: "suplements",
-            type: "article",
-            icon: Pill,
-            desc: "Beneficis dels àcids grassos essencials per a la funció cognitiva i la reducció de la inflamació (MedlinePlus).",
-            readTime: "Guia",
-            url: "https://medlineplus.gov/spanish/ency/patientinstructions/000767.htm"
-        },
-        {
-            id: 605,
-            title: "Vitamina D i Sistema Immune",
-            category: "suplements",
-            type: "article",
-            icon: Pill,
-            desc: "El paper clau de la vitamina D en la regulació immunitària i la salut òssia (MedlinePlus).",
-            readTime: "Article",
-            url: "https://medlineplus.gov/spanish/vitamind.html"
-        },
-        {
-            id: 606,
-            title: "Resveratrol i Envelliment",
-            category: "suplements",
-            type: "article",
-            icon: BookOpen,
-            desc: "L'impacte dels polifenols en l'activació de les sirtuïnes i la longevitat cel·lular (NIH).",
-            readTime: "Article",
-            url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6164842/"
-        },
-        {
-            id: 607,
-            title: "Coenzim Q10 i Energia",
-            category: "suplements",
-            type: "article",
-            icon: Pill,
-            desc: "Importància de la CoQ10 per a la funció mitocondrial i la salut cardíaca (MedlinePlus).",
-            readTime: "Fitxa",
-            url: "https://medlineplus.gov/spanish/druginfo/natural/938.html"
-        },
-        {
-            id: 608,
-            title: "Espermidina i Autofàgia",
-            category: "suplements",
-            type: "article",
-            icon: BookOpen,
-            desc: "Com l'espermidina pot induir l'autofàgia i promoure la renovació cel·lular (ScienceDirect).",
-            readTime: "Estudi",
-            url: "https://www.sciencedirect.com/science/article/pii/S221323171830188X"
-        },
-        {
-            id: 609,
-            title: "Vitamina B12 i Sistema Nerviós",
-            category: "suplements",
-            type: "article",
-            icon: Pill,
-            desc: "Essencial per al manteniment de les neurones i la formació de glòbuls vermells (NIH).",
-            readTime: "Fitxa",
-            url: "https://ods.od.nih.gov/factsheets/VitaminB12-DatosEnEspanol/"
-        }
-    ];
-
-    const filtered = activeTab === 'all' ? resources : resources.filter(r => r.category === activeTab);
+    const filtered = activeTab === 'all' ? resourcesData : resourcesData.filter(r => r.category === activeTab);
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-12">
@@ -268,6 +99,15 @@ export default function Recursos() {
                 title="Recursos i Eines"
                 description="Accedeix a guies, lectures i eines recomanades per aprofundir en el teu benestar."
             />
+
+            {/* MODAL */}
+            {selectedResource && (
+                <ResourceModal
+                    resource={selectedResource}
+                    onClose={() => setSelectedResource(null)}
+                />
+            )}
+
             <div className="max-w-6xl mx-auto">
 
                 {/* HERO */}
@@ -310,44 +150,40 @@ export default function Recursos() {
                 {/* GRID DE RECURSOS */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filtered.map(resource => (
-                        <a
+                        <div
                             key={resource.id}
-                            href={resource.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer block"
+                            onClick={() => setSelectedResource(resource)}
+                            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer block h-full flex flex-col"
                         >
                             <div className="flex justify-between items-start mb-4">
-                                <div className={`p-3 rounded-xl ${resource.type === 'video' ? 'bg-red-50 text-red-600' :
+                                <div className={`p-3 rounded-xl transition-colors ${resource.type === 'video' ? 'bg-red-50 text-red-600' :
                                     resource.category === 'suplements' ? 'bg-teal-50 text-teal-600' :
-                                        'bg-blue-50 text-blue-600'
+                                        'bg-blue-50 text-blue-600 group-hover:bg-purple-50 group-hover:text-purple-600'
                                     }`}>
-                                    {resource.type === 'video' ? <Play size={24} /> :
-                                        resource.category === 'suplements' ? <Pill size={24} /> :
-                                            <BookOpen size={24} />}
+                                    {/* Handle dynamic icons safely */}
+                                    {resource.icon && React.createElement(resource.icon, { size: 24 })}
                                 </div>
                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
                                     {resource.category}
-                                    <ExternalLink size={10} className="ml-1" />
                                 </span>
                             </div>
 
                             <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
                                 {resource.title}
                             </h3>
-                            <p className="text-gray-600 text-sm mb-6 leading-relaxed">
-                                {resource.desc}
+                            <p className="text-gray-600 text-sm mb-6 leading-relaxed flex-1 line-clamp-3">
+                                {resource.summary}
                             </p>
 
-                            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                                 <span className="text-xs font-semibold text-gray-500">
-                                    {resource.type === 'video' ? `${resource.duration} visualització` : `${resource.readTime} lectura`}
+                                    {resource.type === 'video' ? 'Visualització' : `${resource.readTime || '5 min'}`}
                                 </span>
-                                <div className="text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-sm font-bold">
-                                    Accedir <ExternalLink size={14} />
+                                <div className="text-purple-600 opacity-60 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-xs font-bold uppercase tracking-wider">
+                                    Llegir Resum <ExternalLink size={12} />
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     ))}
                 </div>
 
