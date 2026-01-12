@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { diagnosisQuestions } from '../data/diagnosisData';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, HelpCircle, Save, Clock, SkipForward } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import SEO from '../components/SEO';
@@ -14,11 +14,16 @@ const Diagnosis = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [scores, setScores] = useState({ energy: 0, attention: 0, lived_time: 0 });
     const [isCalculating, setIsCalculating] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
 
-    const currentQuestion = diagnosisQuestions[currentIndex];
-    const progress = ((currentIndex + 1) / diagnosisQuestions.length) * 100;
+    const currentQuestion = diagnosisQuestions[currentIndex] || {};
+    const progress = ((currentIndex) / diagnosisQuestions.length) * 100;
+    const questionsLeft = diagnosisQuestions.length - currentIndex;
+    const timeRemaining = Math.max(1, Math.ceil(questionsLeft * 0.5)); // Approx 30s per question
 
     const { user, enterAsGuest } = useAuth();
+    const [answers, setAnswers] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
 
     // AUTO-RESTORE ON MOUNT
     useEffect(() => {
@@ -26,14 +31,13 @@ const Diagnosis = () => {
         if (savedProgress) {
             try {
                 const { currentIndex: savedIndex, scores: savedScores, answers: savedAnswers, timestamp } = JSON.parse(savedProgress);
-                // Check if valid (e.g. less than 24h old)
                 const OneDay = 24 * 60 * 60 * 1000;
                 if (Date.now() - timestamp < OneDay) {
                     if (savedIndex < diagnosisQuestions.length) {
                         setCurrentIndex(savedIndex);
                         setScores(savedScores);
                         setAnswers(savedAnswers);
-                        setStep('quiz'); // Skip intro if restoring
+                        setStep('quiz');
                     }
                 } else {
                     localStorage.removeItem('arrel_quiz_progress');
@@ -45,21 +49,17 @@ const Diagnosis = () => {
         }
     }, []);
 
-    // Helper to get dynamic title based on hero selection
-    const getIntroTitle = () => {
-        const goal = localStorage.getItem('arrel_goal');
-        switch (goal) {
-            case 'energy': return "Analitzem els teus nivells d'energia...";
-            case 'sleep': return "Vegem què afecta el teu descans...";
-            case 'focus': return "Descobrim què bloqueja la teva concentració...";
-            default: return "Arrel et dona el coneixement per cuidar-te.";
-        }
+    const saveAndExit = () => {
+        // Explicit save action (though it autosaves on answer)
+        // Just notify and leave
+        alert("Progrés guardat. Pots continuar quan vulguis.");
+        navigate('/');
     };
 
     const saveResults = async (finalScores) => {
         // Clear progress storage on completion
         localStorage.removeItem('arrel_quiz_progress');
-        localStorage.removeItem('arrel_goal'); // Clear goal after use
+        localStorage.removeItem('arrel_goal');
 
         if (!user) {
             localStorage.setItem('arrel_diagnosis_raw', JSON.stringify(finalScores));
@@ -93,11 +93,9 @@ const Diagnosis = () => {
         }
     };
 
-    const [answers, setAnswers] = useState([]);
-    const [selectedOption, setSelectedOption] = useState(null);
-
     const handleAnswer = (score, variable, answerIndex) => {
         setSelectedOption(answerIndex);
+        setShowTooltip(false); // Hide tooltip if open
 
         // DELAY FOR VISUAL FEEDBACK
         setTimeout(() => {
@@ -127,14 +125,13 @@ const Diagnosis = () => {
                     origin: { y: 0.6 },
                     colors: ['#a855f7', '#ec4899', '#3b82f6']
                 });
-                localStorage.removeItem('arrel_quiz_progress'); // Clear partial progress
+                localStorage.removeItem('arrel_quiz_progress');
                 setStep('calculating');
 
-                // Artificial delay for "calculation" effect
                 setTimeout(() => {
                     saveResults(newScores);
                     localStorage.setItem('arrel_diagnosis_answers', JSON.stringify(newAnswers));
-                    // New Logic: Store basic history for local usage if needed
+
                     const nouDiagnostic = {
                         id: Date.now(),
                         data: new Date().toISOString(),
@@ -147,7 +144,7 @@ const Diagnosis = () => {
                     localStorage.setItem('arrel_respostes', JSON.stringify(newAnswers));
 
                     navigate('/resultats');
-                }, 3000); // 3 seconds delay
+                }, 3000);
             }
             setSelectedOption(null);
         }, 350);
@@ -161,9 +158,8 @@ const Diagnosis = () => {
             const scoreToDeduct = prevQuestion.options[prevAnswerIdx].score;
             const variable = prevQuestion.variable;
 
-            // Revert State
             setScores(prev => ({ ...prev, [variable]: prev[variable] - scoreToDeduct }));
-            setAnswers(prev => prev.slice(0, -1)); // Remove last answer
+            setAnswers(prev => prev.slice(0, -1));
             setCurrentIndex(prevIndex);
         }
     };
@@ -171,12 +167,11 @@ const Diagnosis = () => {
     // KEYBOARD NAVIGATION
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (step !== 'quiz') return;
+            if (step !== 'quiz' || !currentQuestion.options) return;
 
             const key = parseInt(e.key);
             if (!isNaN(key) && key > 0 && key <= currentQuestion.options.length) {
                 const index = key - 1;
-                // Add a small active feedback visually if needed, for now just trigger logic
                 const option = currentQuestion.options[index];
                 if (option) {
                     handleAnswer(option.score, currentQuestion.variable, index);
@@ -186,9 +181,8 @@ const Diagnosis = () => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [step, currentQuestion, currentIndex, scores, answers]); // Re-bind on state change to ensure fresh closure if needed
+    }, [step, currentQuestion, currentIndex, scores, answers]);
 
-    // 1. INTRO SCREEN REMOVED (Direct to Quiz)
 
     // 3. CALCULATING SCREEN
     if (step === 'calculating') {
@@ -225,44 +219,59 @@ const Diagnosis = () => {
     }
 
 
-
     // 2. QUIZ SCREEN
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-900 overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-gray-900 overflow-hidden relative">
+            <SEO
+                title="Diagnòstic Arrel"
+                description="Descobreix la teva edat biològica i optimitza la teva salut."
+            />
+
+            {/* TOP BAR ACTIONS */}
+            <div className="absolute top-6 right-6 flex gap-4 z-20">
+                <button
+                    onClick={saveAndExit}
+                    className="text-gray-400 hover:text-purple-600 text-xs font-bold flex items-center gap-2 transition-colors bg-white/50 px-3 py-2 rounded-lg hover:bg-white"
+                >
+                    <Save size={16} /> <span className="hidden md:inline">Guardar i sortir</span>
+                </button>
+            </div>
+
             <div className="w-full max-w-xl relative">
 
                 {/* Header: BLOC INDICATOR */}
-                <div className="mb-12">
-                    <div className="flex justify-between items-baseline mb-4">
-                        <span className="text-xs font-mono text-purple-600 uppercase tracking-widest">
+                <div className="mb-8">
+                    <div className="flex justify-between items-end mb-2">
+                        <span className="text-xs font-mono text-purple-600 uppercase tracking-widest font-bold">
                             {currentQuestion.block}
                         </span>
-                        <span className="text-xs font-mono text-gray-500">
-                            {currentIndex + 1} / {diagnosisQuestions.length}
-                        </span>
+                        <div className="flex items-center gap-4 text-xs font-mono text-gray-400">
+                            <span className="flex items-center gap-1">
+                                <Clock size={12} /> ~{timeRemaining} min
+                            </span>
+                            <span>
+                                {currentIndex + 1} / {diagnosisQuestions.length}
+                            </span>
+                        </div>
                     </div>
 
-                    <div className="relative">
-                        <div className="flex justify-between text-xs font-mono text-gray-500 mb-1">
-                            <span>PROGRÉS</span>
-                            <span>{Math.round(progress)}%</span>
-                        </div>
-                        <div className="h-2 w-full bg-gray-100 relative overflow-hidden rounded-full">
-                            <motion.div
-                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-blue-500"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${progress}%` }}
-                                transition={{ duration: 0.5 }}
-                            />
-                        </div>
+                    <div className="h-4 w-full bg-gray-200 relative overflow-hidden rounded-full shadow-inner">
+                        <motion.div
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
+                        />
+                        {/* Striped pattern overlay */}
+                        <div className="absolute inset-0 opacity-10 bg-[length:10px_10px] bg-[linear-gradient(45deg,rgba(255,255,255,0.2)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.2)_75%,transparent_75%,transparent)]" />
                     </div>
                 </div>
 
-                {/* BACK BUTTON (Top Left) */}
+                {/* BACK BUTTON (Top Left relative to card) */}
                 {currentIndex > 0 && (
                     <button
                         onClick={handleBack}
-                        className="absolute -top-12 left-0 text-gray-400 hover:text-gray-600 flex items-center gap-1 text-sm font-medium transition-colors"
+                        className="absolute -top-10 left-0 text-gray-400 hover:text-gray-600 flex items-center gap-1 text-sm font-medium transition-colors"
                     >
                         <ArrowLeft size={16} /> Enrere
                     </button>
@@ -278,15 +287,44 @@ const Diagnosis = () => {
                         transition={{ duration: 0.3 }}
                     >
                         {/* Question */}
-                        <div className="mb-10">
-                            <h2 className="text-2xl md:text-3xl font-medium leading-snug text-gray-900 tracking-tight">
+                        <div className="mb-10 relative">
+                            <h2 className="text-2xl md:text-3xl font-medium leading-snug text-gray-900 tracking-tight pr-8">
                                 {currentQuestion.question}
                             </h2>
+
+                            {/* Context Tooltip Trigger */}
+                            {currentQuestion.context && (
+                                <div className="absolute top-1 right-0">
+                                    <button
+                                        onClick={() => setShowTooltip(!showTooltip)}
+                                        className="text-purple-300 hover:text-purple-600 transition-colors"
+                                        title="Per què preguntem això?"
+                                    >
+                                        <HelpCircle size={24} />
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Tooltip Content */}
+                            <AnimatePresence>
+                                {showTooltip && currentQuestion.context && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="absolute z-30 top-full mt-4 right-0 w-full sm:w-64 bg-gray-900 text-white text-sm p-4 rounded-xl shadow-xl border border-gray-700 leading-relaxed"
+                                    >
+                                        <div className="absolute -top-2 right-2 w-4 h-4 bg-gray-900 rotate-45 border-l border-t border-gray-700"></div>
+                                        <span className="font-bold text-purple-300 block mb-1">Per què és important?</span>
+                                        {currentQuestion.context}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Options */}
                         <div className="grid gap-3">
-                            {currentQuestion.options.map((option, idx) => (
+                            {currentQuestion.options && currentQuestion.options.map((option, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => handleAnswer(option.score, currentQuestion.variable, idx)}
@@ -321,24 +359,23 @@ const Diagnosis = () => {
                 <div className="mt-12 flex justify-center gap-8 border-t border-gray-100 pt-6">
                     <button
                         onClick={() => {
-                            if (window.confirm("Vols creuar el pont i anar al Dashboard sense resultats?")) {
+                            // Clearer action: Skip test means entering as guest
+                            if (window.confirm("Saltar el test et permetrà explorar l'app, però no tindràs un pla personalitzat. Vols continuar?")) {
                                 enterAsGuest();
                                 localStorage.removeItem('arrel_quiz_progress');
                                 navigate('/dashboard');
                             }
                         }}
-                        className="text-gray-400 hover:text-purple-600 font-mono text-[10px] tracking-widest uppercase transition-colors"
+                        className="text-gray-400 hover:text-purple-600 font-mono text-[10px] tracking-widest uppercase transition-colors flex items-center gap-2"
                     >
-                        Saltar Test
+                        Saltar Test i Explorar <SkipForward size={12} />
                     </button>
 
                     <button
                         onClick={() => {
-                            if (window.confirm("Vols reiniciar el diagnòstic?")) {
+                            if (window.confirm("Vols reiniciar el diagnòstic des de zero?")) {
                                 localStorage.removeItem('arrel_quiz_progress');
-                                setCurrentIndex(0);
-                                setScores({ energy: 0, attention: 0, lived_time: 0 });
-                                setAnswers([]);
+                                window.location.reload(); // Hard reload is cleaner for full reset
                             }
                         }}
                         className="text-gray-400 hover:text-red-500 font-mono text-[10px] tracking-widest uppercase transition-colors"
