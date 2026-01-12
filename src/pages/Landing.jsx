@@ -104,11 +104,17 @@ export default function Landing() {
                         {/* Image Content */}
                         <div className="relative animate-fade-in-up delay-200">
                             <div className="absolute inset-0 bg-gradient-to-tr from-purple-200 to-blue-200 opacity-20 blur-3xl rounded-full transform scale-110"></div>
-                            <img
-                                src="/hero-image.png"
-                                alt="Representació abstracta de regeneració cel·lular"
-                                className="relative z-10 w-full h-auto object-contain drop-shadow-2xl hover:scale-[1.02] transition-transform duration-700"
-                            />
+                            <picture className="relative z-10 block w-full h-auto drop-shadow-2xl hover:scale-[1.02] transition-transform duration-700">
+                                <source srcSet="/hero-image.webp" type="image/webp" />
+                                <img
+                                    src="/hero-image.png"
+                                    alt="Representació abstracta de regeneració cel·lular"
+                                    className="w-full h-auto object-contain"
+                                    width="800"
+                                    height="800"
+                                    loading="eager"
+                                />
+                            </picture>
                         </div>
                     </div>
                 </div>
