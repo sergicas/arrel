@@ -220,13 +220,19 @@ const Diagnosis = () => {
                         </span>
                     </div>
 
-                    <div className="h-0.5 w-full bg-gray-200 relative overflow-hidden rounded-full">
-                        <motion.div
-                            className="absolute top-0 left-0 h-full bg-purple-600"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${progress}%` }}
-                            transition={{ duration: 0.5 }}
-                        />
+                    <div className="relative">
+                        <div className="flex justify-between text-xs font-mono text-gray-500 mb-1">
+                            <span>PROGRÉS</span>
+                            <span>{Math.round(progress)}%</span>
+                        </div>
+                        <div className="h-2 w-full bg-gray-100 relative overflow-hidden rounded-full">
+                            <motion.div
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-blue-500"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${progress}%` }}
+                                transition={{ duration: 0.5 }}
+                            />
+                        </div>
                     </div>
                 </div>
 

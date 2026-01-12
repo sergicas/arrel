@@ -4,6 +4,7 @@ import Layout from './layout/Layout';
 import PublicLayout from './layout/PublicLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import BrandLoader from './components/BrandLoader';
+import SkeletonDashboard from './components/SkeletonDashboard';
 import PageTransition from './components/PageTransition';
 import { AnimatePresence } from 'framer-motion';
 
@@ -147,7 +148,7 @@ const AnimatedRoutes = () => {
         {/* Protected Layout Routes */}
         <Route element={<PrivateRoute><PageTransition><Layout /></PageTransition></PrivateRoute>}>
           <Route path="/dashboard" element={
-            <Suspense fallback={<BrandLoader text="Carregant Espai Personal..." />}>
+            <Suspense fallback={<SkeletonDashboard />}>
               <Dashboard />
             </Suspense>
           } />
