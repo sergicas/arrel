@@ -1,9 +1,50 @@
-import React from 'react';
-import { Scroll, Heart, Clock, TrendingUp, Users, ShieldCheck, BookOpen, Lightbulb, ArrowLeft, ArrowRight, Globe, Target } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Scroll, Heart, Clock, TrendingUp, Users, ShieldCheck, BookOpen, Lightbulb, ArrowLeft, ArrowRight, Globe, Target, Check, Share2, MessageCircle } from 'lucide-react';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 
+const TwitterIcon = ({ size }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className="text-white">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+);
+
 export default function Manifest() {
+    const [isSigned, setIsSigned] = useState(false);
+    const [count, setCount] = useState(1240); // Base count
+
+    useEffect(() => {
+        // Load signed state
+        const signed = localStorage.getItem('arrel_manifest_signed');
+        if (signed) {
+            setIsSigned(true);
+            setCount(1241);
+        } else {
+            // Simulate "live" counter somewhat
+            setCount(1240 + Math.floor(Math.random() * 5));
+        }
+    }, []);
+
+    const handleSign = async () => {
+        if (isSigned) return;
+
+        // Confetti
+        const { default: confetti } = await import('canvas-confetti');
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#EC4899', '#8B5CF6', '#F59E0B']
+        });
+
+        setIsSigned(true);
+        setCount(prev => prev + 1);
+        localStorage.setItem('arrel_manifest_signed', 'true');
+    };
+
+    const shareUrl = "https://arrel.app"; // Replace with real URL in prod
+    const shareText = "M'acabo d'unir al moviment Arrel per democratitzar la longevitat. La biologia no és el destí. 🌱 #Arrel #Longevity";
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6 md:p-12">
             <SEO
@@ -129,22 +170,72 @@ export default function Manifest() {
                     </div>
                 </div>
 
-                {/* CTA FINAL */}
-                <div className="text-center bg-gradient-to-r from-purple-900 to-indigo-900 rounded-3xl p-12 text-white shadow-2xl mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                {/* CTA FINAL & SIGNATURA */}
+                <div className="relative text-center bg-gray-900 rounded-3xl p-12 text-white shadow-2xl mb-12 overflow-hidden">
+                    {/* Background blob */}
+                    <div className="absolute top-0 right-0 p-40 bg-purple-600 rounded-full blur-3xl opacity-20 -mr-20 -mt-20 pointer-events-none"></div>
+
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 relative z-10">
                         Uneix-te al moviment
                     </h2>
-                    <p className="text-purple-200 text-lg mb-10 max-w-2xl mx-auto">
-                        No esperis a sentir-te "vell" per començar a cuidar la teva màquina biològica. El millor moment és ara.
-                    </p>
 
-                    <button
-                        onClick={() => window.location.href = '/diagnosis'}
-                        className="px-10 py-5 rounded-xl font-bold text-purple-900 bg-white hover:bg-gray-100 shadow-lg hover:shadow-white/20 transition transform hover:scale-105 flex items-center gap-3 mx-auto"
-                    >
-                        Començar Diagnòstic
-                        <ArrowRight className="w-6 h-6" />
-                    </button>
+                    {/* Live Counter */}
+                    <div className="flex justify-center items-center gap-2 mb-8 text-purple-200">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span className="font-mono text-lg">{count.toLocaleString()} persones ja s'han unit</span>
+                    </div>
+
+                    {!isSigned ? (
+                        <>
+                            <p className="text-gray-300 text-lg mb-10 max-w-2xl mx-auto relative z-10">
+                                Signa el manifest per confirmar el teu compromís amb la teva salut i la de la teva comunitat. És un vot per a un futur més sà.
+                            </p>
+
+                            <button
+                                onClick={handleSign}
+                                className="px-10 py-5 rounded-xl font-bold text-purple-900 bg-white hover:bg-gray-100 shadow-lg hover:shadow-white/20 transition transform hover:scale-105 flex items-center justify-center gap-3 mx-auto relative z-10"
+                            >
+                                <Heart className="w-6 h-6 text-pink-500" fill="currentColor" />
+                                Signar el Manifest
+                            </button>
+                        </>
+                    ) : (
+                        <div className="animate-fade-in-up">
+                            <div className="inline-flex items-center gap-2 bg-green-500/20 text-green-300 px-6 py-2 rounded-full font-bold mb-8 border border-green-500/50">
+                                <Check size={20} /> Manifest Signat
+                            </div>
+
+                            <h3 className="text-xl font-bold mb-6">Comparteix el teu compromís 🚀</h3>
+
+                            <div className="flex flex-col sm:flex-row justify-center gap-4">
+                                <a
+                                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-6 py-3 rounded-xl font-bold text-white bg-black hover:bg-gray-800 border border-gray-700 transition flex items-center justify-center gap-2"
+                                >
+                                    <TwitterIcon size={20} />
+                                    Post a X
+                                </a>
+                                <a
+                                    href={`https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-6 py-3 rounded-xl font-bold text-white bg-[#25D366] hover:bg-[#20bd5a] transition flex items-center justify-center gap-2"
+                                >
+                                    <MessageCircle size={20} />
+                                    WhatsApp
+                                </a>
+                            </div>
+
+                            <button
+                                onClick={() => window.location.href = '/diagnosis'}
+                                className="mt-8 text-sm text-gray-400 hover:text-white underline decoration-gray-600 underline-offset-4"
+                            >
+                                Continuar cap al Diagnòstic
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* BOTÓ TORNAR */}
