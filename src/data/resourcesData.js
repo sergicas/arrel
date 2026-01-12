@@ -7,7 +7,8 @@ export const resourcesData = [
         id: 1,
         title: "Tipología circadiana y salud mental",
         category: "energia",
-        type: "article",
+        type: "estudi",
+        difficulty: "avançat",
         icon: Battery,
         summary: "Un estudi profund sobre com el teu cronotip (alosa vs. mussol) influeix directament en la teva predisposició a l'ansietat i la depressió.",
         takeaways: [
@@ -15,7 +16,7 @@ export const resourcesData = [
             "Alinea els teus horaris amb el teu ritme natural per millorar la salut mental.",
             "La llum del matí és el millor antidepressiu natural."
         ],
-        readTime: "Estudi",
+        readTime: "15 min",
         url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0212-97282014000300021"
     },
     {
@@ -23,6 +24,7 @@ export const resourcesData = [
         title: "Glucosa, Fructosa y Metabolismo",
         category: "energia",
         type: "article",
+        difficulty: "intermedi",
         icon: BookOpen,
         summary: "Investigació recent del CIBER-ISCIII que desmunta mites sobre els sucres i explica com impacten diferentment en el fetge i el teixit adipós.",
         takeaways: [
@@ -30,7 +32,7 @@ export const resourcesData = [
             "Els pics de glucosa constant esgoten la teva energia diària.",
             "L'ordre dels aliments altera l'absorció del sucre."
         ],
-        readTime: "Article",
+        readTime: "8 min",
         url: "https://www.ciberisciii.es/noticias/glucosa-o-fructosa-nuevo-estudio-sobre-el-impacto-del-azucar-en-el-metabolismo-y-la-salud-cardiovascular"
     },
     // --- SON ---
@@ -38,7 +40,8 @@ export const resourcesData = [
         id: 4,
         title: "Higiene del sueño: revisión",
         category: "son",
-        type: "article",
+        type: "guia",
+        difficulty: "bàsic",
         icon: Moon,
         summary: "Una revisió exhaustiva de les intervencions científiques més efectives per millorar la qualitat del son sense medicació.",
         takeaways: [
@@ -46,14 +49,15 @@ export const resourcesData = [
             "Evitar pantalles 2 hores abans és la intervenció més potent.",
             "La regularitat en l'hora de llevar-se fixa el ritme de tot el dia."
         ],
-        readTime: "Revisió",
+        readTime: "10 min",
         url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S1699-695X2017000300170"
     },
     {
         id: 202,
         title: "Yoga Nidra: Cambios Cerebrales",
         category: "son",
-        type: "article",
+        type: "estudi",
+        difficulty: "intermedi",
         icon: Brain,
         summary: "Primer estudi d'imatge cerebral que demostra com el 'son conscient' (NSDR) regenera els nivells de dopamina al cervell.",
         takeaways: [
@@ -61,7 +65,7 @@ export const resourcesData = [
             "Augmenta la dopamina disponible fins a un 65%.",
             "Eina clau per recuperar-se de nits dolentes."
         ],
-        readTime: "Estudi",
+        readTime: "12 min",
         url: "https://home.iitd.ac.in/show.php?id=237&in_sections=Press"
     },
     // --- NUTRICIÓ ---
@@ -70,6 +74,7 @@ export const resourcesData = [
         title: "Ayuno intermitente i salut",
         category: "nutricio",
         type: "article",
+        difficulty: "intermedi",
         icon: Coffee,
         summary: "Anàlisi dels escenaris clínics on el dejuni intermitent ha demostrat beneficis clars més enllà de la pèrdua de pes.",
         takeaways: [
@@ -77,7 +82,7 @@ export const resourcesData = [
             "Redueix la inflamació sistèmica crònica.",
             "No és per a tothom: dones i persones amb estrès alt han de vigilar."
         ],
-        readTime: "Revisió",
+        readTime: "7 min",
         url: "http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0212-16112024000100026"
     },
     // --- ATENCIÓ ---
@@ -85,7 +90,8 @@ export const resourcesData = [
         id: 401,
         title: "Neurociencia de la concentración",
         category: "atencio",
-        type: "article",
+        type: "guia",
+        difficulty: "bàsic",
         icon: Brain,
         summary: "Com funciona el circuit de l'atenció al cervell i 7 estratègies basades en evidència per 'hackejar-lo' i entrar en flux.",
         takeaways: [
@@ -93,7 +99,7 @@ export const resourcesData = [
             "L'atenció visual lidera l'atenció cognitiva (mira un punt fix).",
             "El soroll blanc pot augmentar la dopamina tònica."
         ],
-        readTime: "Article",
+        readTime: "5 min",
         url: "https://blog.cognifit.com/es/7-formas-eficaces-de-apoyar-la-concentracion-segun-la-neurociencia/"
     },
     // --- LONGEVITAT ---
@@ -102,6 +108,7 @@ export const resourcesData = [
         title: "Estilo de vida y envejecimiento",
         category: "temps",
         type: "article",
+        difficulty: "bàsic",
         icon: Clock,
         summary: "El titular impactant: només el 30% de la teva longevitat és genètica. El 70% restant depèn de què fas cada dia.",
         takeaways: [
@@ -109,7 +116,7 @@ export const resourcesData = [
             "L'exercici de força és el correlat més fort amb l'esperança de vida.",
             "Les relacions socials fortes protegeixen el cervell."
         ],
-        readTime: "Article",
+        readTime: "6 min",
         url: "https://www.infobae.com/generacion-silver/2025/10/17/el-70-del-envejecimiento-depende-del-estilo-de-vida-advierte-una-experta-en-longevidad/"
     },
     // --- SUPLEMENTS ---
@@ -118,21 +125,23 @@ export const resourcesData = [
         title: "Magnesio y salud cardiovascular",
         category: "suplements",
         type: "article",
+        difficulty: "intermedi",
         icon: Pill,
         summary: "Per què el magnesi és l'oblit de la medicina moderna i com la seva deficiència afecta el cor i el sistema nerviós.",
         takeaways: [
             "El 70% de la població té dèficit subclínic de magnesi.",
-            "Essencial per a més de 300 reaccions enzimàtiques.",
+            "Essencial per l més de 300 reaccions enzimàtiques.",
             "Millora la qualitat del son profund i redueix palpitacions."
         ],
-        readTime: "Revisió",
+        readTime: "9 min",
         url: "https://www.reccardioclinics.org/es-niveles-magnesio-enfermedad-cardiovascular-revision-articulo-S2605153220300856"
     },
     {
         id: 603,
         title: "Riesgos y beneficios del NMN",
         category: "suplements",
-        type: "article",
+        type: "video",
+        difficulty: "avançat",
         icon: Pill,
         summary: "El NMN s'ha posat de moda com a 'píndola de la joventut'. Què hi ha de veritat i què és màrqueting?",
         takeaways: [
@@ -140,7 +149,7 @@ export const resourcesData = [
             "Potencia la funció mitocondrial en ratolins.",
             "L'evidència en humans encara és preliminar però prometedora."
         ],
-        readTime: "Video",
+        readTime: "10 min",
         url: "https://nutritionfacts.org/es/video/riesgos-y-beneficios-de-la-nicotinamida-mononucleotida-na-potenciadora-del-nad/"
     }
 ];
