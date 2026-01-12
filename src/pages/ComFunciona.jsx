@@ -1,11 +1,16 @@
-import React from 'react';
-import { ClipboardList, Target, Sparkles, BarChart3, ArrowLeft, ArrowRight, HelpCircle, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { ClipboardList, Target, Sparkles, BarChart3, ArrowLeft, ArrowRight, HelpCircle, CheckCircle, RefreshCw } from 'lucide-react';
 import RadarChart from '../components/RadarChart';
 import SEO from '../components/SEO';
 
 const ComFunciona = () => {
-    // Dades de mostra per al Radar Chart
-    const sampleData = { global: 78, energia: 85, son: 60, nutricio: 90, atencio: 70, temps: 85 };
+    const [chartMode, setChartMode] = useState('after'); // 'before' or 'after'
+
+    // Dades Comparatives
+    const dataBefore = { global: 45, energia: 40, son: 35, nutricio: 50, atencio: 40, temps: 30 };
+    const dataAfter = { global: 88, energia: 90, son: 85, nutricio: 95, atencio: 85, temps: 80 };
+
+    const currentData = chartMode === 'after' ? dataAfter : dataBefore;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6 md:p-12">
@@ -120,20 +125,39 @@ const ComFunciona = () => {
                     </div>
                 </div>
 
-                {/* SECCIÓ RESULTATS EN DETALL */}
+                {/* SECCIÓ RESULTATS EN DETALL - INTERACTIVE */}
                 <div className="grid md:grid-cols-2 gap-12 items-center mb-24">
                     <div>
                         <h2 className="text-3xl font-bold text-gray-900 mb-6">
                             2. El Teu Mapa Biològic
                         </h2>
                         <p className="text-lg text-gray-600 mb-6">
-                            No et donem només un número. Et donem una imatge clara del teu equilibri actual.
+                            Veuràs exactament com impacten els teus hàbits. Interactua amb el gràfic per veure la diferència.
                         </p>
+
+                        {/* Interactive Toggle */}
+                        <div className="flex bg-gray-100 p-1 rounded-xl w-fit mb-8">
+                            <button
+                                onClick={() => setChartMode('before')}
+                                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${chartMode === 'before' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                            >
+                                Estil de Vida Modern
+                            </button>
+                            <button
+                                onClick={() => setChartMode('after')}
+                                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${chartMode === 'after' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                                    }`}
+                            >
+                                Estil de Vida Arrel
+                            </button>
+                        </div>
+
                         <ul className="space-y-4 mb-6">
                             {[
                                 "Visualització gràfica d'impacte immediat",
                                 "Identificació de l'àrea més feble (el teu ' coll d'ampolla')",
-                                "Comparativa entre les 5 àrees clau"
+                                "Algoritme Ponderat: Donem més pes als hàbits que tenen més impacte científic (ex: son profund vs durada)."
                             ].map((item, i) => (
                                 <li key={i} className="flex items-start gap-3">
                                     <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0" />
@@ -141,12 +165,20 @@ const ComFunciona = () => {
                                 </li>
                             ))}
                         </ul>
-                        <p className="text-sm text-gray-400 bg-gray-50 p-4 rounded-lg italic border-l-4 border-blue-400">
-                            "El que no es mesura, no es pot millorar." - Lord Kelvin
+                        <p className="text-sm text-gray-500 bg-purple-50 p-4 rounded-lg italic border-l-4 border-purple-400">
+                            "L'envelliment és un error en el codi de la informació, i tenim les eines per corregir-lo." - Dr. David Sinclair
                         </p>
                     </div>
-                    <div className="bg-white/50 backdrop-blur-sm p-6 rounded-full shadow-2xl border border-white flex items-center justify-center w-full max-w-[350px] aspect-square mx-auto">
-                        <RadarChart data={sampleData} size={350} />
+
+                    <div className="relative">
+                        <div className="bg-white/50 backdrop-blur-sm p-6 rounded-full shadow-2xl border border-white flex items-center justify-center w-full max-w-[350px] aspect-square mx-auto transition-all duration-500">
+                            <RadarChart data={currentData} size={350} />
+                        </div>
+                        {/* Floating Badge based on mode */}
+                        <div className={`absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg transition-all duration-500 ${chartMode === 'after' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            }`}>
+                            {chartMode === 'after' ? 'Edat Biològica: -5 Anys' : 'Edat Biològica: +8 Anys'}
+                        </div>
                     </div>
                 </div>
 
@@ -156,50 +188,76 @@ const ComFunciona = () => {
                         Les 5 Àrees de la Longevitat 💠
                     </h2>
                     <div className="flex flex-wrap justify-center gap-4">
-                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-orange-100 text-orange-600 font-bold flex items-center gap-2 hover:scale-105 transition">
+                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-orange-100 text-orange-600 font-bold flex items-center gap-2 hover:scale-105 transition cursor-default">
                             ⚡ Energia
                         </div>
-                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-indigo-100 text-indigo-600 font-bold flex items-center gap-2 hover:scale-105 transition">
+                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-indigo-100 text-indigo-600 font-bold flex items-center gap-2 hover:scale-105 transition cursor-default">
                             🌙 Son
                         </div>
-                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-green-100 text-green-600 font-bold flex items-center gap-2 hover:scale-105 transition">
+                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-green-100 text-green-600 font-bold flex items-center gap-2 hover:scale-105 transition cursor-default">
                             🥗 Nutrició
                         </div>
-                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-blue-100 text-blue-600 font-bold flex items-center gap-2 hover:scale-105 transition">
+                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-blue-100 text-blue-600 font-bold flex items-center gap-2 hover:scale-105 transition cursor-default">
                             🧠 Atenció
                         </div>
-                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-purple-100 text-purple-600 font-bold flex items-center gap-2 hover:scale-105 transition">
+                        <div className="px-6 py-3 bg-white rounded-full shadow-md border-2 border-purple-100 text-purple-600 font-bold flex items-center gap-2 hover:scale-105 transition cursor-default">
                             ⏰ Temps Viscut
                         </div>
                     </div>
                 </div>
 
-                {/* SISTEMA DE PUNTUACIÓ */}
+                {/* SISTEMA DE PUNTUACIÓ - MILLORAT */}
                 <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 mb-20">
                     <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
                         <HelpCircle className="w-8 h-8 text-purple-500" />
-                        Com funciona el Sistema de Puntuació?
+                        Com interpretem la teva puntuació?
                     </h2>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div>
-                            <div className="text-4xl font-bold text-green-500 mb-2">80-100</div>
-                            <h4 className="font-bold text-gray-800 mb-2">Zona Òptima</h4>
-                            <p className="text-sm text-gray-600">El teu sistema biològic funciona amb eficiència. L'objectiu és manteniment i micro-millores.</p>
+                        {/* Òptima */}
+                        <div className="bg-green-50/50 p-6 rounded-2xl border border-green-100">
+                            <div className="text-4xl font-bold text-green-600 mb-2">80-100</div>
+                            <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-green-500"></span> Zona Òptima
+                            </h4>
+                            <p className="text-sm text-gray-600 mb-4">El teu sistema biològic funciona amb eficiència. L'objectiu és manteniment.</p>
+                            <ul className="text-xs text-gray-500 space-y-2">
+                                <li className="flex gap-2">✅ Energia constant sense pics</li>
+                                <li className="flex gap-2">✅ Son profund reparador</li>
+                                <li className="flex gap-2">✅ Claredat mental sostinguda</li>
+                            </ul>
                         </div>
-                        <div>
+
+                        {/* Millora */}
+                        <div className="bg-orange-50/50 p-6 rounded-2xl border border-orange-100">
                             <div className="text-4xl font-bold text-orange-500 mb-2">50-79</div>
-                            <h4 className="font-bold text-gray-800 mb-2">Zona de Millora</h4>
-                            <p className="text-sm text-gray-600">Tens bases sòlides però hi ha fricció. Amb el protocol adequat pots pujar ràpidament.</p>
+                            <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-orange-500"></span> Zona de Millora
+                            </h4>
+                            <p className="text-sm text-gray-600 mb-4">Tens bases sòlides però hi ha fricció. Pots pujar ràpidament.</p>
+                            <ul className="text-xs text-gray-500 space-y-2">
+                                <li className="flex gap-2">⚠️ Baixada d'energia (tarda)</li>
+                                <li className="flex gap-2">⚠️ Despertars nocturns</li>
+                                <li className="flex gap-2">⚠️ Ansietat lleu o 'brain fog'</li>
+                            </ul>
                         </div>
-                        <div>
+
+                        {/* Alerta */}
+                        <div className="bg-red-50/50 p-6 rounded-2xl border border-red-100">
                             <div className="text-4xl font-bold text-red-500 mb-2">&lt; 50</div>
-                            <h4 className="font-bold text-gray-800 mb-2">Zona d'Alerta</h4>
-                            <p className="text-sm text-gray-600">Desgast accelerat detectat. Cal intervenció prioritària en son i nutrició per recuperar base.</p>
+                            <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-red-500"></span> Zona d'Alerta
+                            </h4>
+                            <p className="text-sm text-gray-600 mb-4">Desgast accelerat detectat. Cal intervenció prioritària.</p>
+                            <ul className="text-xs text-gray-500 space-y-2">
+                                <li className="flex gap-2">🚨 Dependència de cafè/sucre</li>
+                                <li className="flex gap-2">🚨 Insomni o son fragmentat</li>
+                                <li className="flex gap-2">🚨 Esgotament crònic</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                {/* FAQ SECTION (NOVA) */}
+                {/* FAQ SECTION */}
                 <div className="max-w-3xl mx-auto mb-24">
                     <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Preguntes Freqüents 💬</h2>
 
