@@ -89,6 +89,7 @@ export default function Landing() {
                             <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
                                 <button
                                     onClick={() => navigate('/diagnosis')}
+                                    onMouseEnter={() => import('../pages/Diagnosis')}
                                     className="px-10 py-5 bg-gray-900 text-white text-xl font-bold rounded-full hover:bg-black transition-all hover:scale-105 shadow-xl flex items-center justify-center gap-2 min-w-[280px]"
                                 >
                                     Començar Diagnòstic <ArrowRight size={24} />
@@ -165,6 +166,7 @@ export default function Landing() {
                     </h2>
                     <button
                         onClick={() => navigate('/diagnosis')}
+                        onMouseEnter={() => import('../pages/Diagnosis')}
                         className="px-10 py-5 bg-white text-gray-900 text-xl font-bold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                     >
                         Fes el test d'envelliment
