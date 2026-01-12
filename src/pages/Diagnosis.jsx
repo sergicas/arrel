@@ -94,56 +94,63 @@ const Diagnosis = () => {
     };
 
     const [answers, setAnswers] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
 
     const handleAnswer = (score, variable, answerIndex) => {
-        const newScores = { ...scores, [variable]: (scores[variable] || 0) + score };
-        setScores(newScores);
+        setSelectedOption(answerIndex);
 
-        const newAnswers = [...answers, answerIndex];
-        setAnswers(newAnswers);
+        // DELAY FOR VISUAL FEEDBACK
+        setTimeout(() => {
+            const newScores = { ...scores, [variable]: (scores[variable] || 0) + score };
+            setScores(newScores);
 
-        // AUTO-SAVE PROGRESS
-        if (currentIndex < diagnosisQuestions.length - 1) {
-            const nextIndex = currentIndex + 1;
-            setCurrentIndex(nextIndex);
+            const newAnswers = [...answers, answerIndex];
+            setAnswers(newAnswers);
 
-            localStorage.setItem('arrel_quiz_progress', JSON.stringify({
-                currentIndex: nextIndex,
-                scores: newScores,
-                answers: newAnswers,
-                timestamp: Date.now()
-            }));
+            // AUTO-SAVE PROGRESS
+            if (currentIndex < diagnosisQuestions.length - 1) {
+                const nextIndex = currentIndex + 1;
+                setCurrentIndex(nextIndex);
 
-        } else {
-            // FINISHED QUIZ
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#a855f7', '#ec4899', '#3b82f6']
-            });
-            localStorage.removeItem('arrel_quiz_progress'); // Clear partial progress
-            setStep('calculating');
+                localStorage.setItem('arrel_quiz_progress', JSON.stringify({
+                    currentIndex: nextIndex,
+                    scores: newScores,
+                    answers: newAnswers,
+                    timestamp: Date.now()
+                }));
 
-            // Artificial delay for "calculation" effect
-            setTimeout(() => {
-                saveResults(newScores);
-                localStorage.setItem('arrel_diagnosis_answers', JSON.stringify(newAnswers));
-                // New Logic: Store basic history for local usage if needed
-                const nouDiagnostic = {
-                    id: Date.now(),
-                    data: new Date().toISOString(),
-                    respostes: newAnswers
-                };
-                const historicGuardat = localStorage.getItem('arrel_historic');
-                const historic = historicGuardat ? JSON.parse(historicGuardat) : [];
-                historic.push(nouDiagnostic);
-                localStorage.setItem('arrel_historic', JSON.stringify(historic));
-                localStorage.setItem('arrel_respostes', JSON.stringify(newAnswers));
+            } else {
+                // FINISHED QUIZ
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#a855f7', '#ec4899', '#3b82f6']
+                });
+                localStorage.removeItem('arrel_quiz_progress'); // Clear partial progress
+                setStep('calculating');
 
-                navigate('/resultats');
-            }, 3000); // 3 seconds delay
-        }
+                // Artificial delay for "calculation" effect
+                setTimeout(() => {
+                    saveResults(newScores);
+                    localStorage.setItem('arrel_diagnosis_answers', JSON.stringify(newAnswers));
+                    // New Logic: Store basic history for local usage if needed
+                    const nouDiagnostic = {
+                        id: Date.now(),
+                        data: new Date().toISOString(),
+                        respostes: newAnswers
+                    };
+                    const historicGuardat = localStorage.getItem('arrel_historic');
+                    const historic = historicGuardat ? JSON.parse(historicGuardat) : [];
+                    historic.push(nouDiagnostic);
+                    localStorage.setItem('arrel_historic', JSON.stringify(historic));
+                    localStorage.setItem('arrel_respostes', JSON.stringify(newAnswers));
+
+                    navigate('/resultats');
+                }, 3000); // 3 seconds delay
+            }
+            setSelectedOption(null);
+        }, 350);
     };
 
     const handleBack = () => {
@@ -283,12 +290,26 @@ const Diagnosis = () => {
                                 <button
                                     key={idx}
                                     onClick={() => handleAnswer(option.score, currentQuestion.variable, idx)}
-                                    className="group flex items-center p-5 rounded-lg border-2 border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-purple-200 text-left transition-all duration-200 active:scale-[0.99]"
+                                    disabled={selectedOption !== null}
+                                    className={`group flex items-center p-5 rounded-xl border-2 text-left transition-all duration-200 active:scale-[0.98]
+                                        ${selectedOption === idx
+                                            ? 'border-purple-600 bg-purple-50 ring-4 ring-purple-100 shadow-lg z-10'
+                                            : 'border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-purple-200 opacity-100'
+                                        }
+                                        ${selectedOption !== null && selectedOption !== idx ? 'opacity-50 blur-[0.5px]' : ''}
+                                    `}
                                 >
-                                    <span className="flex items-center justify-center w-6 h-6 mr-4 text-xs font-bold text-gray-400 border border-gray-200 rounded group-hover:border-purple-300 group-hover:text-purple-600 bg-gray-50 group-hover:bg-purple-50 transition-colors">
-                                        {idx + 1}
+                                    <span className={`flex items-center justify-center w-8 h-8 mr-4 text-sm font-bold border rounded-lg transition-colors
+                                        ${selectedOption === idx
+                                            ? 'bg-purple-600 border-purple-600 text-white'
+                                            : 'text-gray-400 border-gray-200 bg-gray-50 group-hover:bg-purple-50 group-hover:border-purple-300 group-hover:text-purple-600'
+                                        }
+                                    `}>
+                                        {['A', 'B', 'C', 'D'][idx]}
                                     </span>
-                                    <span className="flex-1 font-medium text-[15px] text-gray-700 group-hover:text-gray-900 transition-colors">
+                                    <span className={`flex-1 font-medium text-lg transition-colors
+                                        ${selectedOption === idx ? 'text-purple-900' : 'text-gray-700 group-hover:text-gray-900'}
+                                    `}>
                                         {option.label}
                                     </span>
                                 </button>
