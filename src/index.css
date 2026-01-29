@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* 
   ARREL - V3 VISUAL SYSTEM 
@@ -7,30 +7,43 @@
 
 :root {
   /* --- PALETA BASE (CLINICAL DARK) --- */
-  --bg-void: #050505;       /* Fons principal (Pàgina) */
-  --bg-surface: #0F0F10;    /* Targetes / Panells */
-  --bg-elevated: #1A1A1C;   /* Elements flotants / Modals */
-  --bg-highlight: #2A2A2E;  /* Hovers / Inputs */
+  --bg-void: #050505;
+  /* Fons principal (Pàgina) */
+  --bg-surface: #0f0f10;
+  /* Targetes / Panells */
+  --bg-elevated: #1a1a1c;
+  /* Elements flotants / Modals */
+  --bg-highlight: #2a2a2e;
+  /* Hovers / Inputs */
 
   /* --- TIPOGRAFIA --- */
-  --text-primary: #F2F2F5;   /* Títols, Text principal */
-  --text-secondary: #A0A0A5; /* Subtítols, icones no actives */
-  --text-tertiary: #52525A;  /* Detalls, placeholders */
-  --text-inverse: #000000;   /* Text sobre botons clars */
+  --text-primary: #f2f2f5;
+  /* Títols, Text principal */
+  --text-secondary: #a0a0a5;
+  /* Subtítols, icones no actives */
+  --text-tertiary: #71717a;
+  /* Detalls, placeholders - Optimized for >4.5:1 on black */
+  --text-inverse: #000000;
+  /* Text sobre botons clars */
 
   /* --- ACCENTS (DATA VIZ & ACTIONS) --- */
-  --accent-primary: #33FF57;      /* Acció Principal (Green) */
+  --accent-primary: #33ff57;
+  /* Acció Principal (Green) */
   --accent-primary-dim: rgba(51, 255, 87, 0.15);
 
-  --accent-blue: #3B82F6;         /* Informació / Mental */
-  --accent-purple: #A855F7;       /* Identitat / Espiritual */
-  --accent-orange: #F97316;       /* Energia */
-  --accent-red: #EF4444;          /* Alerta / Error */
+  --accent-blue: #3b82f6;
+  /* Informació / Mental */
+  --accent-purple: #9333ea;
+  /* Identitat / Espiritual - Darkened to Purple-600 for white text AA */
+  --accent-orange: #f97316;
+  /* Energia */
+  --accent-red: #ef4444;
+  /* Alerta / Error */
 
   /* --- BORDERS --- */
-  --border-subtle: #1F1F22;
+  --border-subtle: #1f1f22;
   --border-strong: #333336;
-  --border-focus: #55555A;
+  --border-focus: #55555a;
 
   /* --- METRICS --- */
   --app-max-width: 480px;
@@ -42,6 +55,19 @@
   /* --- FONTS --- */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+/* LIGHT THEME OVERRIDES (Marketing Pages) */
+.light-theme {
+  --bg-void: #ffffff;
+  --bg-surface: #f9fafb;
+  --bg-elevated: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #ffffff;
+  --border-subtle: #e5e7eb;
+  --border-strong: #d1d5db;
 }
 
 @layer base {
@@ -70,10 +96,21 @@
   * {
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* ACCESSIBILITY: VISIBLE FOCUS */
+  :focus-visible {
+    outline: 2px solid var(--accent-purple);
+    outline-offset: 2px;
+  }
+
+  /* High Contrast Text Utils if needed */
+  .text-subtle {
+    color: #4b5563;
+    /* Gray-600 for WCAG AA on white */
+  }
 }
 
 @layer components {
-
   /* CARD STYLES */
   .card {
     background-color: var(--bg-elevated);
@@ -81,7 +118,9 @@
     border-radius: 12px;
     /* Somewhat sharp */
     padding: 1.5rem;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .card:active {
@@ -132,9 +171,17 @@
   }
 
   @keyframes shimmer {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   .animate-text-shimmer {
@@ -147,6 +194,7 @@
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -156,10 +204,18 @@
   .animate-slide-up-fade {
     animation: slideUpFade 0.8s ease-out forwards;
   }
-  
-  .delay-100 { animation-delay: 100ms; }
-  .delay-200 { animation-delay: 200ms; }
-  .delay-300 { animation-delay: 300ms; }
+
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
+  }
 
   /* INPUTS */
   .input-field {

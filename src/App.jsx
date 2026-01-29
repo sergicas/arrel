@@ -5,8 +5,10 @@ import PublicLayout from './layout/PublicLayout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import BrandLoader from './components/BrandLoader';
 import SkeletonDashboard from './components/SkeletonDashboard';
+import SkeletonPage from './components/SkeletonPage';
 import PageTransition from './components/PageTransition';
 import { AnimatePresence } from 'framer-motion';
+import ProtocolErrorBoundary from './components/ProtocolErrorBoundary';
 
 // Lazy Load Pages
 const Landing = lazy(() => import('./pages/Landing'));
@@ -27,6 +29,7 @@ const Social = lazy(() => import('./pages/Social'));
 const Intellectual = lazy(() => import('./pages/Intellectual'));
 const Login = lazy(() => import('./pages/Login'));
 const Legal = lazy(() => import('./pages/Legal'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Protected Route Wrapper
 const PrivateRoute = ({ children }) => {
@@ -55,147 +58,244 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Public Routes with Layout */}
-        <Route element={<PageTransition><PublicLayout /></PageTransition>}>
-          <Route path="/" element={
-            <Suspense fallback={<BrandLoader text="Carregant Inici..." />}>
-              <Landing />
-            </Suspense>
-          } />
-          <Route path="/com-funciona" element={
-            <Suspense fallback={<BrandLoader />}>
-              <ComFunciona />
-            </Suspense>
-          } />
-          <Route path="/ciencia" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Ciencia />
-            </Suspense>
-          } />
-          <Route path="/manifest" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Manifest />
-            </Suspense>
-          } />
-          <Route path="/recursos" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Recursos />
-            </Suspense>
-          } />
+        <Route
+          element={
+            <PageTransition>
+              <PublicLayout />
+            </PageTransition>
+          }
+        >
+          <Route
+            path="/"
+            element={
+              <Suspense fallback={<BrandLoader text="Carregant Inici..." />}>
+                <Landing />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/com-funciona"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <ComFunciona />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/ciencia"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Ciencia />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/manifest"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Manifest />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/recursos"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Recursos />
+              </Suspense>
+            }
+          />
 
           {/* Legal Routes */}
-          <Route path="/privacitat" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Legal section="privacitat" />
-            </Suspense>
-          } />
-          <Route path="/termes" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Legal section="termes" />
-            </Suspense>
-          } />
-          <Route path="/cookies" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Legal section="cookies" />
-            </Suspense>
-          } />
-          <Route path="/contacte" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Legal section="contacte" />
-            </Suspense>
-          } />
+          <Route
+            path="/privacitat"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Legal section="privacitat" />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/termes"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Legal section="termes" />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/cookies"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Legal section="cookies" />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/contacte"
+            element={
+              <Suspense fallback={<BrandLoader />}>
+                <Legal section="contacte" />
+              </Suspense>
+            }
+          />
         </Route>
 
         {/* Standalone Public Routes */}
-        <Route path="/diagnosis" element={
-          <PageTransition>
-            <Suspense fallback={<BrandLoader text="Preparant diagnòstic..." />}>
-              <Diagnosis />
-            </Suspense>
-          </PageTransition>
-        } />
-        <Route path="/resultats" element={
-          <PageTransition>
-            <Suspense fallback={<BrandLoader text="Calculant resultats..." />}>
-              <Resultats />
-            </Suspense>
-          </PageTransition>
-        } />
-        <Route path="/login" element={
-          <PageTransition>
-            <Suspense fallback={<BrandLoader />}>
-              <Login />
-            </Suspense>
-          </PageTransition>
-        } />
+        <Route
+          path="/diagnosis"
+          element={
+            <PageTransition>
+              <Suspense fallback={<BrandLoader text="Preparant diagnòstic..." />}>
+                <Diagnosis />
+              </Suspense>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/resultats"
+          element={
+            <PageTransition>
+              <Suspense fallback={<BrandLoader text="Calculant resultats..." />}>
+                <Resultats />
+              </Suspense>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PageTransition>
+              <Suspense fallback={<BrandLoader />}>
+                <Login />
+              </Suspense>
+            </PageTransition>
+          }
+        />
 
         {/* Protected Routes */}
-        <Route path="/historic" element={
-          <PrivateRoute>
-            <Suspense fallback={<BrandLoader />}>
-              <Historic />
-            </Suspense>
-          </PrivateRoute>
-        } />
+        <Route
+          path="/historic"
+          element={
+            <PrivateRoute>
+              <PageTransition>
+                <Suspense fallback={<BrandLoader />}>
+                  <Historic />
+                </Suspense>
+              </PageTransition>
+            </PrivateRoute>
+          }
+        />
         {/* Dynamic Day Route - Replaces static ProtocolDia2 */}
-        <Route path="/dia/:day" element={
-          <PrivateRoute>
-            <Suspense fallback={<BrandLoader />}>
-              <DiaCheckIn />
-            </Suspense>
-          </PrivateRoute>
-        } />
+        <Route
+          path="/dia/:day"
+          element={
+            <PrivateRoute>
+              <PageTransition>
+                <Suspense fallback={<BrandLoader />}>
+                  <DiaCheckIn />
+                </Suspense>
+              </PageTransition>
+            </PrivateRoute>
+          }
+        />
 
         {/* Protected Layout Routes */}
-        <Route element={<PrivateRoute><PageTransition><Layout /></PageTransition></PrivateRoute>}>
-          <Route path="/dashboard" element={
-            <Suspense fallback={<SkeletonDashboard />}>
-              <Dashboard />
-            </Suspense>
-          } />
-          <Route path="/protocol" element={
-            <Suspense fallback={<BrandLoader />}>
-              <DailyProtocol />
-            </Suspense>
-          } />
-          <Route path="/physical" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Physical />
-            </Suspense>
-          } />
-          <Route path="/mental" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Mental />
-            </Suspense>
-          } />
-          <Route path="/emotional" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Emotional />
-            </Suspense>
-          } />
-          <Route path="/social" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Social />
-            </Suspense>
-          } />
-          <Route path="/intellectual" element={
-            <Suspense fallback={<BrandLoader />}>
-              <Intellectual />
-            </Suspense>
-          } />
+        <Route
+          element={
+            <PrivateRoute>
+              <PageTransition>
+                <Layout />
+              </PageTransition>
+            </PrivateRoute>
+          }
+        >
+          <Route
+            path="/dashboard"
+            element={
+              <Suspense fallback={<SkeletonDashboard />}>
+                <Dashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/protocol"
+            element={
+              <ProtocolErrorBoundary>
+                <Suspense fallback={<SkeletonPage />}>
+                  <DailyProtocol />
+                </Suspense>
+              </ProtocolErrorBoundary>
+            }
+          />
+
+          <Route
+            path="/physical"
+            element={
+              <Suspense fallback={<SkeletonPage />}>
+                <Physical />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/mental"
+            element={
+              <Suspense fallback={<SkeletonPage />}>
+                <Mental />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/emotional"
+            element={
+              <Suspense fallback={<SkeletonPage />}>
+                <Emotional />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/social"
+            element={
+              <Suspense fallback={<SkeletonPage />}>
+                <Social />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/intellectual"
+            element={
+              <Suspense fallback={<SkeletonPage />}>
+                <Intellectual />
+              </Suspense>
+            }
+          />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );
 };
 
+import { ArrelProvider } from './context/ArrelContext';
+import InstallPrompt from './components/InstallPrompt';
+import ErrorBoundary from './components/ErrorBoundary';
+
+import { ToastProvider } from './context/ToastContext';
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AnimatedRoutes />
-      </Router>
+      <ToastProvider>
+        <ArrelProvider>
+          <Router>
+            <ErrorBoundary>
+              <AnimatedRoutes />
+            </ErrorBoundary>
+            <InstallPrompt />
+          </Router>
+        </ArrelProvider>
+      </ToastProvider>
     </AuthProvider>
   );
 }

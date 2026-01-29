@@ -1,32 +1,40 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Arrel | Longevity Science</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Arrel | Longevity Science</title>
+    <!-- PWA / Mobile Optimization -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <!-- PWA / Mobile Optimization -->
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#050505" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Font Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Font Optimization -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet" />
+    <!-- Critical Resource Preload -->
+    <link rel="preload" as="image" href="/vite.svg" />
+    <!-- <link rel="preload" as="image" href="/hero-image.webp" /> Un-comment if used as LCP hero -->
 
-  <!-- Supabase Preconnect (Optional: Replace with your project URL for faster auth) -->
-  <!-- <link rel="preconnect" href="https://PROJECT_ID.supabase.co" /> -->
-</head>
+    <!-- Supabase Preconnect -->
+    <link rel="preconnect" href="https://api.arrel.eu" />
+    <link rel="preconnect" href="https://*.supabase.co" />
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+    <!-- Critical Route Prefetch -->
+    <link rel="prefetch" href="/dashboard" />
+    <link rel="prefetch" href="/protocol" />
+  </head>
 
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /protocol
+Disallow: /api/
+
+Sitemap: https://arrel.eu/sitemap.xml

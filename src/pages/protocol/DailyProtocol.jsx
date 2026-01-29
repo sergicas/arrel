@@ -1,354 +1,607 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
 import { week1Protocol } from '../../data/protocolData'; // Needed for Day 1 fallback
 import { protocolData } from '../../data/protocolData';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Clock, Zap } from 'lucide-react';
 import MicroTimer from '../../components/MicroTimer';
+import { secureStorage } from '../../lib/secureStorage';
+import { useToast } from '../../context/ToastContext';
+
+import PaywallModal from '../../components/PaywallModal';
 
 const DailyProtocol = () => {
-    const navigate = useNavigate();
-    const { user, isGuest } = useAuth();
-    const [dayData, setDayData] = useState(null);
-    const [mode, setMode] = useState('loading'); // loading, intro, questions, observation, closing
+  const navigate = useNavigate();
+  const { user, isGuest } = useAuth();
+  const [dayData, setDayData] = useState(null);
+  const [mode, setMode] = useState('loading'); // loading, intro, questions, observation, closing
+  const [currentDay, setCurrentDay] = useState(1);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false); // New State
+  const [error] = useState(null);
+  const { showToast } = useToast();
 
-    // Question Mode State
-    const [currentBatchIndex, setCurrentBatchIndex] = useState(0);
-    const [answers, setAnswers] = useState({});
+  // Mock Premium Status (For now, assume false for testing)
+  const isPremium = false;
 
-    // Load Protocol Data from DB
-    useEffect(() => {
-        if (!user && !isGuest) return;
+  // Question Mode State
+  const [currentBatchIndex, setCurrentBatchIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
 
-        const fetchState = async () => {
-            try {
-                let currentDay = 1;
+  // Load Protocol Data
+  useEffect(() => {
+    let mounted = true;
 
-                if (user) {
-                    // 1. Authenticated: Fetch from Supabase
-                    const { data, error } = await supabase
-                        .from('user_state')
-                        .select('current_day')
-                        .eq('user_id', user.id)
-                        .maybeSingle();
+    // Timeout Safety
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-                    if (error) {
-                        console.error('Error fetching state:', error);
-                    } else if (data) {
-                        currentDay = data.current_day || 1;
-                    }
-                } else {
-                    // 2. Guest: Default to Day 1 (or read local state if we want to support progression later)
-                    // For now, Guest = Day 1
-                    const guestDay = localStorage.getItem('arrel_guest_day');
-                    currentDay = guestDay ? parseInt(guestDay) : 1;
-                }
+    const fetchState = async () => {
+      try {
+        let day = 1;
 
-                // 2. Load Content based on Day
-                if (currentDay === 1) {
-                    // Day 1: Fallback (usually Diagnosis, but if logic allows, standard tasks)
-                    const storedPlan = localStorage.getItem('arrel_day1_plan');
-                    setDayData(storedPlan ? JSON.parse(storedPlan) : week1Protocol[0]);
-                    setMode('tasks');
-                } else {
-                    // Protocol 0 Days 2-7
-                    const protoDay = protocolData.find(d => d.day === currentDay);
-                    if (protoDay) {
-                        setDayData(protoDay);
-                        setMode(protoDay.intro ? 'intro' : 'questions');
-                    } else {
-                        // Fallback/Placeholder
-                        setDayData({ title: "FI DEL CICLE", message: "Propera versió disponible aviat." });
-                        setMode('closing');
-                    }
-                }
+        if (user) {
+          const { data, error } = await supabase
+            .from('user_state')
+            .select('current_day')
+            .eq('user_id', user.id)
+            .maybeSingle()
+            .abortSignal(controller.signal);
 
-            } catch (err) {
-                console.error("Protocol Load Error:", err);
+          if (error) throw error;
+          if (data) day = data.current_day || 1;
+        } else {
+          const guestDay = secureStorage.getItem('arrel_guest_day');
+          day = guestDay || 1;
+        }
+
+        if (!mounted) return;
+        setCurrentDay(day);
+
+        // PAYWALL LOGIC: Check if user needs to upgrade
+        if (day > 28 && !isPremium) {
+          setShowPaywall(true);
+          // Specific logic to show "preview" or just lock entirely?
+          // For now, we load data but overlay Paywall
+        }
+
+        // Load Content
+        if (day === 1) {
+          const storedPlan = secureStorage.getItem('arrel_day1_plan');
+          setDayData(storedPlan || week1Protocol[0]);
+          setMode('tasks');
+        } else {
+          const protoDay = protocolData.find((d) => d.day === day);
+          if (protoDay) {
+            setDayData(protoDay);
+            if (protoDay.tasks && protoDay.tasks.length > 0) {
+              setMode('tasks');
+            } else {
+              setMode(protoDay.intro ? 'intro' : 'questions');
             }
-        };
-
-        fetchState();
-    }, [user, isGuest]);
-
-    const handleAnswer = (questionId, option) => {
-        setAnswers({ ...answers, [questionId]: option });
-        if (currentBatchIndex < dayData.questions.length - 1) {
-            setCurrentBatchIndex(currentBatchIndex + 1);
-        } else {
-            setMode('observation'); // Go to micro-observation after questions
-        }
-    };
-
-    if (!dayData) return <div className="p-20 text-center text-secondary font-mono text-sm tracking-widest uppercase">Inicialitzant Sistema...</div>;
-
-    // --- MODE: INTRO ---
-    if (mode === 'intro') {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-void text-center animate-enter">
-                <div className="max-w-md">
-                    <p className="text-2xl font-medium text-primary mb-8 leading-snug whitespace-pre-line">
-                        {dayData.intro}
-                    </p>
-                    <button
-                        onClick={() => setMode('questions')}
-                        className="btn btn-primary w-full uppercase tracking-widest text-xs font-bold"
-                    >
-                        Començar
-                    </button>
-                    <button onClick={() => navigate('/dashboard')} className="mt-8 text-tertiary text-[10px] uppercase tracking-widest">
-                        Tornar
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    // --- MODE: QUESTIONS ---
-    if (mode === 'questions' && dayData.questions) {
-        const question = dayData.questions[currentBatchIndex];
-        const progress = ((currentBatchIndex + 1) / dayData.questions.length) * 100;
-
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-void animate-enter">
-                <div className="w-full max-w-xl">
-                    <div className="mb-12">
-                        <div className="flex justify-between items-baseline mb-4">
-                            <span className="text-xs font-mono text-accent uppercase tracking-widest">
-                                {dayData.title}
-                            </span>
-                            <span className="text-[10px] font-mono text-tertiary">
-                                {currentBatchIndex + 1} / {dayData.questions.length}
-                            </span>
-                        </div>
-                        <div className="h-0.5 w-full bg-border relative overflow-hidden">
-                            <div className="absolute top-0 left-0 h-full bg-primary transition-all duration-300 ease-out" style={{ width: `${progress}%` }}></div>
-                        </div>
-                    </div>
-
-                    <h2 className="text-2xl font-medium leading-snug text-primary mb-10 tracking-tight">
-                        {question.text}
-                    </h2>
-
-                    <div className="grid gap-3">
-                        {question.options.map((opt, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => handleAnswer(question.id, opt)}
-                                className="p-5 rounded-lg border border-border bg-surface hover:border-primary hover:bg-elevated text-left transition-all duration-200"
-                            >
-                                <span className="font-medium text-[15px] text-secondary hover:text-primary">
-                                    {opt}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // --- MODE: OBSERVATION ---
-    if (mode === 'observation') {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center text-center bg-void animate-enter p-6">
-                <p className="text-xl text-primary font-medium whitespace-pre-line mb-8 leading-relaxed">
-                    {dayData.micro_observation.text}
-                </p>
-                <MicroTimer
-                    duration={dayData.micro_observation.duration}
-                    onComplete={() => setMode('closing')}
-                />
-            </div>
-        );
-    }
-
-    // --- MODE: CLOSING ---
-    if (mode === 'closing') {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-void text-center animate-enter">
-                <div className="max-w-md">
-                    <h2 className="text-2xl font-medium text-primary mb-8 tracking-tight leading-snug">
-                        {dayData.closing.text}
-                    </h2>
-                    <div className="h-px w-12 bg-accent mx-auto mb-8"></div>
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="btn btn-primary w-full uppercase tracking-widest text-xs font-bold"
-                    >
-                        Demà, continuem
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    // --- MODE: TASKS (Day 1 - Interactive) ---
-    // State for local task completion
-    const [completedTasks, setCompletedTasks] = useState([]);
-
-    // Load completed tasks from local storage on mount
-    useEffect(() => {
-        const saved = localStorage.getItem('arrel_day1_progress');
-        if (saved) {
-            setCompletedTasks(JSON.parse(saved));
-        }
-    }, []);
-
-    const toggleTask = (index) => {
-        const newCompleted = [...completedTasks];
-        if (newCompleted.includes(index)) {
-            // Remove if already completed
-            const i = newCompleted.indexOf(index);
-            newCompleted.splice(i, 1);
-        } else {
-            // Add if not completed
-            newCompleted.push(index);
-        }
-        setCompletedTasks(newCompleted);
-        localStorage.setItem('arrel_day1_progress', JSON.stringify(newCompleted));
-
-        // Haptic feedback (if available) or small sound could go here
-    };
-
-    const handleCompleteDay = async () => {
-        // 1. Celebration
-        import('canvas-confetti').then((confetti) => {
-            confetti.default({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#A855F7', '#3B82F6', '#EC4899']
+          } else {
+            setDayData({
+              title: 'FI DEL CICLE',
+              message: 'Propera versió disponible aviat.',
+              tasks: [],
+              closing: {
+                text: 'Has completat la primera setmana! Aviat hi haurà més contingut disponible.',
+              },
             });
-        });
-
-        // 2. Save Progress (Advance Day)
-        const nextDay = 2; // Hardcoded for Day 1 -> Day 2 transition logic
-
-        if (user && !isGuest) {
-            await supabase.from('user_state').update({ current_day: nextDay }).eq('user_id', user.id);
+            setMode('closing');
+          }
         }
+        clearTimeout(timeoutId);
+      } catch (err) {
+        console.error('Protocol Load Error (handled):', err);
 
-        // Always update local for immediate feedback/guest
-        localStorage.setItem('arrel_guest_day', nextDay.toString());
+        // FAIL-OPEN STRATEGY: Fallback to local data or default
+        // This ensures the app remains usable even if Supabase/Network fails
+        if (mounted) {
+          const fallbackDay = Number(secureStorage.getItem('arrel_guest_day')) || 1;
+          setCurrentDay(fallbackDay);
+          showToast('Mode Offline: Dades locals carregades.', 'success'); // Using success/neutral to avoid alarm
 
-        // 3. UI Feedback & Transition
-        setTimeout(() => {
-            alert("Enhorabona! Has completat el primer dia del protocol."); // Replace with a nicer modal if time permits, but basic feedback essential
-            // Force clear local state for testing or next day
-            setCompletedTasks([]);
-            localStorage.removeItem('arrel_day1_progress');
-
-            // Reload or re-fetch to trigger "UseEffect" and switch to Day 2 content
-            window.location.reload();
-        }, 1500);
+          // Load Content for Fallback Day
+          if (fallbackDay === 1) {
+            const storedPlan = secureStorage.getItem('arrel_day1_plan');
+            setDayData(storedPlan || week1Protocol[0]);
+            setMode('tasks');
+          } else {
+            const protoDay = protocolData.find((d) => d.day === fallbackDay);
+            if (protoDay) {
+              setDayData(protoDay);
+              if (protoDay.tasks && protoDay.tasks.length > 0) {
+                setMode('tasks');
+              } else {
+                setMode(protoDay.intro ? 'intro' : 'questions');
+              }
+            } else {
+              setDayData({
+                title: 'FI DEL CICLE',
+                message: 'Protocol completat.',
+                tasks: [],
+                closing: {
+                  text: 'Has completat tot el protocol disponible en mode offline.',
+                },
+              });
+              setMode('closing');
+            }
+          }
+        }
+      } finally {
+        clearTimeout(timeoutId);
+      }
     };
+    fetchState();
 
-    if (mode === 'tasks') {
-        const allTasksCompleted = dayData.tasks && completedTasks.length === dayData.tasks.length;
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [user, isGuest, isPremium, showToast]);
 
-        return (
-            <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex flex-col items-center pt-12 pb-20 px-6 animate-enter">
-
-                {/* Header Section */}
-                <div className="text-center max-w-lg mb-16 relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-purple-200/50 rounded-full blur-[50px] pointer-events-none"></div>
-
-                    <div className="flex items-center justify-center gap-4 mb-6">
-                        <span className="relative inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-purple-100 text-purple-900 text-[10px] font-bold tracking-widest uppercase shadow-sm backdrop-blur-sm">
-                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
-                            Dia 001
-                        </span>
-                        {/* Streak Badge (Mock for now, easy to implement real logic later) */}
-                        <span className="relative inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 border border-orange-200 text-orange-700 text-[10px] font-bold tracking-widest uppercase shadow-sm">
-                            🔥 Ratxa: 1
-                        </span>
-                    </div>
-
-                    <h1 className="relative text-4xl md:text-5xl font-medium text-gray-900 mb-6 tracking-tight leading-tight">
-                        {dayData.title}
-                    </h1>
-
-                    <p className="relative text-base text-gray-600 leading-relaxed text-balance">
-                        {dayData.message}
-                    </p>
-                </div>
-
-                {/* Tasks Cards */}
-                <div className="w-full max-w-xl space-y-4 relative z-10 transition-all">
-                    {dayData.tasks && dayData.tasks.map((task, index) => {
-                        const isCompleted = completedTasks.includes(index);
-                        return (
-                            <div
-                                key={index}
-                                onClick={() => toggleTask(index)}
-                                className={`
-                                    relative border rounded-2xl p-6 shadow-sm transition-all duration-300 flex gap-6 items-start group cursor-pointer select-none
-                                    ${isCompleted
-                                        ? 'bg-purple-50/80 border-purple-200 shadow-inner opacity-75'
-                                        : 'bg-white/60 backdrop-blur-xl border-white/60 hover:shadow-lg hover:bg-white/80 hover:-translate-y-0.5'
-                                    }
-                                `}
-                            >
-                                {/* Checkbox / Number */}
-                                <div className={`
-                                    flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-sm transition-all duration-500
-                                    ${isCompleted
-                                        ? 'bg-green-500 text-white scale-110'
-                                        : 'bg-gray-900 text-white'
-                                    }
-                                `}>
-                                    {isCompleted ? <Check size={16} strokeWidth={4} /> : index + 1}
-                                </div>
-
-                                <div className="flex-1">
-                                    <h3 className={`text-lg font-bold mb-2 leading-tight transition-all duration-300 ${isCompleted ? 'text-purple-900 line-through decoration-purple-300' : 'text-gray-900'}`}>
-                                        {task.action}
-                                    </h3>
-                                    <p className={`text-sm leading-relaxed transition-all duration-300 ${isCompleted ? 'text-purple-700/60' : 'text-gray-600'}`}>
-                                        {task.description}
-                                    </p>
-                                </div>
-
-                                {/* Status Indicator (Desktop visual aid) */}
-                                <div className={`absolute top-6 right-6 transition-all duration-300 ${isCompleted ? 'opacity-100' : 'opacity-0'}`}>
-                                    <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full uppercase tracking-wider">Fet</span>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Navigation / Completion Action */}
-                <div className="mt-16 text-center space-y-4">
-                    {allTasksCompleted ? (
-                        <button
-                            onClick={handleCompleteDay}
-                            className="px-10 py-4 rounded-full bg-gray-900 text-white hover:bg-black hover:scale-105 transition-all text-sm uppercase tracking-widest font-bold shadow-xl shadow-purple-500/20 animate-bounce-subtle"
-                        >
-                            Completar Dia 1
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => navigate('/dashboard')}
-                            className="px-6 py-3 rounded-full bg-transparent border border-gray-300 text-gray-400 hover:text-gray-600 hover:border-gray-400 transition-all text-xs uppercase tracking-widest font-bold flex items-center gap-2 mx-auto"
-                        >
-                            <ArrowLeft size={14} /> Tornar al Centre de Control
-                        </button>
-                    )}
-
-                    {!allTasksCompleted && (
-                        <p className="text-xs text-gray-400 uppercase tracking-widest animate-pulse">
-                            Completa totes les tasques per avançar
-                        </p>
-                    )}
-                </div>
+  // --- TIMELINE COMPONENT ---
+  const Timeline = () => (
+    <div className="w-full overflow-x-auto pb-4 mb-6 no-scrollbar">
+      <div className="flex items-center gap-4 px-2 min-w-max">
+        {Array.from({ length: 7 }, (_, i) => {
+          const startDay = Math.floor((currentDay - 1) / 7) * 7 + 1;
+          return startDay + i;
+        }).map((d) => {
+          const status = d < currentDay ? 'done' : d === currentDay ? 'active' : 'locked';
+          return (
+            <div
+              key={d}
+              className={`flex flex-col items-center gap-2 transition-all ${status === 'active' ? 'scale-110' : 'opacity-60'}`}
+            >
+              <div
+                className={`
+                                w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
+                                ${status === 'done' ? 'bg-green-500 border-green-500 text-white' : ''}
+                                ${status === 'active' ? 'bg-white border-purple-600 text-purple-600 shadow-lg shadow-purple-200' : ''}
+                                ${status === 'locked' ? 'bg-gray-100 border-gray-200 text-gray-400' : ''}
+                            `}
+              >
+                {status === 'done' ? (
+                  <Check size={16} />
+                ) : status === 'locked' ? (
+                  <span className="font-sans font-bold text-gray-400">
+                    {d}
+                  </span>
+                ) : (
+                  d
+                )}
+              </div>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                DIA {d}
+              </span>
             </div>
-        );
-    }
+          );
+        })}
+      </div>
+    </div>
+  );
 
-    return <div>Error: Mode desconegut</div>;
+  // --- NOTIFICATIONS LOGIC ---
+  const [notifsEnabled, setNotifsEnabled] = useState(Notification.permission === 'granted');
+  const enableNotifications = () => {
+    Notification.requestPermission().then((perm) => {
+      if (perm === 'granted') {
+        setNotifsEnabled(true);
+        new Notification('Arrel', {
+          body: 'Notificacions activades! Et recordarem les teves tasques.',
+        });
+      }
+    });
+  };
+
+  // --- LOGIC FOR QUESTIONS/OBSERVATION/CLOSING ---
+  const handleAnswer = (questionId, option) => {
+    setAnswers({ ...answers, [questionId]: option });
+    if (currentBatchIndex < (dayData.questions?.length || 0) - 1) {
+      setCurrentBatchIndex(currentBatchIndex + 1);
+    } else {
+      setMode('observation');
+    }
+  };
+
+  // --- LOGIC FOR TASKS (DAY 1) ---
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [earnedPoints, setEarnedPoints] = useState(0);
+
+  useEffect(() => {
+    if (!dayData?.day) return;
+    const storageKey = `arrel_day${dayData.day}_progress`;
+    const saved = secureStorage.getItem(storageKey) || [];
+    setCompletedTasks(saved);
+    // Calculate initial points
+    if (dayData?.tasks) {
+      const pts = saved.reduce((acc, idx) => acc + (dayData.tasks[idx]?.points || 0), 0);
+      setEarnedPoints(pts);
+    }
+  }, [dayData]);
+
+  const toggleTask = (index) => {
+    const newCompleted = [...completedTasks];
+    let newPoints = earnedPoints;
+    const taskPoints = dayData.tasks[index].points || 0;
+
+    if (newCompleted.includes(index)) {
+      newCompleted.splice(newCompleted.indexOf(index), 1);
+      newPoints -= taskPoints;
+    } else {
+      newCompleted.push(index);
+      newPoints += taskPoints;
+    }
+    setCompletedTasks(newCompleted);
+    setEarnedPoints(newPoints);
+    const storageKey = `arrel_day${dayData.day}_progress`;
+    secureStorage.setItem(storageKey, newCompleted);
+    if (newCompleted.length > completedTasks.length) {
+      showToast(
+        'Tasca completada! +' + (dayData.tasks[index].points || 0) + ' PTS',
+        'success',
+        2000
+      );
+    }
+  };
+
+  const handleCompleteDay = async () => {
+    setShowConfetti(true);
+    import('canvas-confetti').then((confetti) => {
+      confetti.default({
+        particleCount: 200,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#A855F7', '#FFD700', '#3B82F6'],
+      });
+    });
+
+    const nextDay = currentDay + 1;
+    if (user && !isGuest) {
+      await supabase.from('user_state').update({ current_day: nextDay }).eq('user_id', user.id);
+    }
+    secureStorage.setItem('arrel_guest_day', nextDay);
+    // Add Points to Global User Score could go here
+
+    // Delay for UI feedback
+    setTimeout(() => {
+      setCompletedTasks([]);
+      const storageKey = `arrel_day${currentDay}_progress`;
+      secureStorage.removeItem(storageKey);
+      window.location.reload();
+    }, 2500);
+  };
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <div className="text-red-500 mb-4 font-bold">⚠️ {error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-bold uppercase tracking-wider"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
+  if (!dayData)
+    return (
+      <div className="p-20 text-center uppercase tracking-widest text-xs animate-pulse">
+        Carregant Protocol...
+      </div>
+    );
+
+  // --- RENDER MODES ---
+
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: { duration: 0.5, ease: 'easeOut' },
+  };
+
+  const buttonHover = { scale: 1.02 };
+  const buttonTap = { scale: 0.98 };
+
+  // TASKS MODE (Day 1) - Light Theme
+  if (mode === 'tasks') {
+    const allTasksCompleted = dayData.tasks && completedTasks.length === dayData.tasks.length;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="w-full min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex flex-col pt-6 pb-24 px-6 relative"
+      >
+        {/* Notification Toast/Button */}
+        {!notifsEnabled && (
+          <motion.button
+            whileHover={buttonHover}
+            whileTap={buttonTap}
+            onClick={enableNotifications}
+            className="absolute top-6 right-6 p-2 bg-white rounded-full shadow-md text-gray-400 hover:text-purple-600 transition"
+            title="Activar Notificacions"
+          >
+            <Zap size={16} fill="currentColor" />
+          </motion.button>
+        )}
+
+        {/* Timeline */}
+        <Timeline />
+
+        {/* Header */}
+        <div className="text-center max-w-lg mx-auto mb-10 mt-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-purple-100 shadow-sm mb-4">
+            <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+            <span className="text-[10px] font-bold text-purple-900 uppercase tracking-widest">
+              Protocol Actiu · {earnedPoints} Punts
+            </span>
+          </div>
+          <h1 className="text-3xl font-medium text-gray-900 mb-4">{dayData.title}</h1>
+          <p className="text-sm text-gray-600 leading-relaxed">{dayData.message}</p>
+        </div>
+
+        {/* Tasks List */}
+        <div className="w-full max-w-xl mx-auto space-y-4 mb-20">
+          {dayData.tasks?.map((task, index) => {
+            const isCompleted = completedTasks.includes(index);
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => toggleTask(index)}
+                className={`
+                                relative p-5 rounded-2xl border transition-all duration-300 cursor-pointer flex gap-5 items-start select-none
+                                ${isCompleted ? 'bg-purple-50 border-purple-200 opacity-80' : 'bg-white border-white shadow-sm hover:shadow-md'}
+                            `}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.99 }}
+              >
+                <div
+                  className={`mt-1 w-6 h-6 rounded flex items-center justify-center border transition-colors ${isCompleted ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 bg-gray-50'}`}
+                >
+                  {isCompleted && <Check size={14} strokeWidth={3} />}
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h3
+                      className={`font-bold transition-colors ${isCompleted ? 'text-purple-900 line-through' : 'text-gray-900'}`}
+                    >
+                      {task.action}
+                    </h3>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded ${isCompleted ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}
+                    >
+                      +{task.points} PTS
+                    </span>
+                  </div>
+                  <p
+                    className={`text-sm mb-2 ${isCompleted ? 'text-purple-700/60' : 'text-gray-600'}`}
+                  >
+                    {task.description}
+                  </p>
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    <Clock size={12} /> {task.time || '2 min'}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Floating Bottom Bar (Completion) */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-200 p-4 pb-8 z-50">
+          <div className="max-w-xl mx-auto flex items-center justify-between gap-4">
+            <div className="text-xs font-medium text-gray-500">
+              {completedTasks.length}/{dayData.tasks?.length} Tasques
+            </div>
+            {allTasksCompleted ? (
+              <motion.button
+                whileHover={buttonHover}
+                whileTap={buttonTap}
+                onClick={handleCompleteDay}
+                className="flex-1 py-3 px-6 bg-gray-900 text-white rounded-xl font-bold uppercase tracking-wider shadow-lg shadow-purple-900/20 flex items-center justify-center gap-2"
+              >
+                Completar Dia <ArrowRight size={16} />
+              </motion.button>
+            ) : (
+              <motion.button
+                whileHover={buttonHover}
+                whileTap={buttonTap}
+                onClick={() => navigate('/dashboard')}
+                className="flex-1 py-3 px-6 bg-gray-100 text-gray-400 rounded-xl font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors"
+              >
+                Tornar
+              </motion.button>
+            )}
+          </div>
+        </div>
+
+        {/* Completion Modal / Overlay */}
+        {showConfetti && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-enter">
+            <div className="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-sm mx-4 transform scale-110 transition-transform">
+              <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl animate-bounce">
+                🏆
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Dia {currentDay} Completat!</h2>
+              <p className="text-gray-600 mb-6">
+                Has guanyat <span className="font-bold text-purple-600">{earnedPoints} Punts</span>{' '}
+                de longevitat.
+              </p>
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
+                <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[15%]"></div>
+              </div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                Nivell {Math.ceil(currentDay / 7)}: {currentDay <= 7 ? 'Novell' : currentDay <= 14 ? 'Aprenent' : currentDay <= 21 ? 'Expert' : 'Mestre'} ({Math.round((currentDay / 28) * 100)}%)
+              </div>
+            </div>
+          </div>
+        )}
+      </motion.div>
+    );
+  }
+
+  // PROTOCOL MODE (Days 2-7) - Dark Theme
+  // Shared Layout with AnimatePresence
+  return (
+    <div className="min-h-screen flex flex-col pt-6 bg-gray-900 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black text-white relative overflow-hidden">
+      {/* Dynamic Background Effect */}
+      <div className="absolute top-0 left-0 w-full h-96 bg-purple-500/10 blur-[100px] pointer-events-none rounded-full -translate-y-1/2"></div>
+
+      {/* PAYWALL OVERLAY */}
+      {showPaywall && <PaywallModal onGoBack={() => navigate('/dashboard')} />}
+
+      {['intro', 'questions'].includes(mode) && (
+        <div className="px-6 mb-8 z-10 relative">
+          <Timeline />
+        </div>
+      )}
+
+      <div className="flex-1 flex flex-col relative z-0">
+        <AnimatePresence mode="wait">
+          {mode === 'intro' && (
+            <motion.div
+              key="intro"
+              {...pageVariants}
+              className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto"
+            >
+              <h2 className="text-xs font-mono text-purple-400 uppercase tracking-[0.2em] mb-6 border border-purple-500/30 px-3 py-1 rounded-full bg-purple-500/10">
+                Dia {currentDay}: {dayData.title}
+              </h2>
+              <p className="text-3xl font-light text-white/90 mb-12 leading-normal whitespace-pre-line text-balance">
+                {dayData.intro}
+              </p>
+              <motion.button
+                whileHover={buttonHover}
+                whileTap={buttonTap}
+                onClick={() => setMode('questions')}
+                className="btn bg-white text-black w-full uppercase tracking-widest text-xs font-bold shadow-xl shadow-white/5 hover:bg-gray-100"
+              >
+                Començar Exploració
+              </motion.button>
+              <motion.button
+                whileHover={buttonHover}
+                whileTap={buttonTap}
+                onClick={() => navigate('/dashboard')}
+                className="mt-8 text-gray-500 text-[10px] uppercase tracking-widest hover:text-white transition-colors"
+              >
+                Tornar
+              </motion.button>
+            </motion.div>
+          )}
+
+          {mode === 'questions' && dayData.questions && (
+            <motion.div
+              key="questions"
+              {...pageVariants}
+              className="flex-1 flex flex-col items-center justify-center p-6 w-full max-w-xl mx-auto"
+            >
+              <div className="w-full mb-12">
+                <div className="flex justify-between items-baseline mb-2">
+                  <div className="text-xs font-bold text-purple-400">
+                    PREGUNTA {currentBatchIndex + 1}
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-mono">
+                    {dayData.questions.length} TOTAL
+                  </div>
+                </div>
+                <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-purple-500"
+                    initial={{ width: 0 }}
+                    animate={{
+                      width: `${((currentBatchIndex + 1) / dayData.questions.length) * 100}%`,
+                    }}
+                    transition={{ duration: 0.5 }}
+                  ></motion.div>
+                </div>
+              </div>
+              <h2 className="text-2xl text-white font-medium mb-10 w-full leading-snug">
+                {dayData.questions[currentBatchIndex].text}
+              </h2>
+              <div className="grid gap-3 w-full">
+                {dayData.questions[currentBatchIndex].options.map((opt, idx) => (
+                  <motion.button
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(50,50,50,1)' }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleAnswer(dayData.questions[currentBatchIndex].id, opt)}
+                    className="p-5 w-full text-left rounded-xl bg-gray-800/50 border border-gray-700/50 hover:border-purple-500/50 hover:bg-gray-800 transition-all text-gray-200 font-medium text-sm backdrop-blur-sm"
+                  >
+                    {opt}
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {mode === 'observation' && (
+            <motion.div
+              key="observation"
+              {...pageVariants}
+              className="flex-1 flex flex-col items-center justify-center p-6 text-center"
+            >
+              <p className="text-xl text-white font-medium whitespace-pre-line mb-12 leading-relaxed opacity-90">
+                {dayData.micro_observation.text}
+              </p>
+              <MicroTimer
+                duration={dayData.micro_observation.duration}
+                onComplete={() => setMode('closing')}
+              />
+            </motion.div>
+          )}
+
+          {mode === 'closing' && (
+            <motion.div
+              key="closing"
+              {...pageVariants}
+              className="flex-1 flex flex-col items-center justify-center p-8 text-center"
+            >
+              <div className="max-w-md">
+                <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-8 text-green-400">
+                  <Check size={32} />
+                </div>
+                <h2 className="text-2xl font-medium text-white mb-12 leading-relaxed">
+                  {dayData.closing.text}
+                </h2>
+                {dayData.title === 'FI DEL CICLE' ? (
+                  <motion.button
+                    whileHover={buttonHover}
+                    whileTap={buttonTap}
+                    onClick={() => navigate('/dashboard')}
+                    className="btn bg-white text-black w-full uppercase tracking-widest text-xs font-bold shadow-xl shadow-white/10 hover:bg-gray-100 py-4 rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <ArrowLeft size={16} /> Tornar al Dashboard
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    whileHover={buttonHover}
+                    whileTap={buttonTap}
+                    onClick={handleCompleteDay}
+                    className="btn bg-white text-black w-full uppercase tracking-widest text-xs font-bold shadow-xl shadow-white/10 hover:bg-gray-100 py-4 rounded-xl"
+                  >
+                    Completar Protocol
+                  </motion.button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
 };
 
 export default DailyProtocol;
