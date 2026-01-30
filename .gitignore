@@ -95,3 +95,6 @@ typings/
 
 # Vite build output
 dist/
+
+# Local Netlify folder
+.netlify

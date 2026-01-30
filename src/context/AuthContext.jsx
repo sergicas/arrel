@@ -132,7 +132,12 @@ export const AuthProvider = ({ children }) => {
   const value = {
     signUp: (data) => supabase.auth.signUp(data),
     signIn: (data) => supabase.auth.signInWithPassword(data),
-    signInWithOtp: (email) => supabase.auth.signInWithOtp({ email }),
+    signInWithOtp: (email) => supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    }),
     signOut: () => {
       setIsGuest(false);
       localStorage.removeItem('arrel_is_guest');
