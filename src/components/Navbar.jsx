@@ -43,13 +43,16 @@ export default function Navbar() {
                 {link.name}
               </NavLink>
             ))}
-            <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-purple-600 transition-colors">
-              Entrar
-            </Link>
           </div>
 
-          {/* CTA Button (Desktop) */}
-          <div className="hidden md:block">
+          {/* Buttons Group (Desktop) */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link
+              to="/login"
+              className="text-sm font-bold text-gray-900 hover:text-purple-600 px-4 py-2 rounded-full border border-gray-200 hover:border-purple-200 hover:bg-purple-50 transition-all"
+            >
+              Entrar
+            </Link>
             <button
               onClick={() => navigate('/diagnosis')}
               className="bg-gray-900 text-white px-5 py-3 rounded-full text-sm font-bold hover:bg-black transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
@@ -90,7 +93,14 @@ export default function Navbar() {
                 {link.name}
               </NavLink>
             ))}
-            <div className="pt-4 border-t border-gray-100">
+            <Link
+              to="/login"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-lg font-medium py-4 text-gray-900 border-t border-gray-100"
+            >
+              Entrar
+            </Link>
+            <div className="pt-4">
               <button
                 onClick={() => {
                   setIsMenuOpen(false);

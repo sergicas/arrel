@@ -30,6 +30,7 @@ const Intellectual = lazy(() => import('./pages/Intellectual'));
 const Login = lazy(() => import('./pages/Login'));
 const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const Profile = lazy(() => import('./pages/Profile'));
 
 // Protected Route Wrapper
 const PrivateRoute = ({ children }) => {
@@ -215,6 +216,14 @@ const AnimatedRoutes = () => {
             element={
               <Suspense fallback={<SkeletonDashboard />}>
                 <Dashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Suspense fallback={<BrandLoader text="Carregant perfil..." />}>
+                <Profile />
               </Suspense>
             }
           />

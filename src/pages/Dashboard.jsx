@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Award,
   Calendar,
+  User,
 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { useToast } from '../context/ToastContext';
@@ -205,15 +206,20 @@ const Dashboard = () => {
               <TrendingUp size={10} /> Ràtxa: {streak} Dies
             </span>
           </div>
-          <div className="text-3xl font-medium text-primary tracking-tight">
+          <button
+            onClick={() => navigate('/profile')}
+            className="text-3xl font-medium text-primary tracking-tight hover:text-purple-600 transition-colors flex items-center gap-2 group"
+          >
             Hola, {user ? user.email.split('@')[0] : 'Viatger'} 👋
-          </div>
+            <User size={20} className="opacity-0 group-hover:opacity-100 transition-opacity text-purple-500" />
+          </button>
         </div>
         <button
-          onClick={() => navigate('/')}
-          className="p-2 text-gray-300 hover:text-red-500 hover:bg-gray-50 rounded-lg transition-colors"
+          onClick={() => navigate('/profile')}
+          className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+          title="El meu perfil"
         >
-          <LogOut size={20} />
+          <User size={20} />
         </button>
       </header>
 

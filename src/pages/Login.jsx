@@ -21,7 +21,16 @@ const Login = () => {
     const { error } = await signInWithOtp(email);
 
     if (error) {
-      setMessage({ type: 'error', text: 'Error de connexió.' });
+      console.error('Error d\'autenticació:', error);
+      let errorText = 'Error de connexió.';
+
+      if (error.status === 500) {
+        errorText = 'Error intern del servidor. Si us plau, intenta-ho més tard.';
+      } else if (error.message) {
+        errorText = error.message;
+      }
+
+      setMessage({ type: 'error', text: errorText });
     } else {
       const text = mode === 'login'
         ? 'Enllaç d\'accés enviat. Revisa el teu correu.'
