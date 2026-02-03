@@ -31,6 +31,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Profile = lazy(() => import('./pages/Profile'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 
 // Protected Route Wrapper
 const PrivateRoute = ({ children }) => {
@@ -173,6 +174,14 @@ const AnimatedRoutes = () => {
             </PageTransition>
           }
         />
+        <Route
+          path="/auth/callback"
+          element={
+            <Suspense fallback={<BrandLoader text="Verificant sessió..." />}>
+              <AuthCallback />
+            </Suspense>
+          }
+        />
 
         {/* Protected Routes */}
         <Route
@@ -289,6 +298,7 @@ const AnimatedRoutes = () => {
 import { ArrelProvider } from './context/ArrelContext';
 import InstallPrompt from './components/InstallPrompt';
 import ErrorBoundary from './components/ErrorBoundary';
+import AuthRedirect from './components/AuthRedirect';
 
 import { ToastProvider } from './context/ToastContext';
 
@@ -299,6 +309,7 @@ function App() {
         <ArrelProvider>
           <Router>
             <ErrorBoundary>
+              <AuthRedirect />
               <AnimatedRoutes />
             </ErrorBoundary>
             <InstallPrompt />

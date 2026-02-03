@@ -11,6 +11,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isNewUser, setIsNewUser] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
   const [isGuest, setIsGuest] = useState(() => {
     return localStorage.getItem('arrel_is_guest') === 'true';
@@ -109,13 +111,28 @@ export const AuthProvider = ({ children }) => {
             .select('id')
             .eq('user_id', currentUser.id)
             .maybeSingle()
-            .then(({ data, error: selectError }) => {
+            .then(async ({ data, error: selectError }) => {
               if (selectError) {
                 console.error('[Arrel Auth] Error checking existing user_state:', selectError);
                 return;
               }
               if (!data) {
                 console.log('[Arrel Auth] New user detected, creating user_state...');
+                setIsNewUser(true);
+
+                // Check if user has completed diagnosis
+                const { data: diagData } = await supabase
+                  .from('diagnostics')
+                  .select('id')
+                  .eq('user_id', currentUser.id)
+                  .limit(1)
+                  .maybeSingle();
+
+                if (!diagData) {
+                  console.log('[Arrel Auth] New user needs onboarding (no diagnosis)');
+                  setNeedsOnboarding(true);
+                }
+
                 supabase.from('user_state').insert({
                   user_id: currentUser.id,
                   current_day: 1,
@@ -129,6 +146,8 @@ export const AuthProvider = ({ children }) => {
                 });
               } else {
                 console.log('[Arrel Auth] Existing user_state found');
+                setIsNewUser(false);
+                setNeedsOnboarding(false);
               }
             });
         }
@@ -148,24 +167,90 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('arrel_is_guest', 'true');
   };
 
+  const completeOnboarding = () => {
+    setNeedsOnboarding(false);
+    setIsNewUser(false);
+  };
+
   const value = {
     signUp: (data) => supabase.auth.signUp(data),
     signIn: (data) => supabase.auth.signInWithPassword(data),
+    // Original signInWithOtp for backward compatibility
     signInWithOtp: (email) => supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     }),
+    // Login: only works if user already exists
+    signInWithOtpLogin: async (email) => {
+      const result = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          shouldCreateUser: false, // Don't create new users
+        },
+      });
+      // If error contains "user not found" type message, customize it
+      if (result.error && (
+        result.error.message?.toLowerCase().includes('user not found') ||
+        result.error.message?.toLowerCase().includes('signups not allowed') ||
+        result.error.status === 400
+      )) {
+        return {
+          error: {
+            ...result.error,
+            message: 'Aquest compte no existeix. Crea un compte nou.',
+            isUserNotFound: true
+          }
+        };
+      }
+      return result;
+    },
+    // Register: check if user exists first, then create
+    signInWithOtpRegister: async (email) => {
+      // First, try to send OTP without creating user to check if they exist
+      const checkResult = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          shouldCreateUser: false,
+        },
+      });
+
+      // If no error, user already exists
+      if (!checkResult.error) {
+        return {
+          error: {
+            message: 'Aquest compte ja existeix. Utilitza "Ja tinc compte" per entrar.',
+            isUserExists: true
+          }
+        };
+      }
+
+      // User doesn't exist, create them
+      return supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          shouldCreateUser: true,
+        },
+      });
+    },
     signOut: () => {
       setIsGuest(false);
+      setIsNewUser(false);
+      setNeedsOnboarding(false);
       localStorage.removeItem('arrel_is_guest');
       return supabase.auth.signOut();
     },
     enterAsGuest,
+    completeOnboarding,
     user,
     session,
     isGuest,
+    isNewUser,
+    needsOnboarding,
     loading,
   };
 

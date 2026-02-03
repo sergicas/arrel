@@ -10,7 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const { signInWithOtp, enterAsGuest } = useAuth();
+  const { signInWithOtpLogin, signInWithOtpRegister, enterAsGuest } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,13 +18,20 @@ const Login = () => {
     setLoading(true);
     setMessage(null);
 
-    const { error } = await signInWithOtp(email);
+    // Use different function based on mode
+    const authFunction = mode === 'login' ? signInWithOtpLogin : signInWithOtpRegister;
+    const { error } = await authFunction(email);
 
     if (error) {
       console.error('Error d\'autenticació:', error);
       let errorText = 'Error de connexió.';
 
-      if (error.status === 500) {
+      // Check for custom error flags
+      if (error.isUserExists) {
+        errorText = error.message; // "Aquest compte ja existeix..."
+      } else if (error.isUserNotFound) {
+        errorText = error.message; // "Aquest compte no existeix..."
+      } else if (error.status === 500) {
         errorText = 'Error intern del servidor. Si us plau, intenta-ho més tard.';
       } else if (error.message) {
         errorText = error.message;
