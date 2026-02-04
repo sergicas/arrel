@@ -32,12 +32,39 @@ const Legal = lazy(() => import('./pages/Legal'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Profile = lazy(() => import('./pages/Profile'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const PaymentCancel = lazy(() => import('./pages/PaymentCancel'));
 
-// Protected Route Wrapper
+// Imports for payment/trial system
+import Paywall from './components/Paywall';
+import useTrialStatus from './hooks/useTrialStatus';
+
+// Protected Route Wrapper (requires login)
 const PrivateRoute = ({ children }) => {
   const { session, isGuest, loading } = useAuth();
   if (loading) return <BrandLoader text="Verificant sessió..." />;
   if (!session && !isGuest) return <Navigate to="/login" replace />;
+  return children;
+};
+
+// Paid Route Wrapper (requires login + payment or active trial)
+const PaidRoute = ({ children }) => {
+  const { session, isGuest, loading } = useAuth();
+  const { isLoading: trialLoading, canAccess } = useTrialStatus();
+
+  if (loading || trialLoading) {
+    return <BrandLoader text="Verificant accés..." />;
+  }
+
+  // Guests can access (no payment required for guests)
+  if (isGuest) return children;
+
+  // Not logged in
+  if (!session) return <Navigate to="/login" replace />;
+
+  // Trial expired and not paid
+  if (!canAccess) return <Paywall />;
+
   return children;
 };
 
@@ -182,6 +209,22 @@ const AnimatedRoutes = () => {
             </Suspense>
           }
         />
+        <Route
+          path="/payment/success"
+          element={
+            <Suspense fallback={<BrandLoader text="Processant..." />}>
+              <PaymentSuccess />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/payment/cancel"
+          element={
+            <Suspense fallback={<BrandLoader />}>
+              <PaymentCancel />
+            </Suspense>
+          }
+        />
 
         {/* Protected Routes */}
         <Route
@@ -213,11 +256,11 @@ const AnimatedRoutes = () => {
         {/* Protected Layout Routes */}
         <Route
           element={
-            <PrivateRoute>
+            <PaidRoute>
               <PageTransition>
                 <Layout />
               </PageTransition>
-            </PrivateRoute>
+            </PaidRoute>
           }
         >
           <Route

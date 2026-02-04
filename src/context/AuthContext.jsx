@@ -8,15 +8,78 @@ const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isNewUser, setIsNewUser] = useState(false);
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  // Payment & Trial State
+  const [hasPaid, setHasPaid] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
-  const [isGuest, setIsGuest] = useState(() => {
-    return localStorage.getItem('arrel_is_guest') === 'true';
-  });
+  // Helper to calculate trial status
+  const checkTrialStatus = (createdAt, paidStatus) => {
+    if (paidStatus) return false; // Not locked if paid
+
+    // Default 30 days trial
+    const TRIAL_DAYS = 30;
+    const createdDate = new Date(createdAt);
+    const now = new Date();
+
+    // Difference in milliseconds
+    const diffTime = Math.abs(now - createdDate);
+    // Difference in days
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays > TRIAL_DAYS;
+  };
+
+  const refreshUserState = async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('user_state')
+      .select('has_paid, created_at')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error refreshing user state:', error);
+      return;
+    }
+
+    if (data) {
+      setHasPaid(data.has_paid || false);
+      // Use user_state.created_at or fallback to user.created_at
+      const userCreatedAt = data.created_at || user.created_at;
+      const locked = checkTrialStatus(userCreatedAt, data.has_paid);
+      setIsLocked(locked);
+    }
+  };
+
+  const initiateCheckout = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          userEmail: user.email,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('No checkout URL received', data);
+        throw new Error('No checkout URL');
+      }
+    } catch (err) {
+      console.error('Error initiating checkout:', err);
+      throw err;
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -60,6 +123,10 @@ export const AuthProvider = ({ children }) => {
         if (currentUser) {
           setIsGuest(false);
           localStorage.removeItem('arrel_is_guest');
+        } else {
+          // Reset payment state on logout
+          setHasPaid(false);
+          setIsLocked(false);
         }
 
         setLoading(false);
@@ -108,7 +175,7 @@ export const AuthProvider = ({ children }) => {
           // Initialize if new user and no guest data
           supabase
             .from('user_state')
-            .select('id')
+            .select('id, has_paid, created_at') // Added has_paid and created_at
             .eq('user_id', currentUser.id)
             .maybeSingle()
             .then(async ({ data, error: selectError }) => {
@@ -116,7 +183,18 @@ export const AuthProvider = ({ children }) => {
                 console.error('[Arrel Auth] Error checking existing user_state:', selectError);
                 return;
               }
-              if (!data) {
+
+              if (data) {
+                console.log('[Arrel Auth] Existing user_state found');
+                setIsNewUser(false);
+                setNeedsOnboarding(false);
+
+                // Update payment state
+                setHasPaid(data.has_paid || false);
+                const locked = checkTrialStatus(data.created_at || currentUser.created_at, data.has_paid);
+                setIsLocked(locked);
+
+              } else {
                 console.log('[Arrel Auth] New user detected, creating user_state...');
                 setIsNewUser(true);
 
@@ -137,6 +215,7 @@ export const AuthProvider = ({ children }) => {
                   user_id: currentUser.id,
                   current_day: 1,
                   current_cycle: 1,
+                  has_paid: false, // Explicitly set default
                 }).then(({ error: insertError }) => {
                   if (insertError) {
                     console.error('[Arrel Auth] Error creating user_state:', insertError);
@@ -144,10 +223,6 @@ export const AuthProvider = ({ children }) => {
                     console.log('[Arrel Auth] user_state created successfully for user', currentUser.id);
                   }
                 });
-              } else {
-                console.log('[Arrel Auth] Existing user_state found');
-                setIsNewUser(false);
-                setNeedsOnboarding(false);
               }
             });
         }
@@ -241,16 +316,22 @@ export const AuthProvider = ({ children }) => {
       setIsGuest(false);
       setIsNewUser(false);
       setNeedsOnboarding(false);
+      setHasPaid(false);
+      setIsLocked(false);
       localStorage.removeItem('arrel_is_guest');
       return supabase.auth.signOut();
     },
     enterAsGuest,
     completeOnboarding,
+    refreshUserState,
+    initiateCheckout,
     user,
     session,
     isGuest,
     isNewUser,
     needsOnboarding,
+    hasPaid,
+    isLocked,
     loading,
   };
 
