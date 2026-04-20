@@ -79,7 +79,7 @@ const Profile = () => {
             await signOut();
             showToast("Sessió tancada correctament", 'success');
             navigate('/');
-        } catch (error) {
+        } catch {
             showToast("Error tancant la sessió", 'error');
         }
     };
@@ -92,7 +92,7 @@ const Profile = () => {
             await signOut();
             showToast("Compte eliminat", 'success');
             navigate('/');
-        } catch (error) {
+        } catch {
             showToast("Error eliminant el compte", 'error');
         }
     };

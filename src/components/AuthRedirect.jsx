@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 const AuthRedirect = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, session, isGuest, isNewUser, needsOnboarding, loading } = useAuth();
+    const { session, isGuest, needsOnboarding, loading } = useAuth();
 
     useEffect(() => {
         // Wait for auth to be ready
@@ -22,8 +22,6 @@ const AuthRedirect = () => {
 
         // Don't redirect if already on a valid page
         const currentPath = location.pathname;
-        const protectedPaths = ['/dashboard', '/profile', '/protocol', '/diagnosis', '/resultats'];
-        const isOnProtectedRoute = protectedPaths.some(path => currentPath.startsWith(path));
 
         // If user just logged in from the landing page or login page
         if (currentPath === '/' || currentPath === '/login') {
@@ -35,7 +33,7 @@ const AuthRedirect = () => {
                 navigate('/dashboard', { replace: true });
             }
         }
-    }, [session, isGuest, isNewUser, needsOnboarding, loading, navigate, location.pathname]);
+    }, [session, isGuest, needsOnboarding, loading, navigate, location.pathname]);
 
     return null; // This component doesn't render anything
 };

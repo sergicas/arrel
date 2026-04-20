@@ -9,20 +9,23 @@ import BrandLoader from '../components/BrandLoader';
  */
 const AuthCallback = () => {
     const navigate = useNavigate();
-    const { user, session, isNewUser, needsOnboarding, loading } = useAuth();
+    const { user, session, needsOnboarding, loading } = useAuth();
     const [status, setStatus] = useState('Verificant sessió...');
 
     useEffect(() => {
         // Wait for auth to finish loading
         if (loading) {
-            setStatus('Carregant dades...');
+            // Let the initial state handle the loading text
             return;
         }
 
         // If no session, something went wrong
         if (!session) {
-            setStatus('Error d\'autenticació. Redirigint...');
-            setTimeout(() => navigate('/login', { replace: true }), 2000);
+            // Schedule the state update asynchronously
+            setTimeout(() => {
+                setStatus('Error d\'autenticació. Redirigint...');
+                setTimeout(() => navigate('/login', { replace: true }), 2000);
+            }, 0);
             return;
         }
 

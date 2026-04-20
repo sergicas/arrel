@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import confetti from 'canvas-confetti';
 
 export default function PaymentSuccess() {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const sessionId = searchParams.get('session_id');
+    // Keeping searchParams so we could use session_id if needed later
+    // const [searchParams] = useSearchParams();
+    // const sessionId = searchParams.get('session_id');
     const { refreshUserState } = useAuth(); // Assume we will add this to context
 
     useEffect(() => {

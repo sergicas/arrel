@@ -8,6 +8,14 @@ const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
+  // Authentication State
+  const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(() => localStorage.getItem('arrel_is_guest') === 'true');
+  const [isNewUser, setIsNewUser] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+
   // Payment & Trial State
   const [hasPaid, setHasPaid] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
