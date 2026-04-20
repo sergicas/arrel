@@ -41,4 +41,21 @@ export default [
       ...prettierConfig.rules,
     },
   },
+  {
+    files: ['netlify/functions/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        require: 'readonly',
+        process: 'readonly',
+        exports: 'readonly',
+      },
+      parserOptions: {
+        sourceType: 'commonjs',
+      },
+    },
+    rules: {
+      'no-undef': 'error',
+    },
+  },
 ]
