@@ -30,8 +30,36 @@ exports.handler = async (event) => {
         return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
     }
 
+    // Validate required environment variables before proceeding
+    if (!process.env.STRIPE_SECRET_KEY) {
+        console.error('Missing STRIPE_SECRET_KEY environment variable');
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Server configuration error' }),
+        };
+    }
+
+    if (!process.env.STRIPE_PRICE_ID) {
+        console.error('Missing STRIPE_PRICE_ID environment variable');
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Server configuration error' }),
+        };
+    }
+
     try {
-        const payload = JSON.parse(event.body || '{}');
+        // Ensure event.body exists and is a non-empty string before parsing
+        if (!event.body || typeof event.body !== 'string' || event.body.trim() === '') {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ error: 'Request body is empty' }),
+            };
+        }
+
+        const payload = JSON.parse(event.body);
         const userId = typeof payload.userId === 'string' ? payload.userId.trim() : '';
         const userEmail = typeof payload.userEmail === 'string' ? payload.userEmail.trim() : '';
 

@@ -54,9 +54,9 @@ export const secureStorage = {
       return JSON.parse(item);
     } catch {
       // If it can't be parsed as JSON, and failed decryption, it's likely corrupted or encrypted with wrong key.
-      // Safest option: return null and clear it to prevent app crash loop.
-      console.warn(`removing corrupted/unreadable item: ${key}`);
-      localStorage.removeItem(key);
+      // Safest option: return null without removing the item, so data is preserved
+      // for potential future recovery (e.g., after key rotation).
+      console.warn(`unable to read item: ${key} (data preserved for future recovery)`);
       return null;
     }
   },
