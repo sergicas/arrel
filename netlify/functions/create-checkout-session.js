@@ -1,20 +1,39 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-exports.handler = async (event) => {
-    // Only allow POST
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
-    }
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://arrel.eu,https://www.arrel.eu')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
 
-    // CORS headers
-    const headers = {
-        'Access-Control-Allow-Origin': '*',
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const buildHeaders = (origin) => {
+    const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+    return {
+        'Access-Control-Allow-Origin': allowOrigin,
         'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Vary': 'Origin',
         'Content-Type': 'application/json',
     };
+};
+
+exports.handler = async (event) => {
+    const origin = event.headers?.origin || event.headers?.Origin || '';
+    const headers = buildHeaders(origin);
+
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 204, headers, body: '' };
+    }
+
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+    }
 
     try {
-        const { userId, userEmail } = JSON.parse(event.body);
+        const payload = JSON.parse(event.body || '{}');
+        const userId = typeof payload.userId === 'string' ? payload.userId.trim() : '';
+        const userEmail = typeof payload.userEmail === 'string' ? payload.userEmail.trim() : '';
 
         if (!userId || !userEmail) {
             return {
@@ -24,11 +43,28 @@ exports.handler = async (event) => {
             };
         }
 
-        // Create Stripe Checkout Session
+        if (!EMAIL_RE.test(userEmail) || userEmail.length > 254) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ error: 'Invalid email' }),
+            };
+        }
+
+        if (userId.length > 128) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ error: 'Invalid userId' }),
+            };
+        }
+
+        const siteUrl = process.env.URL || 'https://arrel.eu';
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
-            client_reference_id: userId, // Better place for userId than metadata sometimes, but metadata is also good
+            client_reference_id: userId,
             customer_email: userEmail,
             line_items: [
                 {
@@ -37,12 +73,10 @@ exports.handler = async (event) => {
                 },
             ],
             metadata: {
-                userId: userId,
+                userId,
             },
-            // Use environment variable URL or default to localhost for dev, but for production it should be the site URL
-            // Netlify provides process.env.URL
-            success_url: `${process.env.URL || 'https://arrel.eu'}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.URL || 'https://arrel.eu'}/payment/cancel`,
+            success_url: `${siteUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${siteUrl}/payment/cancel`,
             allow_promotion_codes: true,
         });
 
@@ -56,7 +90,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: error.message }),
+            body: JSON.stringify({ error: 'Unable to create checkout session' }),
         };
     }
 };

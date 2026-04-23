@@ -1,6 +1,12 @@
 import CryptoJS from 'crypto-js';
 
-const SECRET_KEY = 'arrel-longevity-secret-key-v1'; // In production, use process.env.VITE_SECRET_KEY
+// Prefer an env-provided key so deploys can rotate it without a rebuild bundle
+// containing the literal secret in plain text. We still fall back to a constant
+// so local dev without .env keeps working; rotating the env var invalidates any
+// existing ciphertext and forces the getItem fallback path.
+const SECRET_KEY =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SECRET_KEY) ||
+  'arrel-longevity-secret-key-v1';
 
 const encrypt = (data) => {
   try {

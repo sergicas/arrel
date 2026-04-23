@@ -19,8 +19,8 @@ export const useTrialStatus = () => {
 
         const createdDate = new Date(user.created_at);
         const now = new Date();
-        const diffTime = Math.abs(now - createdDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffTime = Math.max(0, now - createdDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         const remaining = 30 - diffDays;
 
         return Math.max(0, remaining);
