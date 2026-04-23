@@ -29,12 +29,12 @@ export const AuthProvider = ({ children }) => {
     const createdDate = new Date(createdAt);
     const now = new Date();
 
-    // Difference in milliseconds
-    const diffTime = Math.abs(now - createdDate);
-    // Difference in days
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    // Difference in milliseconds (guard against clock skew producing negatives)
+    const diffTime = Math.max(0, now - createdDate);
+    // Whole days elapsed since account creation
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays > TRIAL_DAYS;
+    return diffDays >= TRIAL_DAYS;
   };
 
   const refreshUserState = async () => {
