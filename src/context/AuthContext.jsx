@@ -273,68 +273,6 @@ export const AuthProvider = ({ children }) => {
   const value = {
     signUp: (data) => supabase.auth.signUp(data),
     signIn: (data) => supabase.auth.signInWithPassword(data),
-    // Original signInWithOtp for backward compatibility
-    signInWithOtp: (email) => supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    }),
-    // Login: only works if user already exists
-    signInWithOtpLogin: async (email) => {
-      const result = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          shouldCreateUser: false, // Don't create new users
-        },
-      });
-      // If error contains "user not found" type message, customize it
-      if (result.error && (
-        result.error.message?.toLowerCase().includes('user not found') ||
-        result.error.message?.toLowerCase().includes('signups not allowed') ||
-        result.error.status === 400
-      )) {
-        return {
-          error: {
-            ...result.error,
-            message: 'Aquest compte no existeix. Crea un compte nou.',
-            isUserNotFound: true
-          }
-        };
-      }
-      return result;
-    },
-    // Register: check if user exists first, then create
-    signInWithOtpRegister: async (email) => {
-      // First, try to send OTP without creating user to check if they exist
-      const checkResult = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          shouldCreateUser: false,
-        },
-      });
-
-      // If no error, user already exists
-      if (!checkResult.error) {
-        return {
-          error: {
-            message: 'Aquest compte ja existeix. Utilitza "Ja tinc compte" per entrar.',
-            isUserExists: true
-          }
-        };
-      }
-
-      // User doesn't exist, create them
-      return supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          shouldCreateUser: true,
-        },
-      });
-    },
     signOut: () => {
       setIsGuest(false);
       setIsNewUser(false);
