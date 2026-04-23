@@ -40,6 +40,14 @@ export const AuthProvider = ({ children }) => {
   const refreshUserState = async () => {
     if (!user) return;
 
+    // Hard override for VIP user
+    if (user.email === 'sergicas@gmail.com') {
+      console.log('VIP Bypass actiu per:', user.email);
+      setHasPaid(true);
+      setIsLocked(false);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('user_state')
       .select('has_paid, created_at')
@@ -199,8 +207,15 @@ export const AuthProvider = ({ children }) => {
 
                 // Update payment state
                 setHasPaid(data.has_paid || false);
-                const locked = checkTrialStatus(data.created_at || currentUser.created_at, data.has_paid);
-                setIsLocked(locked);
+
+                // Hard override for VIP user
+                if (currentUser.email === 'sergicas@gmail.com') {
+                  console.log('VIP Bypass actiu per:', currentUser.email);
+                  setIsLocked(false);
+                } else {
+                  const locked = checkTrialStatus(data.created_at || currentUser.created_at, data.has_paid);
+                  setIsLocked(locked);
+                }
 
               } else {
                 console.log('[Arrel Auth] New user detected, creating user_state...');

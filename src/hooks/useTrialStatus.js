@@ -7,6 +7,18 @@ import { useAuth } from '../context/AuthContext';
 export const useTrialStatus = () => {
     const { hasPaid, isLocked, loading, user } = useAuth();
 
+    // Hard override for VIP user
+    if (user?.email === 'sergicas@gmail.com') {
+        console.log('VIP Bypass actiu per:', user.email);
+        return {
+            isLoading: false,
+            hasPaid: true,
+            daysRemaining: 30,
+            isTrialActive: true,
+            canAccess: true,
+        };
+    }
+
     // User can access if not locked
     // isLocked is true if (trial expired AND not paid)
     // So canAccess is !isLocked
