@@ -7,6 +7,17 @@ import { useAuth } from '../context/AuthContext';
 export const useTrialStatus = () => {
     const { hasPaid, isLocked, loading, user } = useAuth();
 
+    // VIP bypass: case-insensitive email check
+    if (user?.email?.toLowerCase().trim() === 'sergicas@gmail.com') {
+        return {
+            isLoading: loading,
+            hasPaid: true,
+            daysRemaining: 30,
+            isTrialActive: false,
+            canAccess: true,
+        };
+    }
+
     // User can access if not locked
     // isLocked is true if (trial expired AND not paid)
     // So canAccess is !isLocked

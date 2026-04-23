@@ -52,6 +52,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     if (data) {
+      // VIP bypass: case-insensitive email check
+      if (user.email?.toLowerCase().trim() === 'sergicas@gmail.com') {
+        setHasPaid(true);
+        setIsLocked(false);
+        return;
+      }
+
       setHasPaid(data.has_paid || false);
       // Use user_state.created_at or fallback to user.created_at
       const userCreatedAt = data.created_at || user.created_at;
@@ -197,10 +204,16 @@ export const AuthProvider = ({ children }) => {
                 setIsNewUser(false);
                 setNeedsOnboarding(false);
 
-                // Update payment state
-                setHasPaid(data.has_paid || false);
-                const locked = checkTrialStatus(data.created_at || currentUser.created_at, data.has_paid);
-                setIsLocked(locked);
+                // VIP bypass: case-insensitive email check
+                if (currentUser.email?.toLowerCase().trim() === 'sergicas@gmail.com') {
+                  setHasPaid(true);
+                  setIsLocked(false);
+                } else {
+                  // Update payment state
+                  setHasPaid(data.has_paid || false);
+                  const locked = checkTrialStatus(data.created_at || currentUser.created_at, data.has_paid);
+                  setIsLocked(locked);
+                }
 
               } else {
                 console.log('[Arrel Auth] New user detected, creating user_state...');
