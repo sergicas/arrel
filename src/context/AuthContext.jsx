@@ -273,6 +273,12 @@ export const AuthProvider = ({ children }) => {
   const value = {
     signUp: (data) => supabase.auth.signUp(data),
     signIn: (data) => supabase.auth.signInWithPassword(data),
+    resetPassword: (email) =>
+      supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      }),
+    updatePassword: (newPassword) =>
+      supabase.auth.updateUser({ password: newPassword }),
     signOut: () => {
       setIsGuest(false);
       setIsNewUser(false);
