@@ -1,26 +1,20 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { useAuth } from '../context/AuthContext';
 import {
   Lock,
   ArrowRight,
-  Activity,
   Zap,
   Moon,
   Utensils,
   Brain,
   Clock,
-  Info,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
 import { secureStorage } from '../lib/secureStorage';
 
 export default function Resultats() {
   const navigate = useNavigate();
   const { session, enterAsGuest } = useAuth();
-  const [showGuide, setShowGuide] = useState(false);
 
   function calcularPuntuacions(respostes) {
     // Assegurar que tenim prou respostes
@@ -62,18 +56,18 @@ export default function Resultats() {
       return [
         {
           titol: 'Dorm a la mateixa hora cada dia',
-          desc: "La regularitat és reina. Fixa la teva hora d'anar a dormir.",
-          rationale: 'Optimitza els cicles de reparació cel·lular.',
+          desc: "Fixa l'hora d'anar a dormir i mantén-la.",
+          rationale: 'Una hora fixa ajuda el cos a recuperar-se millor cada nit.',
         },
         {
           titol: 'Elimina cafè després de les 14h',
-          desc: 'La cafeïna té una vida mitjana de 6 hores.',
-          rationale: 'Protegeix el son profund, on es repara el dany oxidatiu.',
+          desc: 'La cafeïna triga hores a desaparèixer.',
+          rationale: 'Protegeix el son, que és quan el cos es recupera de debò.',
         },
         {
-          titol: 'Caminar 20min al sol matinal',
-          desc: 'Llum natural abans de les 10am.',
-          rationale: 'Sincronitza el teu rellotge mestre per màxima energia.',
+          titol: 'Camina 20 minuts al sol del matí',
+          desc: 'Llum natural, abans de les 10 h.',
+          rationale: 'La llum del matí ajuda el cos a saber quan activar-se i quan parar.',
         },
       ];
     }
@@ -81,37 +75,37 @@ export default function Resultats() {
       return [
         {
           titol: 'Descansos cada 25 minuts',
-          desc: '25 minuts de feina real, 5 de descans.',
-          rationale: 'Evita la fatiga mental i manté el cortisol baix.',
+          desc: '25 minuts de feina real, 5 de pausa.',
+          rationale: 'Descansar a temps redueix el desgast mental acumulat.',
         },
         {
-          titol: 'Dejuni digital de 3h',
+          titol: 'Silenci digital les primeres 3 hores del dia',
           desc: 'Sense notificacions al matí.',
-          rationale: 'El cervell necessita descans per no envellir prematurament.',
+          rationale: 'El cap necessita silenci per recuperar-se.',
         },
         {
-          titol: 'Respiració conscient (5min)',
-          desc: 'Exhalacions llargues.',
-          rationale: 'Activa el nervi vague i redueix la inflamació.',
+          titol: 'Respiració llarga (5 min)',
+          desc: 'Exhalacions llargues, sense pressa.',
+          rationale: 'Baixa la tensió acumulada del dia.',
         },
       ];
     }
     // Per defecte (o temps)
     return [
       {
-        titol: 'Crea una experiència nova setmanal',
+        titol: "Una experiència nova cada setmana",
         desc: 'Trenca la rutina.',
-        rationale: 'La novetat estimula la neuroplasticitat i manté el cervell jove.',
+        rationale: 'La novetat trenca la inèrcia i manté el cap despert.',
       },
       {
         titol: 'Escriptura nocturna',
-        desc: '3 coses positives del dia.',
-        rationale: "Redueix l'estrès emocional abans de dormir.",
+        desc: '3 coses del dia, sense filtre.',
+        rationale: 'Baixar la tensió abans de dormir et fa guanyar son real.',
       },
       {
         titol: 'Moviment conscient',
         desc: 'Canvia la teva ruta habitual.',
-        rationale: 'Manté el sistema nerviós àgil i adaptable.',
+        rationale: 'Sortir de la ruta manté el cos i el cap adaptables.',
       },
     ];
   }
@@ -127,7 +121,7 @@ export default function Resultats() {
   const areas = [
     {
       id: 'energia',
-      label: 'Energia Cel·lular',
+      label: 'Energia diària',
       score: puntuacions.energia,
       icon: Zap,
       color: 'text-orange-500',
@@ -143,7 +137,7 @@ export default function Resultats() {
     },
     {
       id: 'nutricio',
-      label: 'Salut Metabòlica',
+      label: 'Alimentació',
       score: puntuacions.nutricio,
       icon: Utensils,
       color: 'text-green-500',
@@ -175,135 +169,61 @@ export default function Resultats() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col items-center py-12 px-6">
       <SEO
-        title="El teu Informe d'Envelliment"
-        description="Resultats del test de longevitat d'Arrel."
+        title="El teu diagnòstic"
+        description="Veus on el temps t'està passant més factura i quin és el primer pas per recuperar terreny."
       />
 
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-        {/* HEADER: VITALITY SCORE */}
+        {/* HEADER: GLOBAL SCORE */}
         <div className="bg-gray-900 text-white p-10 text-center relative overflow-hidden">
           <div className="relative z-10">
             <h1 className="text-xl font-medium text-gray-400 uppercase tracking-widest mb-2">
-              Puntuació de Vitalitat
+              Puntuació global
             </h1>
             <div className="text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-400">
               {puntuacions.global}/100
             </div>
             <p className="text-lg text-gray-300 max-w-lg mx-auto mb-2">
               {puntuacions.global >= 80
-                ? "El teu ritme d'envelliment és òptim. Continua així."
+                ? 'El teu estat general és bo. Mantenir el ritme és la feina.'
                 : puntuacions.global >= 60
-                  ? 'Estàs envellint a un ritme normal, però podries frenar-lo.'
-                  : 'Estàs envellint més ràpid del que et toca biològicament.'}
+                  ? 'Hi ha àrees on ja estàs perdent terreny. Tens marge per actuar.'
+                  : 'Vàries àrees acusen el desgast. El marge per recuperar terreny és clar.'}
             </p>
             <p className="text-xs text-gray-500 opacity-60">
-              (Càlcul basat en els teus hàbits reportats, no és un diagnòstic mèdic)
+              (Valoració a partir de les teves respostes. No és un diagnòstic mèdic.)
             </p>
           </div>
           {/* Background decor */}
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500 via-gray-900 to-black"></div>
         </div>
 
-        {/* KEY INSIGHT: ACCELERATOR */}
-        <div className="p-10 border-b border-gray-100 bg-red-50/50">
+        {/* KEY INSIGHT: MOST EXPOSED AREA */}
+        <div className="p-10 border-b border-gray-100 bg-gray-50/50">
           <div className="flex items-start gap-6">
             <div className={`p-4 rounded-2xl ${accelerator.bg} shrink-0`}>
               <accelerator.icon size={32} className={accelerator.color} />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-red-600 uppercase tracking-wider mb-1">
-                ⚠️ Principal Accelerador d'Envelliment
+              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-1">
+                Àrea més exposada
               </h2>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 {accelerator.label} ({accelerator.score}/100)
               </h3>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Les teves respostes indiquen que aquesta és l'àrea que més "desgasta" el teu sistema
-                ara mateix. Millorar aquí tindrà l'impacte més gran en la teva longevitat.
+                Les teves respostes indiquen que és aquí on ara mateix estàs perdent més terreny.
+                Començar per aquí és el que tindrà més impacte.
               </p>
-
-              <button
-                onClick={() => setShowGuide(!showGuide)}
-                className="text-sm font-semibold text-purple-600 hover:text-purple-800 flex items-center gap-1 transition-colors"
-              >
-                <Info size={16} />
-                {showGuide ? "Amagar Guia d'Interpretació" : 'Com interpretar aquest resultat?'}
-                {showGuide ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
             </div>
           </div>
-
-          {/* INTERPRETATION GUIDE (Collapsible) */}
-          {showGuide && (
-            <div className="mt-6 bg-white rounded-xl p-6 border border-purple-100 shadow-sm animate-fade-in">
-              <h4 className="font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">
-                Guia d'Interpretació dels Biomarcadors
-              </h4>
-              <div className="grid gap-6 md:grid-cols-2">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Zap size={16} className="text-orange-500" />
-                    <span className="font-bold text-gray-800 text-sm">Energia Cel·lular</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-1">
-                    <strong>Què és:</strong> La capacitat dels teus mitocondris per produir ATP.
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    <strong>Per què importa:</strong> Sense energia estable, cap altre sistema
-                    funciona bé.
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Moon size={16} className="text-indigo-500" />
-                    <span className="font-bold text-gray-800 text-sm">Qualitat del Son</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-1">
-                    <strong>Què és:</strong> L'eficiència de la teva neteja cerebral (sistema
-                    glimfàtic).
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    <strong>Per què importa:</strong> És quan repares el dany diari i consolides
-                    memòria.
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Utensils size={16} className="text-green-500" />
-                    <span className="font-bold text-gray-800 text-sm">Salut Metabòlica</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-1">
-                    <strong>Què és:</strong> Com el teu cos gestiona el combustible (glucosa/greix).
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    <strong>Per què importa:</strong> Prevé la inflamació crònica, arrel de
-                    l'envelliment.
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Brain size={16} className="text-blue-500" />
-                    <span className="font-bold text-gray-800 text-sm">Focus Mental</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-1">
-                    <strong>Què és:</strong> La teva capacitat de neuroplasticitat i atenció
-                    sostinguda.
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    <strong>Per què importa:</strong> Un cervell distret és un cervell estressat
-                    (cortisol alt).
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* ACTION PLAN */}
         <div className="p-10">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">El teu Pla de Reversió</h2>
-            <p className="text-gray-500">3 accions simples per corregir l'accelerador.</p>
+            <h2 className="text-2xl font-bold text-gray-900">El teu primer pla</h2>
+            <p className="text-gray-500">3 passos per començar a recuperar terreny.</p>
           </div>
 
           <div className="space-y-4">
@@ -377,7 +297,7 @@ export default function Resultats() {
       </div>
 
       <p className="mt-8 text-gray-400 text-sm mb-24">
-        Arrel Health · Longevitat basada en evidència
+        Arrel · Criteri clar per recuperar terreny
       </p>
 
       {/* STICKY CTA BAR (Mobile/Desktop) - Ensures conversion */}

@@ -9,11 +9,11 @@ const SEO = ({
   type = 'website',
   schema,
 }) => {
-  const siteTitle = 'Arrel - Ciència de la Longevitat';
+  const siteTitle = 'Arrel';
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   const metaDesc =
     description ||
-    'Arrel és la guia científica per viure més anys amb millor salut. Protocols personalitzats basats en cronobiologia.';
+    "Arrel detecta on el desgast ja ha començat i et dona una acció al dia per recuperar terreny. Criteri clar, sense sorolls.";
 
   return (
     <Helmet>

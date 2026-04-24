@@ -4,17 +4,10 @@ import {
   ArrowRight,
   Clock,
   Shield,
-  ShieldCheck,
   Activity,
   Zap,
-  Moon,
-  Brain,
-  Battery,
   CheckCircle,
-  Star,
   ChevronDown,
-  ChevronUp,
-  PlayCircle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
@@ -100,9 +93,6 @@ const FAQItem = ({ question, answer }) => {
 // -----------------------------------------------------------------------------
 
 import Button from '../components/Button';
-import TestimonialCarousel from '../components/TestimonialCarousel';
-
-// ... (existing imports)
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -125,8 +115,8 @@ export default function Landing() {
   return (
     <>
       <SEO
-        title="Arrel | Longevity Science"
-        description="Descobreix la teva edat biològica (indicador d'estil de vida) i com alentir el procés d'envelliment amb protocols basats en ciència."
+        title="Arrel"
+        description="Recupera el terreny que el temps t'està prenent. Una acció al dia, criteri clar, sense sorolls."
       />
 
       {/* HERO SECTION */}
@@ -144,16 +134,16 @@ export default function Landing() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 leading-[1.1] mb-6 tracking-tight">
-              La teva salut, <br />
+              Recupera el terreny <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                descodificada.
+                que el temps t'està prenent.
               </span>
             </h1>
 
             <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-lg">
-              No endevinis com estàs envellint. Mesura-ho. Descobreix la teva{' '}
-              <span className="font-semibold text-gray-900">Edat Biològica</span> (indicador d'estil
-              de vida) i rep un pla d'acció personalitzat avui mateix.
+              Arrel detecta on el desgast ja ha començat i et dona una{' '}
+              <span className="font-semibold text-gray-900">acció al dia</span> per recuperar-lo.
+              Criteri clar, sense sorolls.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
@@ -193,35 +183,30 @@ export default function Landing() {
               <div className="flex justify-between items-start mb-8">
                 <div>
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">
-                    El teu resultat
+                    El teu diagnòstic
                   </p>
-                  <h3 className="text-2xl font-bold text-gray-900">Informe de Longevitat</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">Un pas al dia</h3>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-xl">
-                  A+
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                  <Activity size={22} strokeWidth={1.8} />
                 </div>
               </div>
 
-              <div className="space-y-4 mb-8">
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full w-3/4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium text-gray-600">Vitalitat Metabòlica</span>
-                  <span className="font-bold text-gray-900">85/100</span>
-                </div>
+              <div className="space-y-2 mb-8">
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                  Àrea més exposada
+                </p>
+                <p className="text-lg font-semibold text-gray-900">Estrès crònic</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-blue-50 p-4 rounded-2xl">
-                  <p className="text-xs text-gray-400 font-bold uppercase">
-                    Edat Biològica (Estimada)
-                  </p>
-                  <p className="text-2xl font-bold text-blue-600">-2.5 anys</p>
+                  <p className="text-xs text-gray-400 font-bold uppercase">Primer pas</p>
+                  <p className="text-base font-semibold text-blue-700">Respiració llarga · 5 min</p>
                 </div>
                 <div className="bg-purple-50 p-4 rounded-2xl">
-                  <p className="text-xs text-gray-400 font-bold uppercase">Punt Fort</p>
-                  <p className="text-lg font-bold text-purple-600">Neuroplasticitat</p>
+                  <p className="text-xs text-gray-400 font-bold uppercase">Següent check-in</p>
+                  <p className="text-base font-semibold text-purple-700">Avui · 10 seg</p>
                 </div>
               </div>
             </div>
@@ -234,30 +219,30 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              La ciència de viure millor, <br /> no només més temps.
+              Un sistema clar <br /> per recuperar terreny.
             </h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              Arrel no et ven suplements ni fórmules màgiques. T'oferim un sistema operatiu personal
-              per prendre el control de la teva biologia a través d'hàbits mesurables.
+              Arrel no ven suplements ni fórmules. Et dona criteri i un pas concret al dia, sense
+              sorolls.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: Brain,
-                title: 'Neuroplasticitat',
-                desc: "Entrena el teu cervell per mantenir-se jove i adaptable mitjançant reptes cognitius i gestió de l'estrès.",
+                icon: Activity,
+                title: 'Veus on estàs perdent terreny',
+                desc: "Un diagnòstic curt mostra en quina àrea el temps t'està passant més factura. Sense puntuacions inventades.",
               },
               {
-                icon: Battery,
-                title: 'Energia Mitocondrial',
-                desc: "Optimitza la producció d'energia a nivell cel·lular per eliminar la fatiga crònica i millorar el rendiment.",
+                icon: CheckCircle,
+                title: 'Saps què has de fer avui',
+                desc: "Una sola acció al dia, triada segons el teu diagnòstic i l'estat del cicle. No una llista de deu hàbits: el pas que toca avui.",
               },
               {
-                icon: ShieldCheck,
-                title: 'Resiliència Metabòlica',
-                desc: "Ensenya al teu cos a canviar de combustible eficientment, prevenint la inflamació i l'envelliment prematur.",
+                icon: Shield,
+                title: 'Recuperes terreny sense sorolls',
+                desc: "Cicles curts d'acció i repòs. L'app parla quan aporta criteri i calla quan no. No ocupa el teu temps; el respecta.",
               },
             ].map((item, idx) => (
               <div
@@ -289,10 +274,10 @@ export default function Landing() {
                     1
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Fes el Test de 3 minuts</h3>
+                    <h3 className="text-xl font-bold mb-2">Fes el diagnòstic de 3 minuts</h3>
                     <p className="text-gray-400">
-                      Respon preguntes clau sobre els teus hàbits de son, nutrició, estrès i
-                      moviment.
+                      Respons preguntes curtes sobre com estàs ara: ritme, desgast, tensió, xarxa,
+                      sensació general.
                     </p>
                   </div>
                 </div>
@@ -301,10 +286,10 @@ export default function Landing() {
                     2
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Rep el teu Informe</h3>
+                    <h3 className="text-xl font-bold mb-2">Veus el teu diagnòstic</h3>
                     <p className="text-gray-400">
-                      Calculem la teva Edat Biològica aproximada (basada en els teus hàbits) i et
-                      mostrem en quina àrea estàs envellint més ràpid.
+                      Identifiquem on el temps t'està passant més factura i per quina àrea et
+                      convé començar.
                     </p>
                   </div>
                 </div>
@@ -313,10 +298,10 @@ export default function Landing() {
                     3
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Actua amb un Pla Personalitzat</h3>
+                    <h3 className="text-xl font-bold mb-2">Actua amb una acció al dia</h3>
                     <p className="text-gray-400">
-                      Accedeix a un protocol d'intervenció basat en evidència, dissenyat per
-                      revertir els teus punts febles i optimitzar la teva salut.
+                      Cada dia una sola cosa concreta. Fas check-in ràpid i el cicle avança. Sense
+                      llistes infinites ni soroll.
                     </p>
                   </div>
                 </div>
@@ -332,23 +317,23 @@ export default function Landing() {
                 <ul className="space-y-4">
                   <li className="flex items-center gap-3">
                     <CheckCircle size={20} className="text-green-500 shrink-0" />
-                    <span className="font-medium">Ritme Circadià: Llum Matinal (10 min)</span>
+                    <span className="font-medium">Matí: pas al sol (10 min)</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle size={20} className="text-green-500 shrink-0" />
-                    <span className="font-medium">Nutrició: Ordre dels Aliments (Dinar)</span>
+                    <span className="font-medium">Dinar: ordenar els aliments</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle size={20} className="text-green-500 shrink-0" />
-                    <span className="font-medium">Son: Finestra de Desconnexió (90 min)</span>
+                    <span className="font-medium">Nit: 90 min sense pantalla</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle size={20} className="text-green-500 shrink-0" />
-                    <span className="font-medium">Estrès: Respiració 4-7-8 (5 min)</span>
+                    <span className="font-medium">Tensió: respiració llarga (5 min)</span>
                   </li>
                 </ul>
                 <button className="mt-8 w-full py-3 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-colors">
-                  Veure Pla Complet
+                  Veure el pla complet
                 </button>
               </div>
             </div>
@@ -361,9 +346,9 @@ export default function Landing() {
         <section id="how-it-works" className="py-32 bg-white relative">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-20">
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">El Mètode Arrel</h2>
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">El mètode Arrel</h2>
               <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                Ciència complexa, aplicada de forma simple.
+                Un sistema clar per recuperar terreny, pas a pas.
               </p>
             </div>
 
@@ -373,10 +358,10 @@ export default function Landing() {
                 <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 text-purple-600 shadow-sm group-hover:scale-110 transition-transform duration-300">
                   <Activity size={40} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Analitza</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">1. Mira</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  80% de l'envelliment no és genètic. Identifiquem els "lladres d'energia" del teu
-                  dia a dia.
+                  Identifiquem on el desgast ja ha començat i on estàs perdent terreny sense
+                  notar-ho.
                 </p>
               </div>
 
@@ -385,10 +370,10 @@ export default function Landing() {
                 <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 text-blue-600 shadow-sm group-hover:scale-110 transition-transform duration-300">
                   <Clock size={40} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Diagnostica</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">2. Entén</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Calculem la teva Edat Biològica aproximada i et mostrem en quina àrea estàs
-                  envellint més ràpid.
+                  Veus la teva àrea més exposada i el primer pas concret per començar a recuperar
+                  terreny.
                 </p>
               </div>
 
@@ -397,34 +382,35 @@ export default function Landing() {
                 <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center mx-auto mb-8 text-green-600 shadow-sm group-hover:scale-110 transition-transform duration-300">
                   <Zap size={40} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">3. Reverteix (Mes 1: Gratuït)</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">3. Actua (primer cicle gratis)</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Accés complet al programa de 28 dies. Sense cost, sense targeta de crèdit. Només tu i el teu compromís.
+                  Accés complet al primer cicle. Sense cost, sense targeta. Només tu i el pas
+                  del dia.
                 </p>
               </div>
             </div>
 
             {/* FUTURE STEPS / WHAT'S NEXT */}
             <div className="mt-20 p-8 md:p-12 bg-blue-50 rounded-3xl border border-blue-100 text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">I després dels 28 dies?</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">I després del primer cicle?</h3>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-                El Mes 1 és 100% gratuït perquè proves el mètode. Si vols continuar optimitzant la teva biologia més enllà, podràs accedir al <strong>Pla Premium</strong>:
+                El primer cicle és 100% gratuït per provar el mètode. Si vols continuar després, tens accés al <strong>Pla Premium</strong>:
               </p>
               <div className="grid md:grid-cols-3 gap-6 text-left">
                 <div className="bg-white p-6 rounded-2xl shadow-sm relative overflow-hidden">
                   <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-1 uppercase rounded-bl-lg">Premium</div>
                   <div className="font-bold text-blue-600 mb-2">CLUB ARREL</div>
-                  <p className="text-sm text-gray-500">Comunitat privada de longevitats actives.</p>
+                  <p className="text-sm text-gray-500">Comunitat privada d'usuaris Arrel.</p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm relative overflow-hidden">
                   <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-1 uppercase rounded-bl-lg">Premium</div>
-                  <div className="font-bold text-purple-600 mb-2">REPTES MENSUALS</div>
-                  <p className="text-sm text-gray-500">Nous protocols avançats cada mes (Dejuni, Sauna, HIIT).</p>
+                  <div className="font-bold text-purple-600 mb-2">CICLES NOUS</div>
+                  <p className="text-sm text-gray-500">Nous cicles cada mes amb accions i àrees noves.</p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm relative overflow-hidden">
                   <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-1 uppercase rounded-bl-lg">Premium</div>
-                  <div className="font-bold text-gray-900 mb-2">TRACKING AVANÇAT</div>
-                  <p className="text-sm text-gray-500">Integració amb wearables i biomarcadors reals.</p>
+                  <div className="font-bold text-gray-900 mb-2">SEGUIMENT AMPLIAT</div>
+                  <p className="text-sm text-gray-500">Seguiment més detallat dels teus cicles i notes.</p>
                 </div>
               </div>
             </div>
@@ -433,17 +419,9 @@ export default function Landing() {
         </section>
       </RevealOnScroll>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">
-            Històries de Rejoveniment
-          </h2>
-          <div className="mt-12">
-            <TestimonialCarousel />
-          </div>
-        </div>
-      </section>
+      {/* TESTIMONIALS retirats a AR-002: els ficticis actuals tenien claims problemàtics
+          (Oura Ring, "pura biologia", "pic de glucosa"). El component es conserva
+          (src/components/TestimonialCarousel.jsx) per quan hi hagi testimonials reals. */}
 
       {/* FAQ SECTION */}
       <section className="py-24 bg-white">
@@ -454,15 +432,15 @@ export default function Landing() {
           <div className="space-y-2">
             <FAQItem
               question="És realment gratuït?"
-              answer="El Mes 1 (28 dies) és 100% gratuït. Volem que experimentis els beneficis abans de pagar res. Si decideixes continuar amb l'optimització avançada (Mesos 2 i 3), podràs subscriure't al pla Premium."
+              answer="El primer cicle és 100% gratuït. Volem que provis el mètode abans de pagar res. Si decideixes continuar després, tens accés al pla Premium."
             />
             <FAQItem
               question="Necessito registrar-me per veure resultats?"
-              answer="No. Creiem en la privacitat primer. Pots fer el test i veure resultats com a convidat. Només si vols accés al Protocol diari necessitaràs un compte (gratuït)."
+              answer="No. Pots fer el diagnòstic i veure resultats com a convidat. Només si vols accés al pla diari necessitaràs un compte (gratuït)."
             />
             <FAQItem
-              question="En què es basa la ciència?"
-              answer="Ens basem en els pilars de la medicina de l'estil de vida i la gerontociència: ritmes circadians, nutrició metabòlica, hormesis i psicologia conductual."
+              question="Què hi ha darrere del mètode?"
+              answer="Arrel combina observació del desgast funcional amb accions concretes amb suport en la literatura d'hàbits i salut conductual. No fem diagnòstic mèdic ni substituïm cap tractament."
             />
           </div>
         </div>
@@ -472,7 +450,7 @@ export default function Landing() {
       <section className="py-24 bg-gray-900 text-white text-center">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tight">
-            El teu jo del futur t'ho agrairà.
+            Comença pel diagnòstic. 3 minuts.
           </h2>
           <Button
             onClick={handleStartDiagnosis}
@@ -481,7 +459,7 @@ export default function Landing() {
             size="lg"
             className="text-gray-900 bg-white hover:bg-gray-100 hover:scale-105"
           >
-            Començar Diagnòstic
+            Començar diagnòstic
           </Button>
           <p className="mt-6 text-gray-400">Els resultats són privats i 100% teus.</p>
         </div>
