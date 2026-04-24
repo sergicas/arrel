@@ -34,6 +34,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
 const PaymentCancel = lazy(() => import('./pages/PaymentCancel'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
 // Imports for payment/trial system
 import Paywall from './components/Paywall';
@@ -222,6 +223,14 @@ const AnimatedRoutes = () => {
           element={
             <Suspense fallback={<BrandLoader />}>
               <PaymentCancel />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <Suspense fallback={<BrandLoader text="Carregant..." />}>
+              <ResetPassword />
             </Suspense>
           }
         />
