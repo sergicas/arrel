@@ -54,7 +54,7 @@ export class ErrorBoundary extends React.Component {
     const emailSubject = `[Arrel] Error Report - ${errorId}`;
     const emailBody = `Error ID: ${errorId}\nURL: ${window.location.href}\nNavegador: ${navigator.userAgent}\nTimestamp: ${new Date().toISOString()}\n\nDescriu què estaves fent quan ha aparegut l'error:\n\n\n──────────────────────────────────\nDetalls tècnics:\n${error ? error.toString() : 'N/A'}`;
 
-    window.location.href = `mailto:suport@arrel.app?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    window.location.href = `mailto:suport@arrel.eu?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
   };
 
   render() {
@@ -107,8 +107,8 @@ export class ErrorBoundary extends React.Component {
                 <li>Torna a la pàgina anterior</li>
                 <li>
                   Contacta amb nosaltres:{' '}
-                  <a href="mailto:suport@arrel.app" className="underline">
-                    suport@arrel.app
+                  <a href="mailto:suport@arrel.eu" className="underline">
+                    suport@arrel.eu
                   </a>
                 </li>
               </ul>

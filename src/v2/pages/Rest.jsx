@@ -1,4 +1,4 @@
-import { useArrel } from '../state/ArrelContext.jsx';
+import { useArrel } from '../state/useArrel.js';
 import Shell from '../components/Shell.jsx';
 import CycleDots from '../components/CycleDots.jsx';
 
@@ -12,17 +12,18 @@ export default function Rest() {
           Cicle {state.cycleNumber} · dia {state.dayInCycle}
         </p>
 
-        <div className="flex-1 flex flex-col justify-center items-center text-center py-12">
-          <p className="text-3xl mb-6 text-balance font-light">Avui, res.</p>
-          <p className="text-[var(--text-secondary)] max-w-xs leading-relaxed">
-            El cicle es tanca en silenci.
-          </p>
+        <div className="flex-1 flex flex-col justify-center py-12">
+          <div className="v2-hero-card text-center">
+            <p className="v2-panel-label mb-4">Dia 7 · tancament</p>
+            <p className="text-3xl mb-5 text-balance font-medium">Avui no toca empènyer.</p>
+            <p className="text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed">
+              El setè dia serveix per deixar reposar el cicle, mirar què s&apos;ha mogut i
+              arribar net al següent.
+            </p>
+          </div>
 
-          <button
-            onClick={advanceDay}
-            className="mt-16 text-xs text-[var(--text-tertiary)] underline opacity-60 hover:opacity-100 transition"
-          >
-            (provar: tancar el cicle →)
+          <button onClick={advanceDay} className="btn btn-primary mt-8">
+            Tancar el cicle
           </button>
         </div>
 

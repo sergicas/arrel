@@ -10,7 +10,18 @@ const ITEMS = [
 export default function Menu() {
   return (
     <Shell showBack backTo="/">
-      <div className="flex-1 flex flex-col pt-8">
+      <div className="flex-1 flex flex-col pt-8 gap-8">
+        <div className="v2-panel">
+          <p className="v2-panel-label mb-3">Menú secundari</p>
+          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+            El centre d&apos;Arrel continua sent la pantalla d&apos;avui. Aquí només hi ha
+            context, històric i configuració mínima.
+          </p>
+          <Link to="/" className="inline-flex mt-4 text-sm text-[var(--text-primary)] underline">
+            Tornar a avui
+          </Link>
+        </div>
+
         <ul className="flex flex-col">
           {ITEMS.map((item) => (
             <li key={item.to}>

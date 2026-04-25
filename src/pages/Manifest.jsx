@@ -60,9 +60,9 @@ export default function Manifest() {
     secureStorage.setItem('arrel_manifest_signed', true);
   };
 
-  const shareUrl = 'https://arrel.app'; // Replace with real URL in prod
+  const shareUrl = 'https://arrel.eu';
   const shareText =
-    "M'acabo d'unir al moviment Arrel per democratitzar la longevitat. La biologia no és el destí. 🌱 #Arrel #Longevity";
+    "M'acabo d'unir a Arrel: una acció al dia per recuperar terreny sense soroll.";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6 md:p-12">

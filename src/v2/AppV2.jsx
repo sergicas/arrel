@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ArrelProvider, useArrel } from './state/ArrelContext.jsx';
+import { ArrelProvider } from './state/ArrelContext.jsx';
+import { useArrel } from './state/useArrel.js';
 import { STATUS } from './lib/types.js';
 
 import Welcome from './pages/Welcome.jsx';

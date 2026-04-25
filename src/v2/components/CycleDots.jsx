@@ -1,6 +1,6 @@
 import { CYCLE_LENGTH } from '../lib/types.js';
 
-export default function CycleDots({ dayInCycle, isRest = false }) {
+export default function CycleDots({ dayInCycle }) {
   const dots = Array.from({ length: CYCLE_LENGTH }, (_, i) => i + 1);
 
   return (
@@ -14,15 +14,17 @@ export default function CycleDots({ dayInCycle, isRest = false }) {
         const isPast = d < dayInCycle;
         const isRestSlot = d === CYCLE_LENGTH;
 
-        let className = 'w-2 h-2 rounded-full transition-all';
+        let className = 'h-2 rounded-full transition-all duration-300';
         if (isRestSlot) {
-          className += isToday ? ' bg-[var(--text-primary)] opacity-60' : ' border border-[var(--text-tertiary)] border-dashed';
+          className += isToday
+            ? ' w-8 bg-[var(--accent-earth)] opacity-70'
+            : ' w-2.5 border border-[var(--text-tertiary)] border-dashed';
         } else if (isToday) {
-          className += ' bg-[var(--text-primary)] w-2.5 h-2.5';
+          className += ' w-7 bg-[var(--text-primary)]';
         } else if (isPast) {
-          className += ' bg-[var(--text-tertiary)]';
+          className += ' w-2.5 bg-[var(--accent-primary)] opacity-50';
         } else {
-          className += ' border border-[var(--text-tertiary)] border-opacity-50';
+          className += ' w-2.5 border border-[var(--text-tertiary)] border-opacity-50';
         }
 
         return <span key={d} className={className} />;

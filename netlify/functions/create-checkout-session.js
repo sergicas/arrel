@@ -6,6 +6,9 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://arrel.eu,https:
     .filter(Boolean);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DEFAULT_SITE_URL = 'https://arrel.eu';
+
+const siteUrl = () => (process.env.SITE_URL || process.env.URL || DEFAULT_SITE_URL).replace(/\/+$/, '');
 
 const buildHeaders = (origin) => {
     const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -87,7 +90,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const siteUrl = process.env.URL || 'https://arrel.eu';
+        const baseUrl = siteUrl();
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -103,8 +106,8 @@ exports.handler = async (event) => {
             metadata: {
                 userId,
             },
-            success_url: `${siteUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${siteUrl}/payment/cancel`,
+            success_url: `${baseUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${baseUrl}/payment/cancel`,
             allow_promotion_codes: true,
         });
 

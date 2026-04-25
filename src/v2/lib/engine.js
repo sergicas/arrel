@@ -9,17 +9,37 @@ const AREA_ROTATION = [
   AREAS.IDENTITY,
 ];
 
-const DIAGNOSTIC_ANSWER_TO_AREA = {
-  move_daily: AREAS.PHYSICAL,
-  learn_new: AREAS.COGNITIVE,
-  be_silent: AREAS.STRESS,
-  see_people: AREAS.RELATIONAL,
-  change_routine: AREAS.IDENTITY,
-};
+function baseScores() {
+  return {
+    [AREAS.PHYSICAL]: 0,
+    [AREAS.COGNITIVE]: 0,
+    [AREAS.STRESS]: 0,
+    [AREAS.RELATIONAL]: 0,
+    [AREAS.IDENTITY]: 0,
+  };
+}
+
+export function scoreDiagnosis(answers = []) {
+  return answers.reduce((scores, answer) => {
+    if (!answer?.weights) return scores;
+
+    Object.entries(answer.weights).forEach(([area, weight]) => {
+      scores[area] = (scores[area] || 0) + weight;
+    });
+
+    return scores;
+  }, baseScores());
+}
+
+export function getRankedAreas(scores) {
+  return Object.entries(scores)
+    .sort((a, b) => b[1] - a[1])
+    .map(([area]) => area);
+}
 
 export function diagnosisToPrimaryArea(answers) {
-  const first = answers?.[0];
-  return DIAGNOSTIC_ANSWER_TO_AREA[first] || AREAS.PHYSICAL;
+  const ranked = getRankedAreas(scoreDiagnosis(answers));
+  return ranked[0] || AREAS.PHYSICAL;
 }
 
 export function getAreaForCycle(cycleNumber, primaryArea) {

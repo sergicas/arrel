@@ -1,49 +1,48 @@
 @import 'tailwindcss';
 
-/* 
-  ARREL - V3 VISUAL SYSTEM 
-  Theme: Clinical Modernism / High-Tech Wellness
+/*
+  ARREL - V0.2 VISUAL SYSTEM
+  Theme: Warm Vital — paper, plants, daylight
 */
 
 :root {
-  /* --- PALETA BASE (CLINICAL DARK) --- */
-  --bg-void: #050505;
-  /* Fons principal (Pàgina) */
-  --bg-surface: #0f0f10;
+  /* --- PALETA BASE (CREAM / WARM LIGHT) --- */
+  --bg-void: #faf6ee;
+  /* Fons principal — crema càlida */
+  --bg-surface: #ffffff;
   /* Targetes / Panells */
-  --bg-elevated: #1a1a1c;
-  /* Elements flotants / Modals */
-  --bg-highlight: #2a2a2e;
+  --bg-elevated: #ffffff;
+  /* Elements flotants */
+  --bg-highlight: #f2ebda;
   /* Hovers / Inputs */
 
   /* --- TIPOGRAFIA --- */
-  --text-primary: #f2f2f5;
-  /* Títols, Text principal */
-  --text-secondary: #a0a0a5;
-  /* Subtítols, icones no actives */
-  --text-tertiary: #71717a;
-  /* Detalls, placeholders - Optimized for >4.5:1 on black */
-  --text-inverse: #000000;
-  /* Text sobre botons clars */
+  --text-primary: #1f1a14;
+  /* Tinta càlida, gairebé negra */
+  --text-secondary: #5a5147;
+  /* Gris càlid */
+  --text-tertiary: #8e8377;
+  /* Taupe suau */
+  --text-inverse: #faf6ee;
+  /* Crema sobre verd/fosc */
 
-  /* --- ACCENTS (DATA VIZ & ACTIONS) --- */
-  --accent-primary: #33ff57;
-  /* Acció Principal (Green) */
-  --accent-primary-dim: rgba(51, 255, 87, 0.15);
+  /* --- ACCENTS (VIDA) --- */
+  --accent-primary: #1f8b3b;
+  /* Verd primavera — l'acció, el creixement */
+  --accent-primary-dim: rgba(31, 139, 59, 0.12);
+  --accent-earth: #a56a3a;
+  --accent-earth-dim: rgba(165, 106, 58, 0.12);
 
-  --accent-blue: #3b82f6;
-  /* Informació / Mental */
-  --accent-purple: #9333ea;
-  /* Identitat / Espiritual - Darkened to Purple-600 for white text AA */
-  --accent-orange: #f97316;
-  /* Energia */
-  --accent-red: #ef4444;
-  /* Alerta / Error */
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  --accent-orange: #c77e2d;
+  /* Ocre càlid */
+  --accent-red: #c13b3b;
 
   /* --- BORDERS --- */
-  --border-subtle: #1f1f22;
-  --border-strong: #333336;
-  --border-focus: #55555a;
+  --border-subtle: #e8dfc9;
+  --border-strong: #ccbe9e;
+  --border-focus: #1f8b3b;
 
   /* --- METRICS --- */
   --app-max-width: 480px;
@@ -54,25 +53,29 @@
 
   /* --- FONTS --- */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Georgia', 'Iowan Old Style', 'Charter', 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 }
 
-/* LIGHT THEME OVERRIDES (Marketing Pages) */
-.light-theme {
-  --bg-void: #ffffff;
-  --bg-surface: #f9fafb;
-  --bg-elevated: #ffffff;
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-tertiary: #9ca3af;
-  --text-inverse: #ffffff;
-  --border-subtle: #e5e7eb;
-  --border-strong: #d1d5db;
+/* DARK THEME OVERRIDE (per si en algun moment es vol activar) */
+.dark-theme {
+  --bg-void: #1a1610;
+  --bg-surface: #221d15;
+  --bg-elevated: #2a241b;
+  --text-primary: #f5efde;
+  --text-secondary: #b3a99a;
+  --text-tertiary: #8e8377;
+  --text-inverse: #1f1a14;
+  --border-subtle: #3a3328;
+  --border-strong: #5a5147;
 }
 
 @layer base {
   body {
-    background-color: var(--bg-void);
+    background:
+      radial-gradient(circle at top left, rgba(31, 139, 59, 0.08), transparent 28%),
+      radial-gradient(circle at top right, rgba(165, 106, 58, 0.09), transparent 22%),
+      linear-gradient(180deg, #fbf7ef 0%, #f7f1e5 100%);
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
     font-family: var(--font-sans);
@@ -148,6 +151,7 @@
   .btn-primary {
     background-color: var(--text-primary);
     color: var(--bg-void);
+    box-shadow: 0 14px 30px rgba(31, 26, 20, 0.12);
   }
 
   .btn-primary:active {
@@ -231,6 +235,121 @@
 
   .input-field:focus {
     border-color: var(--text-secondary);
+  }
+
+  .v2-nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--text-secondary);
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .v2-nav-button:hover {
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  .v2-panel,
+  .v2-hero-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(232, 223, 201, 0.9);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 50px rgba(31, 26, 20, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .v2-panel {
+    padding: 1.125rem 1rem;
+  }
+
+  .v2-hero-card {
+    padding: 1.5rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(249, 244, 236, 0.92)),
+      rgba(255, 255, 255, 0.82);
+  }
+
+  .v2-kicker,
+  .v2-panel-label {
+    font-size: 0.73rem;
+    line-height: 1;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .v2-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 9999px;
+    background: var(--accent-primary-dim);
+    color: var(--accent-primary);
+    font-size: 0.78rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+
+  .v2-option {
+    padding: 1rem 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 1.15rem;
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--text-primary);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .v2-option:hover {
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.96);
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(31, 26, 20, 0.06);
+  }
+
+  .v2-feedback {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1.15rem;
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.78);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .v2-feedback:hover {
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  .v2-feedback-active {
+    border-color: rgba(31, 139, 59, 0.35);
+    background: linear-gradient(180deg, rgba(31, 139, 59, 0.08), rgba(255, 255, 255, 0.92));
+    box-shadow: 0 18px 40px rgba(31, 139, 59, 0.08);
   }
 }
 

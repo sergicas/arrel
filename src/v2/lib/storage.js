@@ -5,9 +5,11 @@ const KEY = 'arrel-v2-state';
 export const initialState = {
   status: STATUS.NEW,
   primaryArea: null,
+  secondaryArea: null,
   cycleNumber: 1,
   dayInCycle: 1,
   diagnosisAnswers: [],
+  diagnosisScores: null,
   feedback: [],
   subscribed: false,
   feedbackJustGiven: false,
@@ -27,7 +29,7 @@ export function loadState() {
 
 export function saveState(state) {
   try {
-    const { feedbackJustGiven, cycleJustEnded, ...persistent } = state;
+    const { feedbackJustGiven: _feedbackJustGiven, cycleJustEnded: _cycleJustEnded, ...persistent } = state;
     localStorage.setItem(KEY, JSON.stringify(persistent));
   } catch (e) {
     console.warn('arrel: no s\'ha pogut desar l\'estat', e);
