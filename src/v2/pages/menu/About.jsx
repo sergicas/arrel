@@ -36,7 +36,7 @@ export default function About() {
         <div>
           <p className="v2-kicker mb-4">Sobre Arrel</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Una estructura petita per no perdre terreny abans d’hora.
+            Una estructura petita per frenar l’envelliment quotidià.
           </h2>
         </div>
 

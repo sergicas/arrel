@@ -72,7 +72,7 @@ const EXPLAINERS = [
   {
     icon: BookOpen,
     title: 'Què és Arrel?',
-    text: 'Una app per no perdre terreny amb l’edat: cada setmana observes una capacitat que vols conservar.',
+    text: 'Una app per frenar l’envelliment en el lloc on es nota cada dia: cos, memòria, calma, vincles i identitat.',
   },
   {
     icon: Gauge,
@@ -82,7 +82,7 @@ const EXPLAINERS = [
   {
     icon: ShieldCheck,
     title: 'Què no és?',
-    text: 'No és una app mèdica ni promet frenar l’envelliment biològic. Treballa sobre gestos quotidians i capacitats observables.',
+    text: 'No és una app mèdica ni promet revertir l’edat biològica. Parla de frenar l’envelliment com una pràctica quotidiana i observable.',
   },
   {
     icon: Lightbulb,
@@ -96,7 +96,7 @@ const FIRST_DAY_STEPS = [
     step: '01',
     icon: SmilePlus,
     title: 'Entres a l’app',
-    text: 'Arrel t’explica la idea central: no perdre terreny abans d’hora, una prova petita cada dia.',
+    text: 'Arrel t’explica la idea central: frenar l’envelliment amb una prova petita cada dia.',
   },
   {
     step: '02',
@@ -213,8 +213,8 @@ export default function Landing() {
   return (
     <div className="landing-page">
       <SEO
-        title="No perdre terreny"
-        description="Arrel et proposa proves petites per conservar capacitats: cos, memòria, calma, vincles i identitat."
+        title="Frena el teu envelliment"
+        description="Arrel et proposa proves petites per frenar l’envelliment quotidià: cos, memòria, calma, vincles i identitat."
         canonical="https://arrel.eu/"
       />
       <header className="landing-nav">
@@ -247,11 +247,12 @@ export default function Landing() {
           </div>
 
           <div className="landing-hero-content">
-            <p className="landing-kicker">Per no perdre terreny abans d’hora</p>
-            <h1>Conserva el que no vols deixar caure.</h1>
+            <p className="landing-kicker">Una pràctica petita contra el desgast</p>
+            <h1>Frena el teu envelliment.</h1>
             <p className="landing-lead">
-              Arrel et proposa proves petites per seguir sent capaç, present i curiós
-              mentre et fas gran. No promet joventut. Ajuda a no abandonar-te.
+              Arrel et proposa proves petites per protegir cos, memòria, calma,
+              vincles i identitat mentre et fas gran. Sense miracles: una manera
+              clara de no abandonar-te.
             </p>
             <div className="landing-actions">
               <button type="button" onClick={begin} className="landing-primary">

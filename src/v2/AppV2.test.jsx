@@ -21,6 +21,6 @@ describe('AppV2 routing', () => {
     await waitFor(() => {
       expect(window.location.pathname).toBe('/inici');
     });
-    expect(screen.getByRole('heading', { name: 'Conserva el que no vols deixar caure.' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Frena el teu envelliment.' })).toBeInTheDocument();
   });
 });

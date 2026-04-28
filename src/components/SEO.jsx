@@ -16,7 +16,7 @@ const SEO = ({
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   const metaDesc =
     description ||
-    "Arrel et proposa proves petites per conservar capacitats: cos, memòria, calma, vincles i identitat. No perdre terreny abans d’hora.";
+    "Arrel et proposa proves petites per frenar l’envelliment quotidià: cos, memòria, calma, vincles i identitat.";
   const path = typeof window !== 'undefined' ? window.location.pathname : '/';
   const canonicalHref = canonical || `${CANONICAL_ORIGIN}${path}`;
   const absoluteImage = image.startsWith('http') ? image : `${CANONICAL_ORIGIN}${image}`;

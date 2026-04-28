@@ -283,7 +283,7 @@ export default function Today() {
           <p>
             {hasDiagnostic
               ? todayGuidance
-              : 'Això encara no és un resultat personalitzat. És una primera presa de contacte per veure si Arrel et pot ajudar a no perdre terreny.'}
+              : 'Això encara no és un resultat personalitzat. És una primera presa de contacte per veure si Arrel et pot ajudar a frenar l’envelliment quotidià.'}
           </p>
         </section>
 

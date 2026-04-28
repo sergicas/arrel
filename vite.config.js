@@ -40,7 +40,7 @@ export default defineConfig({
       manifest: {
         name: 'Arrel',
         short_name: 'Arrel',
-        description: 'Proves petites per conservar cos, memòria, calma, vincles i identitat.',
+        description: 'Proves petites per frenar l’envelliment quotidià: cos, memòria, calma, vincles i identitat.',
         theme_color: '#edf9fb',
         background_color: '#edf9fb',
         lang: 'ca',

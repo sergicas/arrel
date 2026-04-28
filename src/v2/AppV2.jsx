@@ -84,7 +84,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Sobre Arrel"
-        description="Arrel és una estructura petita per observar capacitats, no perdre terreny abans d’hora i cuidar el que encara vols preservar."
+        description="Arrel és una estructura petita per frenar l’envelliment quotidià observant capacitats que encara vols preservar."
         canonical="https://arrel.eu/menu/sobre"
       />
     );

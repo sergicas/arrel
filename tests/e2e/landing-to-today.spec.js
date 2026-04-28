@@ -8,7 +8,7 @@ import {
 test('landing starts the starter day 1 action without an account', async ({ page }) => {
   await prepareFreshPage(page);
 
-  await expect(page.getByRole('heading', { name: 'Conserva el que no vols deixar caure.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Frena el teu envelliment.' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Privacitat' })).toHaveAttribute('href', '/legal/privacitat');
 
   await startStarterAction(page);
