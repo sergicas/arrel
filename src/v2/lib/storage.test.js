@@ -26,6 +26,12 @@ describe('v2 storage', () => {
     });
   });
 
+  it('fills missing or invalid pace with the slow default', () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ status: 'active', pace: 'rush' }));
+
+    expect(loadState().pace).toBe('slow');
+  });
+
   it('does not persist transient UI flags or the old subscribed flag', () => {
     saveState({
       status: 'active',

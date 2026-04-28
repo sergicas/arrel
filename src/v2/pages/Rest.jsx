@@ -5,6 +5,13 @@ import CycleDots from '../components/CycleDots.jsx';
 import ArrelMascot from '../components/ArrelMascot.jsx';
 import { getLocalDateKey } from '../lib/storage.js';
 import { FEEDBACK } from '../lib/types.js';
+import {
+  formatWaitDuration,
+  getMinutesUntilAvailable,
+  getPaceOption,
+  isAcceleratedPace,
+  isStepAvailable,
+} from '../lib/pace.js';
 
 const FEEDBACK_LABELS = {
   [FEEDBACK.DONE]: 'Hi és',
@@ -20,8 +27,14 @@ export default function Rest() {
     .sort((a, b) => a.day - b.day);
   const presentCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.DONE).length;
   const frictionCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.PARTIAL).length;
+  const paceOption = getPaceOption(state.pace);
   const dayCanOpenNow = canAdvanceDay
-    || getLocalDateKey(now) > (state.currentDayAvailableOn || getLocalDateKey(now));
+    || isAcceleratedPace(state.pace)
+    || isStepAvailable(state.nextDayAvailableAt, now)
+    || (!state.nextDayAvailableAt && getLocalDateKey(now) > (state.currentDayAvailableOn || getLocalDateKey(now)));
+  const minutesUntilNext = state.nextDayAvailableAt
+    ? getMinutesUntilAvailable(state.nextDayAvailableAt, now)
+    : getMinutesUntilAvailable(new Date(new Date(now).setHours(24, 0, 0, 0)).toISOString(), now);
 
   useEffect(() => {
     if (dayCanOpenNow) return undefined;
@@ -89,8 +102,15 @@ export default function Rest() {
             )}
           </section>
 
+          {!dayCanOpenNow ? (
+            <div className="v2-next-day-card mt-6" aria-label="Temps fins al cicle següent">
+              <span>El cicle nou s’obre d’aquí a</span>
+              <strong>{formatWaitDuration(minutesUntilNext)}</strong>
+            </div>
+          ) : null}
+
           <button onClick={advanceDay} disabled={!dayCanOpenNow} className="btn btn-primary mt-8">
-            {dayCanOpenNow ? 'Tancar el cicle' : 'El cicle nou s’obre demà'}
+            {dayCanOpenNow ? 'Tancar el cicle' : paceOption.cycleUnavailableButton}
           </button>
         </div>
 

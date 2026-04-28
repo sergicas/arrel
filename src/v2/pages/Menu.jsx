@@ -4,6 +4,7 @@ import Shell from '../components/Shell.jsx';
 const ITEMS = [
   { to: '/menu/cicles', label: 'Històric' },
   { to: '/menu/arees', label: 'Les cinc capacitats' },
+  { to: '/menu/ritme', label: 'Ritme de proves' },
   { to: '/menu/recordatori', label: 'Recordatori diari' },
   { to: '/diagnostic', label: 'Personalitzar focus' },
   { to: '/menu/sobre', label: 'Sobre Arrel' },

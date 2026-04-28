@@ -19,16 +19,31 @@ import {
   scoreDiagnosis,
 } from '../lib/engine.js';
 import { AREA_GUIDANCE, AREAS, STATUS, INITIAL_GUIDED_CYCLES } from '../lib/types.js';
+import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePace } from '../lib/pace.js';
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
 
 function hasFeedbackForDay(feedback, cycleNumber, dayInCycle) {
   return feedback.some((entry) => entry.cycle === cycleNumber && entry.day === dayInCycle);
 }
 
+function isCurrentDayCompleted(state) {
+  return (
+    state.feedbackJustGiven
+    || isRestDay(state.dayInCycle)
+    || hasFeedbackForDay(state.feedback, state.cycleNumber, state.dayInCycle)
+  );
+}
+
+function canAdvanceState(state, date = new Date()) {
+  if (!isCurrentDayCompleted(state)) return false;
+  if (isAcceleratedPace(state.pace)) return true;
+  if (state.nextDayAvailableAt) return isStepAvailable(state.nextDayAvailableAt, date);
+  return getLocalDateKey(date) > (state.currentDayAvailableOn || getLocalDateKey(date));
+}
+
 export function ArrelProvider({ children }) {
   const [state, setState] = useState(loadState);
   const [storageReady, setStorageReady] = useState(() => !shouldUseNativePreferences());
-  const todayKey = getLocalDateKey();
 
   useEffect(() => {
     if (storageReady) return undefined;
@@ -69,6 +84,7 @@ export function ArrelProvider({ children }) {
       cycleNumber: 1,
       dayInCycle: 1,
       currentDayAvailableOn: getLocalDateKey(),
+      nextDayAvailableAt: null,
       feedback: [],
       feedbackJustGiven: false,
       diagnosisJustCompleted: false,
@@ -91,6 +107,7 @@ export function ArrelProvider({ children }) {
       cycleNumber: 1,
       dayInCycle: 1,
       currentDayAvailableOn: getLocalDateKey(),
+      nextDayAvailableAt: null,
       feedback: s.feedback,
       feedbackJustGiven: false,
       diagnosisJustCompleted: true,
@@ -117,18 +134,24 @@ export function ArrelProvider({ children }) {
         ...s,
         feedback: [...s.feedback, entry],
         feedbackJustGiven: true,
+        nextDayAvailableAt: getNextStepAvailableAt(s.pace, new Date()),
       };
     });
   }, []);
 
   const advanceDay = useCallback(() => {
     setState((s) => {
+      const now = new Date();
       const currentDate = getLocalDateKey();
       const availableOn = s.currentDayAvailableOn || currentDate;
       const isRest = isRestDay(s.dayInCycle);
       const completed = isRest || hasFeedbackForDay(s.feedback, s.cycleNumber, s.dayInCycle);
 
-      if (!completed || currentDate <= availableOn) return s;
+      if (!completed) return s;
+
+      const canOpenNext = isAcceleratedPace(s.pace)
+        || (s.nextDayAvailableAt ? isStepAvailable(s.nextDayAvailableAt, now) : currentDate > availableOn);
+      if (!canOpenNext) return s;
 
       if (isCycleEnd(s.dayInCycle)) {
         const newCycle = s.cycleNumber + 1;
@@ -138,17 +161,33 @@ export function ArrelProvider({ children }) {
           cycleNumber: newCycle,
           dayInCycle: 1,
           currentDayAvailableOn: currentDate,
+          nextDayAvailableAt: null,
           status: initialPeriodComplete ? STATUS.INITIAL_PERIOD_COMPLETE : STATUS.ACTIVE,
           feedbackJustGiven: false,
           cycleJustEnded: true,
         };
       }
+      const nextDay = s.dayInCycle + 1;
       return {
         ...s,
-        dayInCycle: s.dayInCycle + 1,
+        dayInCycle: nextDay,
         currentDayAvailableOn: currentDate,
+        nextDayAvailableAt: isRestDay(nextDay) ? getNextStepAvailableAt(s.pace, now) : null,
         feedbackJustGiven: false,
         cycleJustEnded: false,
+      };
+    });
+  }, []);
+
+  const setPace = useCallback((pace) => {
+    setState((s) => {
+      const normalized = normalizePace(pace);
+      return {
+        ...s,
+        pace: normalized,
+        nextDayAvailableAt: isCurrentDayCompleted(s)
+          ? getNextStepAvailableAt(normalized, new Date())
+          : s.nextDayAvailableAt,
       };
     });
   }, []);
@@ -220,6 +259,7 @@ export function ArrelProvider({ children }) {
     setState((s) => ({
       ...initialState,
       status: STATUS.DIAGNOSTIC,
+      pace: s.pace,
       continuedAfterInitialPeriod: s.continuedAfterInitialPeriod,
     }));
   }, []);
@@ -247,7 +287,7 @@ export function ArrelProvider({ children }) {
     [state.feedback, state.cycleNumber, state.dayInCycle]
   );
   const currentDayCompleted = state.feedbackJustGiven || Boolean(dayFeedback) || isToday7;
-  const canAdvanceDay = currentDayCompleted && todayKey > (state.currentDayAvailableOn || todayKey);
+  const canAdvanceDay = canAdvanceState(state);
 
   const value = {
     state,
@@ -265,6 +305,7 @@ export function ArrelProvider({ children }) {
     completeDiagnostic,
     submitFeedback,
     advanceDay,
+    setPace,
     acknowledgeTransition,
     acknowledgeDiagnosisResult,
     continueAfterInitialPeriod,

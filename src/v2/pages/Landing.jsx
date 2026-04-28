@@ -32,8 +32,8 @@ import SEO from '../../components/SEO.jsx';
 const FEATURES = [
   {
     icon: Activity,
-    title: 'Una prova petita cada dia',
-    text: 'Arrel et proposa una prova de 3 a 10 minuts per observar una capacitat que no vols deixar caure.',
+    title: 'Una prova petita al teu ritme',
+    text: 'Pots anar lent, regular o accelerat. La prova dura de 3 a 10 minuts; tu decideixes la cadència.',
   },
   {
     icon: Compass,
@@ -101,8 +101,8 @@ const FIRST_DAY_STEPS = [
   {
     step: '02',
     icon: Compass,
-    title: 'Tries com començar',
-    text: 'Pots començar amb una prova inicial o respondre cinc preguntes per detectar la capacitat més fràgil ara mateix.',
+    title: 'Tries com avançar',
+    text: 'Comences en ritme lent, però pots passar a regular o accelerat si vols explorar més proves.',
   },
   {
     step: '03',
@@ -271,7 +271,7 @@ export default function Landing() {
               </span>
               <span>
                 <HeartHandshake size={17} />
-                Sense culpa
+                Ritme flexible
               </span>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default function Landing() {
         <section id="que-es" className="landing-section landing-explain">
           <div className="landing-section-head">
             <p className="landing-kicker">Què és</p>
-            <h2>Arrel és simple: una capacitat per setmana i una prova petita al dia.</h2>
+            <h2>Arrel és simple: una capacitat per setmana i proves petites al ritme que puguis sostenir.</h2>
           </div>
           <div className="landing-definition">
             <p>

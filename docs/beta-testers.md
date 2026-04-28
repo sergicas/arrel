@@ -6,7 +6,7 @@ Gràcies per provar Arrel abans que sigui pública. No busquem una opinió perfe
 
 ## Què és Arrel
 
-Arrel et proposa una acció curta al dia per cuidar cos, ment, estrès, vincles o identitat. Funciona en cicles de 7 dies: 6 dies d'acció i 1 dia de descans/resum.
+Arrel et proposa proves curtes per frenar l'envelliment quotidià cuidant cos, memòria, calma, vincles i identitat. Funciona en cicles de 7 dies: 6 dies de prova i 1 dia de descans/resum. Pots anar a ritme lent, regular o accelerat.
 
 La beta guarda el progrés al teu dispositiu. No hi ha compte d'usuari ni sincronització al núvol en aquesta versió.
 
@@ -14,13 +14,13 @@ Si l'app perd el progrés sense que tu l'hagis esborrat des de `Sobre Arrel`, é
 
 ## Què has de provar
 
-### 1. Entrada i primera acció
+### 1. Entrada i primera prova
 
 Comença des de la landing i toca `Provar sense compte`.
 
 Mira si queda clar:
 - què has de fer avui
-- quant dura l'acció
+- quant dura la prova
 - com has de tancar el dia
 
 Flag important:
@@ -42,18 +42,22 @@ Flag important:
 - les preguntes són confuses
 - sembla que la diagnosi no ha servit per a res
 
-### 3. Check-in i ritme diari
+### 3. Lectura i ritme
 
-Tanca una acció amb `Fet`, `Mig` o `No`.
+Tanca una prova amb `Hi és`, `Costava` o `Evitat`. Després ves a `Menú > Ritme de proves` i prova els tres ritmes:
+
+- `Lent`: una prova al dia
+- `Regular`: següent prova al cap d'unes hores
+- `Accelerat`: pots continuar sense espera
 
 Mira si queda clar:
-- que el dia següent no s'obre fins demà
-- que no hi ha penalització si marques `Mig` o `No`
-- si el ritme d'una acció al dia se sent tranquil o massa restrictiu
+- que pots triar el ritme sense sentir-te obligat a fer més
+- que no hi ha penalització si marques `Costava` o `Evitat`
+- quin ritme et sembla més útil per tornar a Arrel
 
 Flag important:
-- voldria fer més d'una acció al dia
-- em molesta no poder avançar
+- no trobo on canviar el ritme
+- no entenc la diferència entre lent, regular i accelerat
 - no entenc per què el botó queda bloquejat
 
 ### 4. Recordatori
@@ -80,7 +84,7 @@ Si arribes al dia 7, revisa el resum.
 
 Mira si queda clar:
 - quins dies has marcat
-- quants han estat `Fet`, `Mig` o `No`
+- quants han estat `Hi és`, `Costava` o `Evitat`
 - si el dia de descans té sentit o se sent buit
 
 Flag important:
@@ -124,7 +128,7 @@ Després de 3-7 dies, respon aquestes cinc preguntes:
 
 1. Has entès què era Arrel durant el primer minut?
 2. Has tornat pel teu compte algun dia?
-3. Si has fet més d'una acció, n'hi ha alguna que t'hagi quedat?
+3. Si has fet més d'una prova, n'hi ha alguna que t'hagi quedat?
 4. En quin moment has dubtat o has deixat d'entendre l'app?
 5. Recomanaries Arrel a algú concret? A qui?
 

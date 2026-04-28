@@ -1,4 +1,5 @@
-import { DEFAULT_REMINDER, STATUS } from './types.js';
+import { DEFAULT_REMINDER, PACE, STATUS } from './types.js';
+import { normalizePace } from './pace.js';
 
 const KEY = 'arrel-v2-state';
 
@@ -19,12 +20,14 @@ export const initialState = {
   diagnosisAnswers: [],
   diagnosisScores: null,
   feedback: [],
+  pace: PACE.SLOW,
   continuedAfterInitialPeriod: false,
   reminder: DEFAULT_REMINDER,
   feedbackJustGiven: false,
   diagnosisJustCompleted: false,
   cycleJustEnded: false,
   currentDayAvailableOn: null,
+  nextDayAvailableAt: null,
 };
 
 function getCapacitorRuntime() {
@@ -46,6 +49,7 @@ function normalizeState(parsed = {}) {
     ...initialState,
     ...storedState,
     continuedAfterInitialPeriod: storedState.continuedAfterInitialPeriod ?? Boolean(subscribed),
+    pace: normalizePace(storedState.pace),
     reminder: {
       ...DEFAULT_REMINDER,
       ...(storedState.reminder || {}),

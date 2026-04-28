@@ -17,6 +17,14 @@ import CycleDots from '../components/CycleDots.jsx';
 import ArrelMascot from '../components/ArrelMascot.jsx';
 import { getLocalDateKey } from '../lib/storage.js';
 import { AREA_ACCENTS, AREA_ACCENT_SOFT, AREA_LABELS, AREAS, FEEDBACK } from '../lib/types.js';
+import { isRestDay } from '../lib/engine.js';
+import {
+  formatWaitDuration,
+  getMinutesUntilAvailable,
+  getPaceOption,
+  isAcceleratedPace,
+  isStepAvailable,
+} from '../lib/pace.js';
 
 const FEEDBACK_ITEMS = [
   {
@@ -57,21 +65,6 @@ function formatSeconds(seconds) {
   const minutes = Math.floor(seconds / 60);
   const rest = seconds % 60;
   return `${minutes}:${String(rest).padStart(2, '0')}`;
-}
-
-function getMinutesUntilTomorrow(date = new Date()) {
-  const nextMidnight = new Date(date);
-  nextMidnight.setHours(24, 0, 0, 0);
-  return Math.max(0, Math.ceil((nextMidnight.getTime() - date.getTime()) / 60000));
-}
-
-function formatWait(minutes) {
-  if (minutes <= 1) return 'menys d’1 min';
-  const hours = Math.floor(minutes / 60);
-  const rest = minutes % 60;
-  if (hours === 0) return `${rest} min`;
-  if (rest === 0) return `${hours} h`;
-  return `${hours} h ${String(rest).padStart(2, '0')} min`;
 }
 
 function getMascotMood({ feedbackJustGiven, dayFeedback, previousDayFeedback }) {
@@ -123,9 +116,13 @@ export default function Today() {
   };
   const timerProgress = Math.round(((totalSeconds - currentTimer.secondsLeft) / totalSeconds) * 100);
   const areaLabel = todayArea ? AREA_LABELS[todayArea] : 'Avui';
+  const paceOption = getPaceOption(state.pace);
+  const nextStepIsRest = isRestDay(state.dayInCycle + 1);
+  const nextStepTimerLabel = nextStepIsRest ? 'Temps fins al descans' : 'Temps fins a la prova següent';
+  const openNextLabel = nextStepIsRest ? paceOption.availableRestButton : paceOption.availableButton;
   const areaStyle = {
-    '--area-accent': AREA_ACCENTS[todayArea] || '#58bcc9',
-    '--area-soft': AREA_ACCENT_SOFT[todayArea] || 'rgba(88, 188, 201, 0.16)',
+    '--area-accent': AREA_ACCENTS[todayArea] || '#c9583b',
+    '--area-soft': AREA_ACCENT_SOFT[todayArea] || 'rgba(201, 88, 59, 0.16)',
   };
   const rankedAreas = useMemo(() => {
     const scores = state.diagnosisScores || {};
@@ -147,9 +144,16 @@ export default function Today() {
   });
   const dayCanOpenNow = canAdvanceDay || (
     currentDayCompleted
-    && getLocalDateKey(now) > (state.currentDayAvailableOn || getLocalDateKey(now))
+    && (
+      isAcceleratedPace(state.pace)
+      || isStepAvailable(state.nextDayAvailableAt, now)
+      || (!state.nextDayAvailableAt && getLocalDateKey(now) > (state.currentDayAvailableOn || getLocalDateKey(now)))
+    )
   );
-  const waitUntilTomorrow = formatWait(getMinutesUntilTomorrow(now));
+  const minutesUntilNext = state.nextDayAvailableAt
+    ? getMinutesUntilAvailable(state.nextDayAvailableAt, now)
+    : getMinutesUntilAvailable(new Date(new Date(now).setHours(24, 0, 0, 0)).toISOString(), now);
+  const waitUntilNext = formatWaitDuration(minutesUntilNext);
 
   useEffect(() => {
     if (!timer.active || timer.dayKey !== dayKey) return undefined;
@@ -217,6 +221,7 @@ export default function Today() {
             <span>Cicle {state.cycleNumber}</span>
             <span>Dia {state.dayInCycle}</span>
             {todayAction?.duration ? <span>{todayAction.duration}</span> : null}
+            <span>Ritme {paceOption.label.toLowerCase()}</span>
             <span>{hasDiagnostic ? 'personalitzat' : 'exploració'}</span>
           </div>
 
@@ -380,18 +385,18 @@ export default function Today() {
         ) : (
           <section className="v2-mark-panel is-closed">
             <p className="v2-ritual-kicker">Lectura desada</p>
-            <h2>Avui ja tens un senyal.</h2>
+            <h2>{paceOption.closedTitle}</h2>
             <p>
-              Arrel no acumula tasques. Deixa reposar la prova d’avui i torna demà amb una altra prova petita.
+              {paceOption.closedCopy}
             </p>
             {!dayCanOpenNow ? (
-              <div className="v2-next-day-card" aria-label="Temps fins al dia següent">
-                <span>El dia següent s’obre d’aquí a</span>
-                <strong>{waitUntilTomorrow}</strong>
+              <div className="v2-next-day-card" aria-label={nextStepTimerLabel}>
+                <span>{nextStepIsRest ? 'El descans' : 'La prova següent'} s’obre d’aquí a</span>
+                <strong>{waitUntilNext}</strong>
               </div>
             ) : null}
             <button onClick={advanceDay} disabled={!dayCanOpenNow} className="v2-commit-button">
-              {dayCanOpenNow ? 'Obrir el dia següent' : 'S’obre demà'}
+              {dayCanOpenNow ? openNextLabel : paceOption.unavailableButton}
             </button>
           </section>
         )}

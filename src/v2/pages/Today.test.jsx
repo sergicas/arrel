@@ -129,9 +129,51 @@ describe('Today v2', () => {
       },
     });
 
-    expect(screen.getByText('Avui ja tens un senyal.')).toBeInTheDocument();
-    expect(screen.getByLabelText('Temps fins al dia següent')).toHaveTextContent('14 h 30 min');
+    expect(screen.getByText('Prova guardada.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Temps fins a la prova següent')).toHaveTextContent('14 h 30 min');
     expect(screen.getByRole('button', { name: 'S’obre demà' })).toBeDisabled();
+  });
+
+  it('lets an already closed day advance immediately on accelerated rhythm', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 3, 27, 9, 30));
+
+    const { advanceDay } = renderToday({
+      currentDayCompleted: true,
+      canAdvanceDay: false,
+      state: {
+        cycleNumber: 1,
+        dayInCycle: 1,
+        feedbackJustGiven: false,
+        feedback: [{ cycle: 1, day: 1, value: FEEDBACK.DONE }],
+        currentDayAvailableOn: '2026-04-27',
+        nextDayAvailableAt: null,
+        pace: 'accelerated',
+      },
+    });
+
+    const nextButton = screen.getByRole('button', { name: 'Obrir la prova següent' });
+    expect(nextButton).toBeEnabled();
+
+    fireEvent.click(nextButton);
+    expect(advanceDay).toHaveBeenCalledTimes(1);
+  });
+
+  it('names the rest day when the next step is day 7', () => {
+    renderToday({
+      currentDayCompleted: true,
+      canAdvanceDay: true,
+      state: {
+        cycleNumber: 1,
+        dayInCycle: 6,
+        feedbackJustGiven: false,
+        feedback: [{ cycle: 1, day: 6, value: FEEDBACK.DONE }],
+        currentDayAvailableOn: '2026-04-27',
+        pace: 'accelerated',
+      },
+    });
+
+    expect(screen.getByRole('button', { name: 'Obrir el descans' })).toBeEnabled();
   });
 
   it('keeps the mascot celebratory when the current day feedback was already saved', () => {

@@ -17,6 +17,7 @@ import PastCycles from './pages/menu/PastCycles.jsx';
 import Areas from './pages/menu/Areas.jsx';
 import About from './pages/menu/About.jsx';
 import Reminder from './pages/menu/Reminder.jsx';
+import Pace from './pages/menu/Pace.jsx';
 import Legal from './pages/Legal.jsx';
 
 function AppLoading() {
@@ -80,6 +81,16 @@ function RouteMeta() {
     );
   }
 
+  if (pathname === '/menu/ritme') {
+    return (
+      <SEO
+        title="Ritme de proves"
+        description="Configura el ritme d’Arrel: lent, regular o accelerat segons com vulguis avançar en les proves."
+        canonical="https://arrel.eu/menu/ritme"
+      />
+    );
+  }
+
   if (pathname === '/menu/sobre') {
     return (
       <SEO
@@ -124,6 +135,7 @@ export default function AppV2() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/menu/cicles" element={<PastCycles />} />
           <Route path="/menu/arees" element={<Areas />} />
+          <Route path="/menu/ritme" element={<Pace />} />
           <Route path="/menu/recordatori" element={<Reminder />} />
           <Route path="/menu/sobre" element={<About />} />
           <Route path="/legal" element={<Legal />} />

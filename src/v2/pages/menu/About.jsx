@@ -52,8 +52,9 @@ export default function About() {
           <div className="v2-panel">
             <p className="v2-panel-label">Com funciona</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Tria una capacitat principal, fes sis dies de prova i reserva el setè per
-              mirar què respon, què costa i què no vols deixar caure.
+              Tria una capacitat principal, escull un ritme lent, regular o accelerat,
+              fes sis proves i reserva el setè dia per mirar què respon, què costa i
+              què no vols deixar caure.
             </p>
           </div>
 

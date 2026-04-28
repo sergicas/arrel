@@ -14,8 +14,8 @@ test('daily reading locks the next day until local midnight', async ({ page }) =
 
   await markToday(page, 'Hi és');
 
-  await expect(page.getByText('Avui ja tens un senyal.')).toBeVisible();
-  await expect(page.getByLabel('Temps fins al dia següent')).toContainText('15 h');
+  await expect(page.getByText('Prova guardada.')).toBeVisible();
+  await expect(page.getByLabel('Temps fins a la prova següent')).toContainText('15 h');
   await expect(page.getByRole('button', { name: 'S’obre demà' })).toBeDisabled();
   await expect(page.getByLabel('Dia 1: hi és')).toBeVisible();
 
@@ -31,7 +31,7 @@ test('daily reading locks the next day until local midnight', async ({ page }) =
 
   await advanceClock(page, { hours: 15, minutes: 1 });
 
-  const nextDayButton = page.getByRole('button', { name: 'Obrir el dia següent' });
+  const nextDayButton = page.getByRole('button', { name: 'Obrir la prova següent' });
   await expect(nextDayButton).toBeEnabled();
   await nextDayButton.click();
 

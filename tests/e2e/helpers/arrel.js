@@ -12,6 +12,8 @@ export function makeActiveState(overrides = {}) {
     cycleNumber: 1,
     dayInCycle: 1,
     currentDayAvailableOn: '2026-04-27',
+    nextDayAvailableAt: null,
+    pace: 'slow',
     feedback: [],
     ...overrides,
   };
@@ -61,7 +63,7 @@ export async function markToday(page, label = 'Hi és') {
 
 export async function openNextActionDay(page) {
   await advanceClock(page, { days: 1, minutes: 1 });
-  const nextDayButton = page.getByRole('button', { name: 'Obrir el dia següent' });
+  const nextDayButton = page.getByRole('button', { name: /Obrir (la prova següent|el descans)/ });
   await expect(nextDayButton).toBeEnabled();
   await nextDayButton.click();
 }
