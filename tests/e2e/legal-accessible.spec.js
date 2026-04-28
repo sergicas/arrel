@@ -12,7 +12,7 @@ async function expectPrivacy(page) {
 
 async function expectTerms(page) {
   await expect(page).toHaveURL(/\/legal\/termes$/);
-  await expect(page.getByRole('heading', { name: 'Arrel és una eina de benestar, no una eina mèdica.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Arrel és una eina de cura quotidiana, no una eina mèdica.' })).toBeVisible();
 }
 
 test('landing footer links to privacy and can switch to terms', async ({ page }) => {

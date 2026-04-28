@@ -5,9 +5,9 @@ import { CYCLE_LENGTH } from '../../lib/types.js';
 import { AREA_LABELS, FEEDBACK } from '../../lib/types.js';
 
 const FEEDBACK_LABEL = {
-  [FEEDBACK.DONE]: 'fet',
-  [FEEDBACK.PARTIAL]: 'a mig fer',
-  [FEEDBACK.SKIPPED]: 'no fet',
+  [FEEDBACK.DONE]: 'hi és',
+  [FEEDBACK.PARTIAL]: 'costava',
+  [FEEDBACK.SKIPPED]: 'evitat',
 };
 
 function groupByCycle(feedback) {
@@ -33,14 +33,14 @@ export default function PastCycles() {
         <div>
           <p className="v2-kicker mb-4">Històric</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            {grouped.length === 0 ? 'Encara cap petjada.' : 'Les teves petjades.'}
+            {grouped.length === 0 ? 'Encara cap senyal.' : 'Els teus senyals.'}
           </h2>
         </div>
 
         {grouped.length === 0 ? (
           <div className="v2-panel">
             <p className="text-[var(--text-secondary)] leading-relaxed">
-              Torna aquí després de la primera acció. Hi veuràs què has fet, què ha quedat a mig camí i les notes que hagis escrit.
+              Torna aquí després de la primera prova. Hi veuràs què ha respost, què ha costat i les notes que hagis escrit.
             </p>
           </div>
         ) : (

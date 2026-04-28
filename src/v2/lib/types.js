@@ -8,16 +8,16 @@ export const AREAS = {
 
 export const AREA_LABELS = {
   [AREAS.PHYSICAL]: 'Cos',
-  [AREAS.COGNITIVE]: 'Ment',
-  [AREAS.STRESS]: 'Estrès',
+  [AREAS.COGNITIVE]: 'Memòria',
+  [AREAS.STRESS]: 'Calma',
   [AREAS.RELATIONAL]: 'Vincles',
   [AREAS.IDENTITY]: 'Identitat',
 };
 
 export const AREA_SHORT_LABELS = {
   [AREAS.PHYSICAL]: 'Cos',
-  [AREAS.COGNITIVE]: 'Ment',
-  [AREAS.STRESS]: 'Estrès',
+  [AREAS.COGNITIVE]: 'Memòria',
+  [AREAS.STRESS]: 'Calma',
   [AREAS.RELATIONAL]: 'Vincles',
   [AREAS.IDENTITY]: 'Identitat',
 };
@@ -40,28 +40,28 @@ export const AREA_ACCENT_SOFT = {
 
 export const AREA_DESCRIPTIONS = {
   [AREAS.PHYSICAL]:
-    'Accions curtes per moure’t una mica, recuperar mobilitat i tornar a notar el cos sense convertir-ho en entrenament.',
+    'Proves petites per conservar mobilitat, força bàsica i confiança corporal sense convertir-ho en entrenament.',
   [AREAS.COGNITIVE]:
-    'Petits exercicis per obrir perspectiva, activar l’atenció i sortir dels mateixos camins mentals.',
+    'Proves per sostenir atenció, memòria, curiositat i flexibilitat mental quan els camins de sempre s’estrenyen.',
   [AREAS.STRESS]:
-    'Pauses molt concretes per baixar revolucions, respirar millor i no respondre sempre des de la pressa.',
+    'Proves de calma per no viure sempre en reacció, recuperar marge i respirar abans de respondre.',
   [AREAS.RELATIONAL]:
-    'Gestos senzills per reconnectar amb altres persones sense forçar converses llargues ni fer-ho solemne.',
+    'Gestos senzills per no retirar-se dels altres i mantenir presència amb la gent que importa.',
   [AREAS.IDENTITY]:
-    'Accions petites per provar una variació de rutina, mirar-te diferent i recuperar una mica de moviment personal.',
+    'Proves per no quedar tancat en una versió fixa de tu mateix i seguir reconeixent moviment propi.',
 };
 
 export const AREA_GUIDANCE = {
   [AREAS.PHYSICAL]:
-    'Durant aquests dies treballarem sobre el cos: força, mobilitat i confiança quotidiana.',
+    'Aquesta setmana observarem el cos: mobilitat, força mínima i confiança per continuar habitant-lo.',
   [AREAS.COGNITIVE]:
-    'Durant aquests dies treballarem sobre la ment: flexibilitat, atenció i capacitat de moure perspectiva.',
+    'Aquesta setmana observarem memòria i atenció: recordar, aprendre i canviar de perspectiva.',
   [AREAS.STRESS]:
-    'Durant aquests dies treballarem sobre el ritme intern: menys reactivitat, més espai per respirar.',
+    'Aquesta setmana observarem la calma: menys reactivitat i més marge abans de respondre.',
   [AREAS.RELATIONAL]:
-    'Durant aquests dies treballarem sobre els vincles: presència, contacte i menys retirada automàtica.',
+    'Aquesta setmana observarem els vincles: contacte, presència i menys retirada automàtica.',
   [AREAS.IDENTITY]:
-    'Durant aquests dies treballarem sobre la identitat: desenganxar-se una mica de la versió de sempre.',
+    'Aquesta setmana observarem la identitat: no quedar-te enganxat a la versió de sempre.',
 };
 
 export const FEEDBACK = {

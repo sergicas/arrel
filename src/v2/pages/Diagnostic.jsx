@@ -7,38 +7,38 @@ import Shell from '../components/Shell.jsx';
 const QUESTIONS = [
   {
     id: 'difficulty',
-    text: 'Quina part et convé cuidar primer aquests dies?',
+    text: 'Quina capacitat no vols deixar caure aquests dies?',
     options: [
       {
         value: 'move_daily',
-        label: 'Em costa activar el cos i aguantar millor el dia.',
+        label: 'Vull mantenir el cos disponible, fort i mòbil.',
         weights: { physical: 3, stress: 1 },
       },
       {
         value: 'learn_new',
-        label: 'Em noto mentalment més rígid o repetitiu.',
+        label: 'Vull conservar memòria, atenció i curiositat.',
         weights: { cognitive: 3, identity: 1 },
       },
       {
         value: 'be_silent',
-        label: 'Visc massa en tensió o sempre accelerat.',
+        label: 'Vull recuperar calma abans de viure en reacció.',
         weights: { stress: 3, physical: 1 },
       },
       {
         value: 'see_people',
-        label: 'Em tanco més del compte i em costa apropar-me.',
+        label: 'Vull no retirar-me dels vincles que m’importen.',
         weights: { relational: 3, stress: 1 },
       },
       {
         value: 'change_routine',
-        label: "Sento que m'estic repetint i em costa provar una versió diferent.",
+        label: "Vull no quedar atrapat en una versió massa fixa de mi.",
         weights: { identity: 3, cognitive: 1 },
       },
     ],
   },
   {
     id: 'when',
-    text: 'Quan es fa més evident aquest bloqueig?',
+    text: 'Quan notes més que estàs perdent terreny?',
     options: [
       {
         value: 'pressure',
@@ -64,7 +64,7 @@ const QUESTIONS = [
   },
   {
     id: 'avoid',
-    text: 'Quina cosa estàs evitant més últimament?',
+    text: 'Quina prova petita estàs evitant més últimament?',
     options: [
       {
         value: 'body',
@@ -99,27 +99,27 @@ const QUESTIONS = [
     options: [
       {
         value: 'lighter_body',
-        label: 'Més energia, més mobilitat, més confiança corporal.',
+        label: 'El cos respon una mica millor.',
         weights: { physical: 2, stress: 1 },
       },
       {
         value: 'clearer_mind',
-        label: 'Una ment més desperta i menys enganxada als mateixos carrils.',
+        label: 'La memòria o l’atenció no s’han adormit.',
         weights: { cognitive: 2, identity: 1 },
       },
       {
         value: 'slower_inside',
-        label: 'Baixar una mica la tensió i reaccionar menys.',
+        label: 'Tinc una mica més de marge abans de reaccionar.',
         weights: { stress: 2, relational: 1 },
       },
       {
         value: 'closer_people',
-        label: 'Sentir-me més present i menys retirat dels altres.',
+        label: 'Estic una mica més present amb els altres.',
         weights: { relational: 2, identity: 1 },
       },
       {
         value: 'more_alive',
-        label: 'Notar que torno a moure coses que tenia congelades.',
+        label: 'Encara puc sorprendre’m una mica de mi mateix.',
         weights: { identity: 2, cognitive: 1 },
       },
     ],
@@ -130,7 +130,7 @@ const QUESTIONS = [
     options: [
       {
         value: 'clear_push',
-        label: "Una indicació clara i una mica d'empenta.",
+        label: "Una prova clara i una mica d'empenta.",
         weights: { physical: 1, identity: 1 },
       },
       {
@@ -190,8 +190,8 @@ export default function Diagnostic() {
         </p>
         <h2 className="v2-question-title text-balance">{q.text}</h2>
         <p className="text-[var(--text-secondary)] leading-relaxed mb-10 max-w-sm">
-          No busquem etiquetes definitives. Només el focus més útil per començar
-          aquesta setmana.
+          No busquem etiquetes definitives. Busquem quina capacitat convé observar
+          primer perquè no s’encongeixi sense adonar-te’n.
         </p>
         <div className="flex flex-col gap-3">
           {q.options.map((opt, index) => (

@@ -40,7 +40,7 @@ export default defineConfig({
       manifest: {
         name: 'Arrel',
         short_name: 'Arrel',
-        description: 'Una acció curta al dia per cuidar cos, ment, estrès, relacions i rutina personal.',
+        description: 'Proves petites per conservar cos, memòria, calma, vincles i identitat.',
         theme_color: '#edf9fb',
         background_color: '#edf9fb',
         lang: 'ca',
@@ -70,14 +70,14 @@ export default defineConfig({
           {
             name: 'Avui',
             short_name: 'Avui',
-            description: 'Obre l’acció del dia',
+            description: 'Obre la prova del dia',
             url: '/app',
             icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }],
           },
           {
-            name: 'Les cinc àrees',
-            short_name: 'Àrees',
-            description: 'Consulta les àrees de treball',
+            name: 'Les cinc capacitats',
+            short_name: 'Capacitats',
+            description: 'Consulta les capacitats que Arrel observa',
             url: '/menu/arees',
             icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }],
           },

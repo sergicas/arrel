@@ -2,11 +2,11 @@ import { Check, Circle, Minus, X } from 'lucide-react';
 import { CYCLE_LENGTH, FEEDBACK } from '../lib/types.js';
 
 const STATUS_LABELS = {
-  [FEEDBACK.DONE]: 'fet',
-  [FEEDBACK.PARTIAL]: 'mig fet',
-  [FEEDBACK.SKIPPED]: 'no fet',
+  [FEEDBACK.DONE]: 'hi és',
+  [FEEDBACK.PARTIAL]: 'costava',
+  [FEEDBACK.SKIPPED]: 'evitat',
   today: 'avui',
-  rest: 'repòs',
+  rest: 'lectura',
   pending: 'pendent',
 };
 

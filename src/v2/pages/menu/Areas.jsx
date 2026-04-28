@@ -14,9 +14,9 @@ export default function Areas() {
     <Shell showBack backTo="/menu">
       <div className="flex-1 flex flex-col pt-8 pb-8 gap-6">
         <div>
-          <p className="v2-kicker mb-4">Les cinc àrees</p>
+          <p className="v2-kicker mb-4">Les cinc capacitats</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Arrel treballa sempre sobre un sol focus cada cicle.
+            Arrel observa una sola capacitat cada cicle.
           </h2>
         </div>
 
@@ -25,7 +25,7 @@ export default function Areas() {
             <li key={area} className="v2-panel">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-lg text-[var(--text-primary)]">{AREA_LABELS[area]}</span>
-                <span className="v2-chip">cicle de 7 dies</span>
+                <span className="v2-chip">7 dies</span>
               </div>
               <p className="mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
                 {AREA_DESCRIPTIONS[area]}

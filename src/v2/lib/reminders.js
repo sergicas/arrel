@@ -1,7 +1,7 @@
 export const REMINDER_NOTIFICATION_ID = 2701;
 
 const REMINDER_TITLE = 'Arrel';
-const REMINDER_BODY = 'Tens una acció curta esperant-te.';
+const REMINDER_BODY = 'Tens una prova petita esperant-te.';
 
 export function parseReminderTime(time) {
   const match = /^(\d{2}):(\d{2})$/.exec(time || '');

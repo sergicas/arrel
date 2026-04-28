@@ -14,21 +14,21 @@ function renderSeo(props = {}) {
 describe('SEO', () => {
   it('renders app metadata and robots rules', async () => {
     renderSeo({
-      title: 'Acció d’avui',
-      description: 'Pantalla personal d’Arrel amb l’acció curta del dia.',
+      title: 'Prova d’avui',
+      description: 'Pantalla personal d’Arrel amb la prova del dia.',
       canonical: 'https://arrel.eu/app',
       robots: 'noindex, follow',
     });
 
     await waitFor(() => {
-      expect(document.title).toBe('Acció d’avui | Arrel');
+      expect(document.title).toBe('Prova d’avui | Arrel');
     });
 
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute('href', 'https://arrel.eu/app');
     expect(document.querySelector('meta[property="og:description"]')).toHaveAttribute(
       'content',
-      'Pantalla personal d’Arrel amb l’acció curta del dia.'
+      'Pantalla personal d’Arrel amb la prova del dia.'
     );
     expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(
       'MobileApplication'

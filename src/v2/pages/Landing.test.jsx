@@ -41,7 +41,7 @@ describe('Landing v2', () => {
   it('opens the starter action directly from the primary CTA', async () => {
     renderLanding();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Provar sense compte' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Comprovar avui' }));
 
     await waitFor(() => {
       expect(screen.getByTestId('state')).toHaveTextContent(`/app|${STATUS.ACTIVE}|starter|`);

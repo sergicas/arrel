@@ -3,7 +3,7 @@ import Shell from '../components/Shell.jsx';
 
 const ITEMS = [
   { to: '/menu/cicles', label: 'Històric' },
-  { to: '/menu/arees', label: 'Les cinc àrees' },
+  { to: '/menu/arees', label: 'Les cinc capacitats' },
   { to: '/menu/recordatori', label: 'Recordatori diari' },
   { to: '/diagnostic', label: 'Personalitzar focus' },
   { to: '/menu/sobre', label: 'Sobre Arrel' },
@@ -18,7 +18,7 @@ export default function Menu() {
           <p className="v2-panel-label mb-3">Menú secundari</p>
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             El centre d&apos;Arrel continua sent la pantalla d&apos;avui. Aquí només hi ha
-            context, històric i configuració mínima.
+            context, lectures anteriors i configuració mínima.
           </p>
           <Link to="/app" className="inline-flex mt-4 text-sm text-[var(--text-primary)] underline">
             Tornar a avui

@@ -60,9 +60,9 @@ export function getAllActions() {
 
 function buildActionSteps(action) {
   return [
-    'Prepara-ho: fes lloc a l’acció i no hi afegeixis cap extra.',
+    'Prepara-ho: fes lloc a la prova i no hi afegeixis cap extra.',
     action.text,
-    'Tanca-ho: respira un cop i marca què ha passat sense corregir-ho.',
+    'Tanca-ho: respira un cop i marca què has comprovat sense corregir-ho.',
   ];
 }
 

@@ -32,18 +32,18 @@ import SEO from '../../components/SEO.jsx';
 const FEATURES = [
   {
     icon: Activity,
-    title: 'Una acció curta cada dia',
-    text: 'Arrel et proposa una acció de 3 a 10 minuts. La fas quan puguis i marques com ha anat.',
+    title: 'Una prova petita cada dia',
+    text: 'Arrel et proposa una prova de 3 a 10 minuts per observar una capacitat que no vols deixar caure.',
   },
   {
     icon: Compass,
-    title: 'Pots començar sense test',
-    text: 'Primer pots provar una acció. Si vols personalitzar l’experiència, després fas una diagnosi de cinc preguntes.',
+    title: 'Comences pel que encara respon',
+    text: 'Primer pots provar-ho sense diagnosi. Si vols més precisió, després respon cinc preguntes sobre on notes que perds terreny.',
   },
   {
     icon: Timer,
     title: 'Funciona per setmanes',
-    text: 'Cada cicle té sis dies d’acció i un dia per revisar què has fet abans de continuar.',
+    text: 'Cada cicle té sis dies de prova i un dia per mirar què ha resistit, què costa i què convé cuidar.',
   },
 ];
 
@@ -51,20 +51,20 @@ const APP_MOCKUPS = [
   {
     preview: 'quiz',
     icon: PenLine,
-    title: 'Diagnosi lleugera',
-    text: 'Cinc preguntes quan vulguis personalitzar el focus.',
+    title: 'Lectura de capacitats',
+    text: 'Cinc preguntes per veure què convé preservar primer.',
   },
   {
     preview: 'action',
     icon: AlarmClockCheck,
-    title: 'Accions concretes',
-    text: 'Tasques curtes amb un check-in senzill.',
+    title: 'Proves concretes',
+    text: 'Gestos curts que donen senyal, no una llista d’obligacions.',
   },
   {
     preview: 'results',
     icon: BadgeCheck,
-    title: 'Progrés visible',
-    text: 'Una lectura clara del que estàs consolidant.',
+    title: 'Senyals visibles',
+    text: 'Una lectura clara del que respon, costa o s’evita.',
   },
 ];
 
@@ -72,22 +72,22 @@ const EXPLAINERS = [
   {
     icon: BookOpen,
     title: 'Què és Arrel?',
-    text: 'Una app que et dona una acció concreta cada dia per cuidar cos, ment, estrès, relacions i rutina personal.',
+    text: 'Una app per no perdre terreny amb l’edat: cada setmana observes una capacitat que vols conservar.',
   },
   {
     icon: Gauge,
     title: 'A qui va dirigida?',
-    text: 'A persones que volen cuidar-se millor però no volen una altra llista infinita d’hàbits, mètriques i recordatoris.',
+    text: 'A persones que noten que la vellesa ja no és una idea llunyana i volen seguir sent capaces, presents i curioses.',
   },
   {
     icon: ShieldCheck,
     title: 'Què no és?',
-    text: 'No és una app mèdica, no substitueix cap professional i no promet resultats clínics.',
+    text: 'No és una app mèdica ni promet frenar l’envelliment biològic. Treballa sobre gestos quotidians i capacitats observables.',
   },
   {
     icon: Lightbulb,
     title: 'Què fas cada dia?',
-    text: 'Obres l’app, llegeixes una acció, la fas i tanques amb un check-in molt curt: fet, mig fet o no fet.',
+    text: 'Obres l’app, fas una prova petita i tanques amb una lectura: què ha respost, què ha costat o què has evitat.',
   },
 ];
 
@@ -96,25 +96,25 @@ const FIRST_DAY_STEPS = [
     step: '01',
     icon: SmilePlus,
     title: 'Entres a l’app',
-    text: 'Arrel t’explica com funciona: una acció al dia, cicles setmanals i check-in curt.',
+    text: 'Arrel t’explica la idea central: no perdre terreny abans d’hora, una prova petita cada dia.',
   },
   {
     step: '02',
     icon: Compass,
     title: 'Tries com començar',
-    text: 'Pots provar una acció sense diagnosi o respondre cinc preguntes per personalitzar el primer focus.',
+    text: 'Pots començar amb una prova inicial o respondre cinc preguntes per detectar la capacitat més fràgil ara mateix.',
   },
   {
     step: '03',
     icon: Sparkles,
-    title: 'Fas l’acció del dia',
-    text: 'És una acció petita i concreta. Per exemple: caminar deu minuts, respirar tres minuts o escriure una frase.',
+    title: 'Fas la prova del dia',
+    text: 'És un gest petit i concret. Per exemple: caminar deu minuts, recordar set objectes o trucar algú.',
   },
   {
     step: '04',
     icon: CheckCircle2,
-    title: 'Marques com ha anat',
-    text: 'Indiques si ho has fet, mig fet o no fet. Amb això Arrel manté el fil del cicle.',
+    title: 'Llegeixes què diu',
+    text: 'Marques si la capacitat hi és, si ha costat o si l’has evitat. Això dona sentit al cicle.',
   },
 ];
 
@@ -122,35 +122,35 @@ const AREAS = [
   {
     icon: Dumbbell,
     name: 'Cos',
-    text: 'Moviment, mobilitat, força bàsica i petites accions físiques.',
+    text: 'Mobilitat, força bàsica i confiança per continuar habitant el cos.',
   },
   {
     icon: Brain,
-    name: 'Ment',
-    text: 'Atenció, flexibilitat mental, lectura, memòria i canvi de perspectiva.',
+    name: 'Memòria',
+    text: 'Atenció, record, aprenentatge i flexibilitat per no tancar els camins mentals.',
   },
   {
     icon: Wind,
-    name: 'Estrès',
-    text: 'Pausa, respiració, notificacions, ritme intern i descans mental.',
+    name: 'Calma',
+    text: 'Marge intern, pausa i capacitat de no viure sempre en reacció.',
   },
   {
     icon: UsersRound,
     name: 'Vincles',
-    text: 'Missatges, trucades, converses curtes i presència amb altres persones.',
+    text: 'Presència, contacte i cura dels fils que et mantenen vinculat.',
   },
   {
     icon: Leaf,
     name: 'Identitat',
-    text: 'Accions per sortir de rutines personals massa automàtiques.',
+    text: 'Moviment personal, decisió i continuïtat amb qui encara vols ser.',
   },
 ];
 
 const USE_CASES = [
-  'Quan vols cuidar-te però et costa mantenir rutines llargues.',
-  'Quan tens poc temps i necessites una acció molt concreta.',
-  'Quan vols reduir estrès sense començar un programa complicat.',
-  'Quan prefereixes provar primer i personalitzar després.',
+  'Quan notes que una part de tu s’està encongint sense fer soroll.',
+  'Quan vols conservar mobilitat, memòria, calma, vincles o identitat.',
+  'Quan no vols una app d’hàbits, sinó una manera de comprovar què encara respon.',
+  'Quan prefereixes una estructura petita abans que un programa complicat.',
 ];
 
 function AppPreview({ type = 'action', compact = false }) {
@@ -183,12 +183,12 @@ function AppPreview({ type = 'action', compact = false }) {
           ) : null}
           {type === 'action' ? (
             <>
-              <p>Acció d’avui · 5 min</p>
-              <h3>Baixa revolucions abans de continuar.</h3>
+              <p>Prova d’avui · 5 min</p>
+              <h3>Comprova què encara respon.</h3>
               <div className="landing-preview-checks">
-                <span>Fet</span>
-                <span>Mig</span>
-                <span>No</span>
+                <span>Hi és</span>
+                <span>Costava</span>
+                <span>Evitat</span>
               </div>
             </>
           ) : null}
@@ -213,8 +213,8 @@ export default function Landing() {
   return (
     <div className="landing-page">
       <SEO
-        title="Una acció al dia"
-        description="Arrel et proposa una acció curta cada dia per cuidar cos, ment, estrès, relacions i rutina personal."
+        title="No perdre terreny"
+        description="Arrel et proposa proves petites per conservar capacitats: cos, memòria, calma, vincles i identitat."
         canonical="https://arrel.eu/"
       />
       <header className="landing-nav">
@@ -225,7 +225,7 @@ export default function Landing() {
         <nav className="landing-links" aria-label="Navegació principal">
           <a href="#que-es">Què és</a>
           <a href="#primer-dia">Primer dia</a>
-          <a href="#arees">Àrees</a>
+          <a href="#arees">Capacitats</a>
           <button type="button" onClick={begin}>
             {hasStarted ? 'Continuar' : 'Provar'}
           </button>
@@ -247,15 +247,15 @@ export default function Landing() {
           </div>
 
           <div className="landing-hero-content">
-            <p className="landing-kicker">Cura quotidiana sense soroll</p>
-            <h1>Una acció al dia. Prou.</h1>
+            <p className="landing-kicker">Per no perdre terreny abans d’hora</p>
+            <h1>Conserva el que no vols deixar caure.</h1>
             <p className="landing-lead">
-              Cinc minuts per cuidar cos, ment o estrès. Arrel tria el pas d’avui
-              perquè tu no hagis de convertir-ho en un projecte.
+              Arrel et proposa proves petites per seguir sent capaç, present i curiós
+              mentre et fas gran. No promet joventut. Ajuda a no abandonar-te.
             </p>
             <div className="landing-actions">
               <button type="button" onClick={begin} className="landing-primary">
-                {hasStarted ? 'Continuar avui' : 'Provar sense compte'}
+                {hasStarted ? 'Continuar avui' : 'Comprovar avui'}
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -279,13 +279,13 @@ export default function Landing() {
         <section id="que-es" className="landing-section landing-explain">
           <div className="landing-section-head">
             <p className="landing-kicker">Què és</p>
-            <h2>Arrel és simple: una acció al dia i un check-in curt.</h2>
+            <h2>Arrel és simple: una capacitat per setmana i una prova petita al dia.</h2>
           </div>
           <div className="landing-definition">
             <p>
-              No has de crear un pla, comparar dades ni omplir una pantalla plena
-              d’objectius. Obres Arrel, fas l’acció que et proposa i marques com ha anat.
-              Demà continues amb la següent.
+              No has de competir amb el teu passat ni convertir la vellesa en un projecte
+              de rendiment. Obres Arrel, fas una prova petita i mires què diu sobre
+              allò que vols conservar.
             </p>
           </div>
           <div className="landing-explainer-grid">
@@ -325,7 +325,7 @@ export default function Landing() {
         <section id="metode" className="landing-section">
           <div className="landing-section-head">
             <p className="landing-kicker">Mètode</p>
-            <h2>Pots provar-ho abans de personalitzar res.</h2>
+            <h2>Pots provar-ho abans de posar-li nom a res.</h2>
           </div>
           <div className="landing-feature-grid">
             {FEATURES.map((feature) => {
@@ -365,8 +365,8 @@ export default function Landing() {
 
         <section id="arees" className="landing-section landing-areas">
           <div className="landing-section-head">
-            <p className="landing-kicker">Les cinc àrees</p>
-            <h2>Les accions es reparteixen en cinc àrees de la vida quotidiana.</h2>
+            <p className="landing-kicker">Les cinc capacitats</p>
+            <h2>Les proves observen cinc capacitats que val la pena preservar.</h2>
           </div>
           <div className="landing-area-list">
             {AREAS.map((area) => {
@@ -386,7 +386,7 @@ export default function Landing() {
         <section className="landing-section landing-use-cases">
           <div className="landing-section-head">
             <p className="landing-kicker">Quan serveix</p>
-            <h2>Serveix quan vols començar petit i evitar complicar-te.</h2>
+            <h2>Serveix quan vols no deixar que la vida s’encongeixi sense adonar-te’n.</h2>
           </div>
           <ul>
             {USE_CASES.map((item) => (
@@ -401,10 +401,10 @@ export default function Landing() {
         <section className="landing-final">
           <div>
             <Sprout size={28} />
-            <h2>Prova una acció i decideix si et serveix.</h2>
+            <h2>Fes una prova i mira si et diu alguna cosa real.</h2>
             <p>
-              Pots començar sense diagnosi. Si després vols que Arrel adapti millor les
-              accions, respondràs cinc preguntes.
+              Pots començar sense diagnosi. Si després vols que Arrel miri millor què
+              convé preservar, respondràs cinc preguntes.
             </p>
             <button type="button" onClick={begin} className="landing-primary">
               {hasStarted ? 'Tornar a avui' : 'Obrir Arrel'}

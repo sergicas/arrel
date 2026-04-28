@@ -12,18 +12,18 @@ test('after two guided cycles the handoff is not a paywall and can continue to c
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await completeCycleDays(page, 6, 'Fet');
+  await completeCycleDays(page, 6, 'Hi és');
   await closeRestDay(page);
   await acknowledgeTransition(page, 1);
   await expect(page.getByText('Cicle 2')).toBeVisible();
   await expect(page.getByText('Dia 1')).toBeVisible();
 
-  await completeCycleDays(page, 6, 'Fet');
+  await completeCycleDays(page, 6, 'Hi és');
   await closeRestDay(page);
   await acknowledgeTransition(page, 2);
 
   await expect(page.getByText('Període inicial complet')).toBeVisible();
-  await expect(page.getByText('Ja tens dos cicles fets.')).toBeVisible();
+  await expect(page.getByText('Ja tens dos cicles observats.')).toBeVisible();
   await expect(page.locator('body')).not.toContainText('5 €');
   await expect(page.locator('body')).not.toContainText('€/mes');
 

@@ -23,10 +23,10 @@ des d'una terminal normal o des de CI.
 
 ## Cobertura inicial
 
-- `landing-to-today.spec.js`: Landing -> Provar sense compte -> Today starter dia 1.
-- `daily-gating.spec.js`: check-in -> bloqueig fins l’endemà -> avançar rellotge -> dia 2.
-- `diagnostic-flow.spec.js`: diagnosi de 5 preguntes -> resultat -> Today personalitzat.
-- `full-cycle.spec.js`: sis dies d’acció -> dia 7 amb resum i CycleDots.
+- `landing-to-today.spec.js`: Landing -> Comprovar avui -> prova starter dia 1.
+- `daily-gating.spec.js`: lectura del dia -> bloqueig fins l’endemà -> avançar rellotge -> dia 2.
+- `diagnostic-flow.spec.js`: diagnosi de 5 preguntes -> resultat -> prova personalitzada.
+- `full-cycle.spec.js`: sis dies de prova -> dia 7 amb resum i CycleDots.
 - `initial-period-complete.spec.js`: dos cicles guiats -> handoff sense preu -> cicle 3.
 - `reminder.spec.js`: fallback web del recordatori, persistència i apagat.
 - `legal-accessible.spec.js`: privacitat i termes accessibles des de landing, menú i Sobre.

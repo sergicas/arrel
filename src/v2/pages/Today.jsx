@@ -21,20 +21,20 @@ import { AREA_ACCENTS, AREA_ACCENT_SOFT, AREA_LABELS, AREAS, FEEDBACK } from '..
 const FEEDBACK_ITEMS = [
   {
     value: FEEDBACK.DONE,
-    label: 'Fet',
-    description: 'Ha passat de veritat.',
+    label: 'Hi és',
+    description: 'La capacitat ha respost.',
     icon: Check,
   },
   {
     value: FEEDBACK.PARTIAL,
-    label: 'Mig',
-    description: 'Hi he entrat una mica.',
+    label: 'Costava',
+    description: "M'ha costat més del que pensava.",
     icon: Sparkles,
   },
   {
     value: FEEDBACK.SKIPPED,
-    label: 'No',
-    description: 'Avui no ha trobat lloc.',
+    label: 'Evitat',
+    description: 'Avui no hi he entrat.',
     icon: CircleSlash,
   },
 ];
@@ -208,7 +208,7 @@ export default function Today() {
   return (
     <Shell showBack backTo="/inici" showMenu className="v2-ritual-shell">
       <div className="v2-ritual-day" style={areaStyle}>
-        <section className="v2-day-ledger" aria-label="Acció d’avui">
+        <section className="v2-day-ledger" aria-label="Prova d’avui">
           <div className="v2-day-mascot" data-mood={mascotMood}>
             <ArrelMascot mood={mascotMood} />
           </div>
@@ -217,7 +217,7 @@ export default function Today() {
             <span>Cicle {state.cycleNumber}</span>
             <span>Dia {state.dayInCycle}</span>
             {todayAction?.duration ? <span>{todayAction.duration}</span> : null}
-            <span>{hasDiagnostic ? 'personalitzat' : 'prova'}</span>
+            <span>{hasDiagnostic ? 'personalitzat' : 'exploració'}</span>
           </div>
 
           <p className="v2-ledger-area">{areaLabel}</p>
@@ -226,19 +226,19 @@ export default function Today() {
           <div className="v2-ledger-rule">
             <span>Regla d’avui</span>
             <p>
-              Fes-ho petit i literal. No ho milloris, no ho converteixis en un projecte,
-              no compensis. Només deixa una marca real.
+              No busquem rendiment. Busquem senyal: comprovar què encara respon,
+              què costa i què tendeixes a deixar caure.
             </p>
           </div>
         </section>
 
         {!currentDayCompleted ? (
-          <section className="v2-action-guide" aria-label="Guia curta de l’acció">
+          <section className="v2-action-guide" aria-label="Guia curta de la prova">
             <div className="v2-guide-copy">
               <p className="v2-ritual-kicker">Guia curta</p>
-              <h2>{currentTimer.completed ? 'Ja tens el temps fet.' : 'Fes-la ara, petita i literal.'}</h2>
+              <h2>{currentTimer.completed ? 'Ja tens el temps fet.' : 'Fes-la ara, petita i honesta.'}</h2>
               <p>
-                Mantén el gest tal com està escrit. Quan acabis, marca només el que ha passat.
+                Mantén el gest tal com està escrit. Quan acabis, marca només què has comprovat.
               </p>
               {todayAction?.steps?.length ? (
                 <ol className="v2-action-steps">
@@ -279,11 +279,11 @@ export default function Today() {
         ) : null}
 
         <section className="v2-day-context">
-          <p className="v2-ritual-kicker">Per què aquesta acció</p>
+          <p className="v2-ritual-kicker">Per què aquesta prova</p>
           <p>
             {hasDiagnostic
               ? todayGuidance
-              : 'Això encara no és un resultat personalitzat. És una primera presa de contacte perquè entenguis Arrel fent-la servir.'}
+              : 'Això encara no és un resultat personalitzat. És una primera presa de contacte per veure si Arrel et pot ajudar a no perdre terreny.'}
           </p>
         </section>
 
@@ -294,12 +294,12 @@ export default function Today() {
             </span>
             <div>
               <p className="v2-ritual-kicker">
-                {hasDiagnostic ? 'Focus personalitzat' : 'Millora la prova'}
+                {hasDiagnostic ? 'Capacitat prioritària' : 'Troba la capacitat a cuidar'}
               </p>
               <h2>
                 {hasDiagnostic
                   ? `Aquesta setmana: ${areaLabel}`
-                  : 'Vols que Arrel triï millor per tu?'}
+                  : 'Vols que Arrel miri què convé preservar primer?'}
               </h2>
             </div>
           </div>
@@ -318,8 +318,8 @@ export default function Today() {
           ) : (
             <>
               <p>
-                Respon cinc preguntes i Arrel començarà un cicle amb el focus que encaixi
-                millor amb el teu moment.
+                Respon cinc preguntes i Arrel començarà un cicle amb la capacitat que
+                sembla més fràgil o més urgent ara mateix.
               </p>
               <button type="button" onClick={personalizeFocus} className="v2-focus-cta">
                 Fer diagnosi
@@ -330,10 +330,10 @@ export default function Today() {
         </section>
 
         {!currentDayCompleted ? (
-          <section className="v2-mark-panel" aria-label="Check-in curt">
+          <section className="v2-mark-panel" aria-label="Lectura curta">
             <div className="v2-mark-head">
-              <p className="v2-ritual-kicker">Marca del dia</p>
-              <h2>Què ha passat?</h2>
+              <p className="v2-ritual-kicker">Lectura del dia</p>
+              <h2>Què has comprovat?</h2>
             </div>
 
             <div className="v2-stamp-grid">
@@ -365,7 +365,7 @@ export default function Today() {
                 value={note}
                 onChange={(event) => setDraft({ dayKey, selectedFeedback, note: event.target.value })}
                 rows={3}
-                placeholder="Què has notat?"
+                placeholder="Què no vols deixar caure?"
               />
             </label>
 
@@ -374,15 +374,15 @@ export default function Today() {
               disabled={!selectedFeedback}
               className="v2-commit-button"
             >
-              Tancar el dia
+              Guardar la lectura
             </button>
           </section>
         ) : (
           <section className="v2-mark-panel is-closed">
-            <p className="v2-ritual-kicker">Marca desada</p>
-            <h2>Avui ja té una petjada.</h2>
+            <p className="v2-ritual-kicker">Lectura desada</p>
+            <h2>Avui ja tens un senyal.</h2>
             <p>
-              Arrel manté el ritme d’una acció al dia. No cal empènyer més avui.
+              Arrel no acumula tasques. Deixa reposar la prova d’avui i torna demà amb una altra prova petita.
             </p>
             {!dayCanOpenNow ? (
               <div className="v2-next-day-card" aria-label="Temps fins al dia següent">

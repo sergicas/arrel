@@ -16,7 +16,7 @@ const SEO = ({
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   const metaDesc =
     description ||
-    "Arrel et proposa una acció curta cada dia per cuidar cos, ment, estrès, vincles i rutina personal. Una cosa al dia, sense soroll.";
+    "Arrel et proposa proves petites per conservar capacitats: cos, memòria, calma, vincles i identitat. No perdre terreny abans d’hora.";
   const path = typeof window !== 'undefined' ? window.location.pathname : '/';
   const canonicalHref = canonical || `${CANONICAL_ORIGIN}${path}`;
   const absoluteImage = image.startsWith('http') ? image : `${CANONICAL_ORIGIN}${image}`;

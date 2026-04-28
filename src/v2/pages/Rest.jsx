@@ -7,9 +7,9 @@ import { getLocalDateKey } from '../lib/storage.js';
 import { FEEDBACK } from '../lib/types.js';
 
 const FEEDBACK_LABELS = {
-  [FEEDBACK.DONE]: 'Fet',
-  [FEEDBACK.PARTIAL]: 'Mig',
-  [FEEDBACK.SKIPPED]: 'No fet',
+  [FEEDBACK.DONE]: 'Hi és',
+  [FEEDBACK.PARTIAL]: 'Costava',
+  [FEEDBACK.SKIPPED]: 'Evitat',
 };
 
 export default function Rest() {
@@ -18,8 +18,8 @@ export default function Rest() {
   const cycleEntries = state.feedback
     .filter((entry) => entry.cycle === state.cycleNumber)
     .sort((a, b) => a.day - b.day);
-  const doneCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.DONE).length;
-  const partialCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.PARTIAL).length;
+  const presentCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.DONE).length;
+  const frictionCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.PARTIAL).length;
   const dayCanOpenNow = canAdvanceDay
     || getLocalDateKey(now) > (state.currentDayAvailableOn || getLocalDateKey(now));
 
@@ -42,10 +42,10 @@ export default function Rest() {
               <ArrelMascot mood="rest" />
             </div>
             <p className="v2-panel-label mb-4">Dia 7 · tancament</p>
-            <p className="text-3xl mb-5 text-balance font-medium">Avui no toca empènyer.</p>
+            <p className="text-3xl mb-5 text-balance font-medium">Avui toca llegir el senyal.</p>
             <p className="text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed">
-              El setè dia serveix per deixar reposar el cicle i mirar què s&apos;ha mogut
-              abans d&apos;obrir el següent.
+              El setè dia serveix per mirar què ha respost, què ha costat i quina
+              capacitat no vols deixar caure.
             </p>
           </div>
 
@@ -54,15 +54,15 @@ export default function Rest() {
             <div className="v2-cycle-summary-grid">
               <span>
                 <strong>{cycleEntries.length}</strong>
-                <small>dies marcats</small>
+                <small>senyals</small>
               </span>
               <span>
-                <strong>{doneCount}</strong>
-                <small>fets</small>
+                <strong>{presentCount}</strong>
+                <small>hi és</small>
               </span>
               <span>
-                <strong>{partialCount}</strong>
-                <small>mig fets</small>
+                <strong>{frictionCount}</strong>
+                <small>costava</small>
               </span>
             </div>
 
@@ -83,8 +83,8 @@ export default function Rest() {
               </div>
             ) : (
               <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                Encara no hi ha marques guardades en aquest cicle. Quan tanquis accions,
-                aquí hi veuràs la teva petjada.
+                Encara no hi ha senyals guardats en aquest cicle. Quan tanquis proves,
+                aquí hi veuràs què respon i què convé cuidar.
               </p>
             )}
           </section>

@@ -73,8 +73,8 @@ function RouteMeta() {
   if (pathname === '/menu/arees') {
     return (
       <SEO
-        title="Les cinc àrees"
-        description="Les cinc àrees d’Arrel: cos, ment, estrès, vincles i identitat. Accions petites per cuidar el teu dia a dia."
+        title="Les cinc capacitats"
+        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i identitat. Proves petites per conservar el que no vols deixar caure."
         canonical="https://arrel.eu/menu/arees"
       />
     );
@@ -84,7 +84,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Sobre Arrel"
-        description="Arrel és una app de benestar quotidià basada en una acció curta al dia, cicles setmanals i una experiència sense soroll."
+        description="Arrel és una estructura petita per observar capacitats, no perdre terreny abans d’hora i cuidar el que encara vols preservar."
         canonical="https://arrel.eu/menu/sobre"
       />
     );
@@ -94,7 +94,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Privacitat i termes"
-        description="Informació legal d’Arrel: privacitat, dades locals, termes d’ús i límits de les accions de benestar."
+        description="Informació legal d’Arrel: privacitat, dades locals, termes d’ús i límits de les proves de cura quotidiana."
         canonical={`https://arrel.eu${pathname}`}
       />
     );
@@ -102,8 +102,8 @@ function RouteMeta() {
 
   return (
     <SEO
-      title={state.status === STATUS.ACTIVE ? 'Acció d’avui' : 'App'}
-      description="Pantalla personal d’Arrel amb l’acció curta del dia i el progrés del cicle."
+      title={state.status === STATUS.ACTIVE ? 'Prova d’avui' : 'App'}
+      description="Pantalla personal d’Arrel amb la prova del dia, la lectura del cicle i el senyal de capacitat."
       canonical={`https://arrel.eu${pathname}`}
       robots="noindex, follow"
     />

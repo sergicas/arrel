@@ -41,7 +41,7 @@ export default function Reminder() {
         <div>
           <p className="v2-kicker mb-4">Recordatori</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Un avís suau per tornar a l’acció del dia.
+            Un avís suau per tornar a la prova del dia.
           </h2>
         </div>
 

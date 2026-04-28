@@ -32,11 +32,11 @@ export default function Paywall() {
         <div className="v2-hero-card text-center">
           <p className="v2-panel-label mb-4">Període inicial complet</p>
           <p className="text-3xl mb-5 text-balance leading-snug font-medium">
-            Ja tens dos cicles fets.
+            Ja tens dos cicles observats.
           </p>
           <p className="text-[var(--text-secondary)] max-w-sm mx-auto leading-relaxed">
-            Ja has provat el ritme bàsic d’Arrel: sis dies d’acció i un dia de repòs.
-            Pots continuar amb un nou cicle quan et vagi bé.
+            Ja has provat el ritme bàsic d’Arrel: sis dies de prova i un dia de lectura.
+            Pots continuar observant una nova capacitat quan et vagi bé.
           </p>
         </div>
 

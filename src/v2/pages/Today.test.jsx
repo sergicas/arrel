@@ -26,9 +26,9 @@ function renderToday(overrides = {}) {
       duration: '≈ 10 min',
       text: 'Camina deu minuts a un ritme còmode.',
       steps: [
-        'Prepara-ho: fes lloc a l’acció.',
+        'Prepara-ho: fes lloc a la prova.',
         'Camina deu minuts a un ritme còmode.',
-        'Tanca-ho: marca què ha passat.',
+        'Tanca-ho: marca què has comprovat.',
       ],
     },
     todayArea: AREAS.STRESS,
@@ -61,8 +61,8 @@ describe('Today v2', () => {
     renderToday();
 
     expect(screen.getByText('Guia curta')).toBeInTheDocument();
-    expect(screen.getByText('Fes-la ara, petita i literal.')).toBeInTheDocument();
-    expect(screen.getByText('Prepara-ho: fes lloc a l’acció.')).toBeInTheDocument();
+    expect(screen.getByText('Fes-la ara, petita i honesta.')).toBeInTheDocument();
+    expect(screen.getByText('Prepara-ho: fes lloc a la prova.')).toBeInTheDocument();
     expect(screen.getByText('10:00')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Iniciar' })).toBeInTheDocument();
   });
@@ -85,8 +85,8 @@ describe('Today v2', () => {
   it('offers the diagnostic when the user is still in starter mode', () => {
     const { startDiagnostic } = renderToday();
 
-    expect(screen.getByText('Millora la prova')).toBeInTheDocument();
-    expect(screen.getByText('Vols que Arrel triï millor per tu?')).toBeInTheDocument();
+    expect(screen.getByText('Troba la capacitat a cuidar')).toBeInTheDocument();
+    expect(screen.getByText('Vols que Arrel miri què convé preservar primer?')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Fer diagnosi' }));
 
@@ -108,8 +108,8 @@ describe('Today v2', () => {
       },
     });
 
-    expect(screen.getByText('Focus personalitzat')).toBeInTheDocument();
-    expect(screen.getByText('Aquesta setmana: Estrès')).toBeInTheDocument();
+    expect(screen.getByText('Capacitat prioritària')).toBeInTheDocument();
+    expect(screen.getByText('Aquesta setmana: Calma')).toBeInTheDocument();
     expect(screen.getByLabelText('Resultat resumit de la diagnosi')).toBeInTheDocument();
   });
 
@@ -129,7 +129,7 @@ describe('Today v2', () => {
       },
     });
 
-    expect(screen.getByText('Avui ja té una petjada.')).toBeInTheDocument();
+    expect(screen.getByText('Avui ja tens un senyal.')).toBeInTheDocument();
     expect(screen.getByLabelText('Temps fins al dia següent')).toHaveTextContent('14 h 30 min');
     expect(screen.getByRole('button', { name: 'S’obre demà' })).toBeDisabled();
   });

@@ -27,7 +27,7 @@ describe('Initial period complete screen', () => {
     const { continueAfterInitialPeriod } = renderPaywall();
 
     expect(screen.getByText('Període inicial complet')).toBeInTheDocument();
-    expect(screen.getByText('Ja tens dos cicles fets.')).toBeInTheDocument();
+    expect(screen.getByText('Ja tens dos cicles observats.')).toBeInTheDocument();
     expect(screen.queryByText(/subscrip|pagament|cobrament|targeta/i)).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Continuar amb un nou cicle' }));

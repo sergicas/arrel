@@ -16,8 +16,8 @@ const AREA_ORDER = [
 
 const AREA_WITH_ARTICLE = {
   [AREAS.PHYSICAL]: 'el cos',
-  [AREAS.COGNITIVE]: 'la ment',
-  [AREAS.STRESS]: 'l’estrès',
+  [AREAS.COGNITIVE]: 'la memòria',
+  [AREAS.STRESS]: 'la calma',
   [AREAS.RELATIONAL]: 'els vincles',
   [AREAS.IDENTITY]: 'la identitat',
 };
@@ -59,7 +59,7 @@ export default function DiagnosticResult() {
             Començarem per {primaryLabel}.
           </h2>
           <p className="text-[var(--text-secondary)] leading-relaxed">
-            Aquesta primera setmana Arrel et proposarà accions curtes per aquest focus.
+            Aquesta primera setmana Arrel et proposarà proves petites per observar aquesta capacitat.
             {secondary ? ` També tindrem present ${AREA_WITH_ARTICLE[secondary.area]}.` : ''}
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function DiagnosticResult() {
 
         <div className="flex w-full min-w-0 flex-col gap-3">
           <button type="button" onClick={handleContinue} className="btn btn-primary w-full">
-            Veure l’acció d’avui
+            Veure la prova d’avui
             <ArrowRight size={18} />
           </button>
           <button type="button" onClick={handleRetake} className="btn btn-ghost w-full">
