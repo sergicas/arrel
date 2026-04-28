@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { useArrel } from '../state/useArrel.js';
 import Shell from '../components/Shell.jsx';
 
 const QUESTIONS = [
   {
     id: 'difficulty',
-    text: 'On notes més desgast aquests últims mesos?',
+    text: 'Quina part et convé cuidar primer aquests dies?',
     options: [
       {
         value: 'move_daily',
@@ -30,7 +31,7 @@ const QUESTIONS = [
       },
       {
         value: 'change_routine',
-        label: 'Sento que m&apos;estic repetint i em costa moure la meva identitat.',
+        label: "Sento que m'estic repetint i em costa provar una versió diferent.",
         weights: { identity: 3, cognitive: 1 },
       },
     ],
@@ -94,7 +95,7 @@ const QUESTIONS = [
   },
   {
     id: 'signal',
-    text: 'Quin senyal t&apos;agradaria notar d&apos;aquí una setmana?',
+    text: "Quin senyal t'agradaria notar d'aquí una setmana?",
     options: [
       {
         value: 'lighter_body',
@@ -125,11 +126,11 @@ const QUESTIONS = [
   },
   {
     id: 'style',
-    text: 'Quin tipus d&apos;ajuda et serveix més ara?',
+    text: "Quin tipus d'ajuda et serveix més ara?",
     options: [
       {
         value: 'clear_push',
-        label: 'Una indicació clara i una mica d&apos;empenta.',
+        label: "Una indicació clara i una mica d'empenta.",
         weights: { physical: 1, identity: 1 },
       },
       {
@@ -167,24 +168,18 @@ export default function Diagnostic() {
     }
 
     completeDiagnostic(next);
-    navigate('/');
+    navigate('/app');
   };
 
   const q = QUESTIONS[step];
 
   return (
-    <Shell>
-      <div className="flex justify-center gap-2 pt-6">
+    <Shell showBack backTo="/inici">
+      <div className="v2-progress-line mt-6" aria-label={`Pas ${step + 1} de ${QUESTIONS.length}`}>
         {QUESTIONS.map((_, i) => (
           <span
             key={i}
-            className={`rounded-full transition-all duration-300 ${
-              i === step
-                ? 'w-8 h-2 bg-[var(--text-primary)]'
-                : i < step
-                  ? 'w-2.5 h-2 bg-[var(--accent-primary)] opacity-50'
-                  : 'w-2.5 h-2 border border-[var(--border-strong)] opacity-40'
-            }`}
+            className={i <= step ? 'v2-progress-segment is-filled' : 'v2-progress-segment'}
           />
         ))}
       </div>
@@ -193,19 +188,21 @@ export default function Diagnostic() {
         <p className="v2-kicker mb-4">
           Diagnòstic curt · pas {step + 1} de {QUESTIONS.length}
         </p>
-        <h2 className="text-[2rem] mb-4 leading-[1.05] text-balance font-medium">{q.text}</h2>
+        <h2 className="v2-question-title text-balance">{q.text}</h2>
         <p className="text-[var(--text-secondary)] leading-relaxed mb-10 max-w-sm">
-          No busquem una identitat completa. Només el lloc més exposat des d&apos;on
-          val la pena començar.
+          No busquem etiquetes definitives. Només el focus més útil per començar
+          aquesta setmana.
         </p>
         <div className="flex flex-col gap-3">
-          {q.options.map((opt) => (
+          {q.options.map((opt, index) => (
             <button
               key={opt.value}
               onClick={() => handleSelect(opt)}
               className="v2-option text-left"
             >
-              {opt.label}
+              <span className="v2-option-index">{String(index + 1).padStart(2, '0')}</span>
+              <span>{opt.label}</span>
+              <ArrowRight size={16} className="v2-option-arrow" />
             </button>
           ))}
         </div>

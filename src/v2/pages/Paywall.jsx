@@ -3,14 +3,14 @@ import { useArrel } from '../state/useArrel.js';
 import Shell from '../components/Shell.jsx';
 
 export default function Paywall() {
-  const { subscribe } = useArrel();
+  const { continueAfterInitialPeriod } = useArrel();
   const [deferred, setDeferred] = useState(false);
 
   if (deferred) {
     return (
-      <Shell>
+      <Shell showBack backTo="/menu">
         <div className="flex-1 flex flex-col justify-center items-center text-center py-12">
-          <p className="text-xl mb-6 text-balance font-light max-w-xs">Arrel s&apos;atura aquí.</p>
+          <p className="text-xl mb-6 text-balance font-light max-w-xs">Arrel queda pausada aquí.</p>
           <p className="text-[var(--text-secondary)] mb-12 max-w-xs leading-relaxed">
             Quan vulguis reprendre el ritme, pots tornar i continuar des del punt on ho has
             deixat.
@@ -19,7 +19,7 @@ export default function Paywall() {
             onClick={() => setDeferred(false)}
             className="text-sm text-[var(--text-tertiary)] underline hover:text-[var(--text-secondary)] transition"
           >
-            Veure la subscripció
+            Veure opcions
           </button>
         </div>
       </Shell>
@@ -27,21 +27,21 @@ export default function Paywall() {
   }
 
   return (
-    <Shell>
+    <Shell showBack backTo="/menu">
       <div className="flex-1 flex flex-col justify-center py-12">
         <div className="v2-hero-card text-center">
-          <p className="v2-panel-label mb-4">Final del període inicial</p>
+          <p className="v2-panel-label mb-4">Període inicial complet</p>
           <p className="text-3xl mb-5 text-balance leading-snug font-medium">
-            Has completat dos cicles.
+            Ja tens dos cicles fets.
           </p>
           <p className="text-[var(--text-secondary)] max-w-sm mx-auto leading-relaxed">
-            Si vols continuar amb Arrel, la subscripció és de 5 € al mes. Mantens el
-            mateix ritme: una acció al dia, sense soroll afegit.
+            Ja has provat el ritme bàsic d’Arrel: sis dies d’acció i un dia de repòs.
+            Pots continuar amb un nou cicle quan et vagi bé.
           </p>
         </div>
 
-        <button onClick={subscribe} className="btn btn-primary w-full mt-8">
-          Continuar amb Arrel
+        <button onClick={continueAfterInitialPeriod} className="btn btn-primary w-full mt-8">
+          Continuar amb un nou cicle
         </button>
         <button
           onClick={() => setDeferred(true)}

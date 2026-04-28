@@ -1,5 +1,5 @@
 const CACHE_NAME = 'arrel-cache-v1';
-const URLS_TO_CACHE = ['/', '/index.html', '/manifest.json', '/vite.svg'];
+const URLS_TO_CACHE = ['/', '/index.html', '/arrel-logo.svg', '/pwa-192x192.png', '/pwa-512x512.png'];
 
 // Install: Cache core assets
 self.addEventListener('install', (event) => {
@@ -55,7 +55,7 @@ self.addEventListener('push', function (event) {
   if (event.data) {
     self.registration.showNotification('Arrel Protocol', {
       body: event.data.text(),
-      icon: '/vite.svg',
+      icon: '/pwa-192x192.png',
     });
   }
 });

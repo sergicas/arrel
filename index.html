@@ -1,16 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="ca">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/arrel-logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>Arrel | Una acció al dia</title>
+    <meta
+      name="description"
+      content="Arrel et proposa una acció curta cada dia per cuidar cos, ment, estrès, vincles i rutina personal. Una cosa al dia, sense soroll."
+    />
+    <meta name="application-name" content="Arrel" />
+    <meta name="apple-mobile-web-app-title" content="Arrel" />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- PWA / Mobile Optimization -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#faf6ee" />
+    <meta name="theme-color" content="#edf9fb" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+
+    <!-- Social Preview -->
+    <meta property="og:title" content="Arrel | Una acció al dia" />
+    <meta
+      property="og:description"
+      content="Una acció curta al dia per cuidar cos, ment, estrès, vincles i rutina personal."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://arrel.eu/" />
+    <meta property="og:image" content="https://arrel.eu/pwa-512x512.png" />
+    <meta property="og:site_name" content="Arrel" />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Font Optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,16 +39,12 @@
       rel="stylesheet"
     />
 
-    <!-- Critical Resource Preload -->
-    <link rel="preload" as="image" href="/vite.svg" />
-    <!-- <link rel="preload" as="image" href="/hero-image.webp" /> Un-comment if used as LCP hero -->
-
     <!-- Supabase Preconnect -->
     <link rel="preconnect" href="https://api.arrel.eu" />
     <link rel="preconnect" href="https://*.supabase.co" />
 
     <!-- Critical Route Prefetch -->
-    <link rel="prefetch" href="/menu" />
+    <link rel="prefetch" href="/app" />
   </head>
 
   <body>

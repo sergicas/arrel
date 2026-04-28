@@ -1,7 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /app
+Disallow: /diagnostic
 Disallow: /dashboard
 Disallow: /protocol
 Disallow: /api/
+Disallow: /menu/cicles
+Disallow: /menu/recordatori
 
 Sitemap: https://arrel.eu/sitemap.xml

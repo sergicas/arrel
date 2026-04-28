@@ -6,7 +6,18 @@ import reactPlugin from 'eslint-plugin-react'
 import prettierConfig from 'eslint-config-prettier'
 
 export default [
-  { ignores: ['dist', 'node_modules', '*.config.js', 'scripts'] },
+  {
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'ios/App/App/public/**',
+      'test-results/**',
+      'playwright-report/**',
+      'blob-report/**',
+      '*.config.js',
+      'scripts/**',
+    ],
+  },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {

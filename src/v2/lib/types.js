@@ -7,11 +7,11 @@ export const AREAS = {
 };
 
 export const AREA_LABELS = {
-  [AREAS.PHYSICAL]: 'Deteriorament funcional del cos',
-  [AREAS.COGNITIVE]: 'Rigidesa cognitiva',
-  [AREAS.STRESS]: 'Estrès crònic',
-  [AREAS.RELATIONAL]: 'Aïllament relacional',
-  [AREAS.IDENTITY]: 'Estancament identitari',
+  [AREAS.PHYSICAL]: 'Cos',
+  [AREAS.COGNITIVE]: 'Ment',
+  [AREAS.STRESS]: 'Estrès',
+  [AREAS.RELATIONAL]: 'Vincles',
+  [AREAS.IDENTITY]: 'Identitat',
 };
 
 export const AREA_SHORT_LABELS = {
@@ -22,17 +22,33 @@ export const AREA_SHORT_LABELS = {
   [AREAS.IDENTITY]: 'Identitat',
 };
 
+export const AREA_ACCENTS = {
+  [AREAS.PHYSICAL]: '#9fd7f0',
+  [AREAS.COGNITIVE]: '#58bcc9',
+  [AREAS.STRESS]: '#7aa7d9',
+  [AREAS.RELATIONAL]: '#6ecbd9',
+  [AREAS.IDENTITY]: '#8a86d6',
+};
+
+export const AREA_ACCENT_SOFT = {
+  [AREAS.PHYSICAL]: 'rgba(159, 215, 240, 0.18)',
+  [AREAS.COGNITIVE]: 'rgba(88, 188, 201, 0.16)',
+  [AREAS.STRESS]: 'rgba(122, 167, 217, 0.16)',
+  [AREAS.RELATIONAL]: 'rgba(110, 203, 217, 0.17)',
+  [AREAS.IDENTITY]: 'rgba(138, 134, 214, 0.15)',
+};
+
 export const AREA_DESCRIPTIONS = {
   [AREAS.PHYSICAL]:
-    "El cos perd força, mobilitat i confiança quan passa massa temps sense ser cridat. Arrel hi torna amb demandes petites i clares.",
+    'Accions curtes per moure’t una mica, recuperar mobilitat i tornar a notar el cos sense convertir-ho en entrenament.',
   [AREAS.COGNITIVE]:
-    "La ment es rigidifica quan ja només repeteix camins coneguts. Arrel introdueix friccions petites perquè torni a obrir-se.",
+    'Petits exercicis per obrir perspectiva, activar l’atenció i sortir dels mateixos camins mentals.',
   [AREAS.STRESS]:
-    "Quan tot va massa de pressa, el sistema queda sempre en alerta. Arrel crea espais curts perquè el cos torni a baixar.",
+    'Pauses molt concretes per baixar revolucions, respirar millor i no respondre sempre des de la pressa.',
   [AREAS.RELATIONAL]:
-    "Quan els vincles es debiliten, la vida es fa més estreta. Arrel demana presència concreta, no intensitat teatral.",
+    'Gestos senzills per reconnectar amb altres persones sense forçar converses llargues ni fer-ho solemne.',
   [AREAS.IDENTITY]:
-    "Quan una persona ja només es repeteix a si mateixa, es va tancant. Arrel obre esquerdes petites perquè torni el moviment.",
+    'Accions petites per provar una variació de rutina, mirar-te diferent i recuperar una mica de moviment personal.',
 };
 
 export const AREA_GUIDANCE = {
@@ -58,9 +74,19 @@ export const STATUS = {
   NEW: 'new',
   DIAGNOSTIC: 'diagnostic',
   ACTIVE: 'active',
-  AWAITING_SUBSCRIPTION: 'awaiting_subscription',
+  INITIAL_PERIOD_COMPLETE: 'initial_period_complete',
+};
+
+export const DEFAULT_REMINDER = {
+  enabled: false,
+  time: '09:00',
+  permission: 'unknown',
+  platform: 'unknown',
+  scheduled: false,
+  lastScheduledAt: null,
+  error: null,
 };
 
 export const CYCLE_LENGTH = 7;
 export const REST_DAY = 7;
-export const FREE_CYCLES = 2;
+export const INITIAL_GUIDED_CYCLES = 2;

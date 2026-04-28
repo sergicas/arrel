@@ -1,5 +1,5 @@
 import Shell from '../../components/Shell.jsx';
-import { AREAS, AREA_LABELS, AREA_DESCRIPTIONS, AREA_SHORT_LABELS } from '../../lib/types.js';
+import { AREAS, AREA_LABELS, AREA_DESCRIPTIONS } from '../../lib/types.js';
 
 const ORDER = [
   AREAS.PHYSICAL,
@@ -25,7 +25,7 @@ export default function Areas() {
             <li key={area} className="v2-panel">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-lg text-[var(--text-primary)]">{AREA_LABELS[area]}</span>
-                <span className="v2-chip">{AREA_SHORT_LABELS[area]}</span>
+                <span className="v2-chip">cicle de 7 dies</span>
               </div>
               <p className="mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
                 {AREA_DESCRIPTIONS[area]}

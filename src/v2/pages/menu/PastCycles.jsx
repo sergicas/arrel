@@ -1,5 +1,7 @@
 import { useArrel } from '../../state/useArrel.js';
 import Shell from '../../components/Shell.jsx';
+import CycleDots from '../../components/CycleDots.jsx';
+import { CYCLE_LENGTH } from '../../lib/types.js';
 import { AREA_LABELS, FEEDBACK } from '../../lib/types.js';
 
 const FEEDBACK_LABEL = {
@@ -16,7 +18,9 @@ function groupByCycle(feedback) {
     map.get(entry.cycle).push(entry);
   }
 
-  return Array.from(map.entries()).sort((a, b) => b[0] - a[0]);
+  return Array.from(map.entries())
+    .map(([cycle, entries]) => [cycle, entries.sort((a, b) => a.day - b.day)])
+    .sort((a, b) => b[0] - a[0]);
 }
 
 export default function PastCycles() {
@@ -28,34 +32,45 @@ export default function PastCycles() {
       <div className="flex-1 flex flex-col pt-8 pb-8 gap-6">
         <div>
           <p className="v2-kicker mb-4">Històric</p>
-          <h2 className="text-3xl font-medium text-balance max-w-sm">Cicles passats</h2>
+          <h2 className="text-3xl font-medium text-balance max-w-sm">
+            {grouped.length === 0 ? 'Encara cap petjada.' : 'Les teves petjades.'}
+          </h2>
         </div>
 
         {grouped.length === 0 ? (
           <div className="v2-panel">
             <p className="text-[var(--text-secondary)] leading-relaxed">
-              Encara no hi ha cicles tancats. Torna aquí després del primer dia 7.
+              Torna aquí després de la primera acció. Hi veuràs què has fet, què ha quedat a mig camí i les notes que hagis escrit.
             </p>
           </div>
         ) : (
           <ul className="flex flex-col gap-4">
             {grouped.map(([cycleNum, entries]) => {
               const area = entries[0]?.area;
+              const visibleDay = cycleNum === state.cycleNumber
+                ? state.dayInCycle
+                : CYCLE_LENGTH;
 
               return (
                 <li key={cycleNum} className="v2-panel">
                   <div className="flex items-baseline justify-between gap-4">
                     <span className="text-lg text-[var(--text-primary)]">Cicle {cycleNum}</span>
-                    <span className="text-xs text-[var(--text-tertiary)] tracking-wide">
+                    <span className="text-xs text-[var(--text-tertiary)]">
                       {area ? AREA_LABELS[area] : ''}
                     </span>
                   </div>
+                  <CycleDots
+                    dayInCycle={visibleDay}
+                    feedback={entries}
+                    cycleNumber={cycleNum}
+                    className="mt-4 justify-start"
+                  />
 
                   <div className="flex flex-col gap-3 mt-4">
                     {entries.map((entry) => (
                       <div
                         key={`${entry.cycle}-${entry.day}`}
-                        className="rounded-[16px] border border-[var(--border-subtle)] px-4 py-3"
+                        className="rounded-lg border border-[var(--border-subtle)] px-4 py-3"
                       >
                         <div className="flex items-baseline justify-between gap-3">
                           <span className="text-sm text-[var(--text-primary)]">Dia {entry.day}</span>

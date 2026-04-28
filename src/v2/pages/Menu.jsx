@@ -2,14 +2,17 @@ import { Link } from 'react-router-dom';
 import Shell from '../components/Shell.jsx';
 
 const ITEMS = [
-  { to: '/menu/cicles', label: 'Cicles passats' },
+  { to: '/menu/cicles', label: 'Històric' },
   { to: '/menu/arees', label: 'Les cinc àrees' },
-  { to: '/menu/sobre', label: 'Sobre arrel' },
+  { to: '/menu/recordatori', label: 'Recordatori diari' },
+  { to: '/diagnostic', label: 'Personalitzar focus' },
+  { to: '/menu/sobre', label: 'Sobre Arrel' },
+  { to: '/legal/privacitat', label: 'Privacitat i termes' },
 ];
 
 export default function Menu() {
   return (
-    <Shell showBack backTo="/">
+    <Shell showBack backTo="/app">
       <div className="flex-1 flex flex-col pt-8 gap-8">
         <div className="v2-panel">
           <p className="v2-panel-label mb-3">Menú secundari</p>
@@ -17,7 +20,7 @@ export default function Menu() {
             El centre d&apos;Arrel continua sent la pantalla d&apos;avui. Aquí només hi ha
             context, històric i configuració mínima.
           </p>
-          <Link to="/" className="inline-flex mt-4 text-sm text-[var(--text-primary)] underline">
+          <Link to="/app" className="inline-flex mt-4 text-sm text-[var(--text-primary)] underline">
             Tornar a avui
           </Link>
         </div>

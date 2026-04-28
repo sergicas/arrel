@@ -10,21 +10,43 @@ export default defineConfig({
     react(),
     sitemap({
       hostname: 'https://arrel.eu',
-      routes: ['/', '/menu/sobre', '/menu/arees'],
-      exclude: ['/dashboard', '/protocol', '/api/*', '/menu/cicles'],
+      dynamicRoutes: ['/inici', '/menu/sobre', '/menu/arees', '/legal', '/legal/privacitat', '/legal/termes'],
+      // `/app` and `/menu/cicles` contain local user progress, so they must stay out of public SEO.
+      exclude: ['/app', '/dashboard', '/protocol', '/api/*', '/menu/cicles', '/menu/recordatori'],
+      changefreq: {
+        '*': 'monthly',
+        '/': 'weekly',
+        '/inici': 'weekly',
+      },
+      priority: {
+        '*': 0.4,
+        '/': 1,
+        '/inici': 0.9,
+        '/menu/sobre': 0.6,
+        '/menu/arees': 0.6,
+      },
+      readable: true,
+      robots: [
+        {
+          userAgent: '*',
+          allow: '/',
+          disallow: ['/app', '/diagnostic', '/dashboard', '/protocol', '/api/', '/menu/cicles', '/menu/recordatori'],
+        },
+      ],
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      includeAssets: ['arrel-logo.svg', 'pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
         name: 'Arrel',
         short_name: 'Arrel',
-        description: 'Una acció al dia per recuperar terreny on el desgast ja ha començat.',
-        theme_color: '#faf6ee',
-        background_color: '#faf6ee',
+        description: 'Una acció curta al dia per cuidar cos, ment, estrès, relacions i rutina personal.',
+        theme_color: '#edf9fb',
+        background_color: '#edf9fb',
+        lang: 'ca',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        start_url: '/app',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -49,7 +71,7 @@ export default defineConfig({
             name: 'Avui',
             short_name: 'Avui',
             description: 'Obre l’acció del dia',
-            url: '/',
+            url: '/app',
             icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }],
           },
           {

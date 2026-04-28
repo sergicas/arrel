@@ -34,3 +34,9 @@ Object.defineProperty(globalThis, 'sessionStorage', {
   configurable: true,
   writable: true,
 });
+
+Object.defineProperty(window, 'scrollTo', {
+  value: () => {},
+  configurable: true,
+  writable: true,
+});

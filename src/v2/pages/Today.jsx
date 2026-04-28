@@ -1,139 +1,406 @@
-import { useState } from 'react';
-import { Check, CircleSlash, PencilLine, Sparkles } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  ArrowRight,
+  Check,
+  CirclePause,
+  CirclePlay,
+  CircleSlash,
+  PencilLine,
+  RotateCcw,
+  SlidersHorizontal,
+  Sparkles,
+} from 'lucide-react';
 import { useArrel } from '../state/useArrel.js';
 import Shell from '../components/Shell.jsx';
 import CycleDots from '../components/CycleDots.jsx';
-import { AREA_LABELS, FEEDBACK } from '../lib/types.js';
+import ArrelMascot from '../components/ArrelMascot.jsx';
+import { getLocalDateKey } from '../lib/storage.js';
+import { AREA_ACCENTS, AREA_ACCENT_SOFT, AREA_LABELS, AREAS, FEEDBACK } from '../lib/types.js';
 
 const FEEDBACK_ITEMS = [
   {
     value: FEEDBACK.DONE,
     label: 'Fet',
-    description: 'Ho he fet tal com tocava avui.',
+    description: 'Ha passat de veritat.',
     icon: Check,
   },
   {
     value: FEEDBACK.PARTIAL,
-    label: 'A mig fer',
-    description: 'Hi he entrat, però no l&apos;he acabat del tot.',
+    label: 'Mig',
+    description: 'Hi he entrat una mica.',
     icon: Sparkles,
   },
   {
     value: FEEDBACK.SKIPPED,
-    label: 'No ho he fet',
-    description: 'Avui no ha passat. Ho deixo registrat igualment.',
+    label: 'No',
+    description: 'Avui no ha trobat lloc.',
     icon: CircleSlash,
   },
 ];
 
+const AREA_ORDER = [
+  AREAS.PHYSICAL,
+  AREAS.COGNITIVE,
+  AREAS.STRESS,
+  AREAS.RELATIONAL,
+  AREAS.IDENTITY,
+];
+
+function durationToMinutes(duration) {
+  const match = duration?.match(/\d+/);
+  if (!match) return 5;
+  return Math.max(1, Number(match[0]));
+}
+
+function formatSeconds(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const rest = seconds % 60;
+  return `${minutes}:${String(rest).padStart(2, '0')}`;
+}
+
+function getMinutesUntilTomorrow(date = new Date()) {
+  const nextMidnight = new Date(date);
+  nextMidnight.setHours(24, 0, 0, 0);
+  return Math.max(0, Math.ceil((nextMidnight.getTime() - date.getTime()) / 60000));
+}
+
+function formatWait(minutes) {
+  if (minutes <= 1) return 'menys d’1 min';
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours === 0) return `${rest} min`;
+  if (rest === 0) return `${hours} h`;
+  return `${hours} h ${String(rest).padStart(2, '0')} min`;
+}
+
+function getMascotMood({ feedbackJustGiven, dayFeedback, previousDayFeedback }) {
+  const visibleFeedback = dayFeedback || previousDayFeedback;
+
+  if (feedbackJustGiven) return 'celebrate';
+  if (!visibleFeedback) return 'action';
+  if (visibleFeedback.value === FEEDBACK.SKIPPED) return 'rest';
+  return 'celebrate';
+}
+
 export default function Today() {
-  const { state, todayAction, todayArea, todayGuidance, submitFeedback, advanceDay } = useArrel();
-  const [selectedFeedback, setSelectedFeedback] = useState(null);
-  const [note, setNote] = useState('');
+  const navigate = useNavigate();
+  const {
+    state,
+    todayAction,
+    todayArea,
+    todayGuidance,
+    hasDiagnostic,
+    dayFeedback,
+    currentDayCompleted,
+    canAdvanceDay,
+    submitFeedback,
+    advanceDay,
+    startDiagnostic,
+  } = useArrel();
+  const dayKey = `${state.cycleNumber}-${state.dayInCycle}`;
+  const totalSeconds = useMemo(
+    () => durationToMinutes(todayAction?.duration) * 60,
+    [todayAction?.duration]
+  );
+  const [draft, setDraft] = useState({ dayKey, selectedFeedback: null, note: '' });
+  const [timer, setTimer] = useState({
+    dayKey,
+    totalSeconds,
+    secondsLeft: totalSeconds,
+    active: false,
+    completed: false,
+  });
+  const [now, setNow] = useState(() => new Date());
+  const selectedFeedback = draft.dayKey === dayKey ? draft.selectedFeedback : null;
+  const note = draft.dayKey === dayKey ? draft.note : '';
+  const currentTimer = timer.dayKey === dayKey ? timer : {
+    dayKey,
+    totalSeconds,
+    secondsLeft: totalSeconds,
+    active: false,
+    completed: false,
+  };
+  const timerProgress = Math.round(((totalSeconds - currentTimer.secondsLeft) / totalSeconds) * 100);
+  const areaLabel = todayArea ? AREA_LABELS[todayArea] : 'Avui';
+  const areaStyle = {
+    '--area-accent': AREA_ACCENTS[todayArea] || '#58bcc9',
+    '--area-soft': AREA_ACCENT_SOFT[todayArea] || 'rgba(88, 188, 201, 0.16)',
+  };
+  const rankedAreas = useMemo(() => {
+    const scores = state.diagnosisScores || {};
+    return AREA_ORDER
+      .map((area) => ({ area, score: scores[area] || 0 }))
+      .sort((a, b) => b.score - a.score);
+  }, [state.diagnosisScores]);
+  const maxScore = Math.max(...rankedAreas.map((entry) => entry.score), 1);
+  const previousDayFeedback = useMemo(() => {
+    if (state.dayInCycle <= 1) return null;
+    return (state.feedback || []).find((entry) => (
+      entry.cycle === state.cycleNumber && entry.day === state.dayInCycle - 1
+    )) || null;
+  }, [state.cycleNumber, state.dayInCycle, state.feedback]);
+  const mascotMood = getMascotMood({
+    feedbackJustGiven: state.feedbackJustGiven,
+    dayFeedback,
+    previousDayFeedback,
+  });
+  const dayCanOpenNow = canAdvanceDay || (
+    currentDayCompleted
+    && getLocalDateKey(now) > (state.currentDayAvailableOn || getLocalDateKey(now))
+  );
+  const waitUntilTomorrow = formatWait(getMinutesUntilTomorrow(now));
+
+  useEffect(() => {
+    if (!timer.active || timer.dayKey !== dayKey) return undefined;
+
+    const interval = window.setInterval(() => {
+      setTimer((current) => {
+        if (!current.active || current.dayKey !== dayKey) return current;
+        if (current.secondsLeft <= 1) {
+          return { ...current, secondsLeft: 0, active: false, completed: true };
+        }
+        return { ...current, secondsLeft: current.secondsLeft - 1 };
+      });
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [dayKey, timer.active, timer.dayKey]);
+
+  useEffect(() => {
+    if (!currentDayCompleted || dayCanOpenNow) return undefined;
+
+    const interval = window.setInterval(() => setNow(new Date()), 60000);
+    return () => window.clearInterval(interval);
+  }, [currentDayCompleted, dayCanOpenNow]);
 
   const saveFeedback = () => {
     if (!selectedFeedback) return;
     submitFeedback(selectedFeedback, note.trim());
   };
 
+  const startTimer = () => {
+    setTimer((current) => ({
+      ...(current.dayKey === dayKey ? current : { dayKey, totalSeconds, secondsLeft: totalSeconds, completed: false }),
+      active: true,
+    }));
+  };
+
+  const pauseTimer = () => {
+    setTimer((current) => ({ ...current, active: false }));
+  };
+
+  const resetTimer = () => {
+    setTimer({
+      dayKey,
+      totalSeconds,
+      secondsLeft: totalSeconds,
+      active: false,
+      completed: false,
+    });
+  };
+
+  const personalizeFocus = () => {
+    startDiagnostic();
+    navigate('/diagnostic');
+  };
+
   return (
-    <Shell showMenu>
-      <div className="flex-1 flex flex-col">
-        <p className="text-sm text-[var(--text-tertiary)] tracking-wide pt-6">
-          Cicle {state.cycleNumber} · dia {state.dayInCycle}
-        </p>
+    <Shell showBack backTo="/inici" showMenu className="v2-ritual-shell">
+      <div className="v2-ritual-day" style={areaStyle}>
+        <section className="v2-day-ledger" aria-label="Acció d’avui">
+          <div className="v2-day-mascot" data-mood={mascotMood}>
+            <ArrelMascot mood={mascotMood} />
+          </div>
 
-        <div className="flex flex-col gap-4 pt-6">
-          <div className="v2-hero-card">
-            <p className="v2-panel-label mb-3">Àrea activa</p>
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-2xl leading-tight font-medium text-balance">
-                {todayArea ? AREA_LABELS[todayArea] : 'Avui'}
-              </h2>
-              <span className="v2-chip">dia {state.dayInCycle}</span>
+          <div className="v2-ledger-meta">
+            <span>Cicle {state.cycleNumber}</span>
+            <span>Dia {state.dayInCycle}</span>
+            {todayAction?.duration ? <span>{todayAction.duration}</span> : null}
+            <span>{hasDiagnostic ? 'personalitzat' : 'prova'}</span>
+          </div>
+
+          <p className="v2-ledger-area">{areaLabel}</p>
+          <h1 className="v2-ledger-action">{todayAction?.text}</h1>
+
+          <div className="v2-ledger-rule">
+            <span>Regla d’avui</span>
+            <p>
+              Fes-ho petit i literal. No ho milloris, no ho converteixis en un projecte,
+              no compensis. Només deixa una marca real.
+            </p>
+          </div>
+        </section>
+
+        {!currentDayCompleted ? (
+          <section className="v2-action-guide" aria-label="Guia curta de l’acció">
+            <div className="v2-guide-copy">
+              <p className="v2-ritual-kicker">Guia curta</p>
+              <h2>{currentTimer.completed ? 'Ja tens el temps fet.' : 'Fes-la ara, petita i literal.'}</h2>
+              <p>
+                Mantén el gest tal com està escrit. Quan acabis, marca només el que ha passat.
+              </p>
+              {todayAction?.steps?.length ? (
+                <ol className="v2-action-steps">
+                  {todayAction.steps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              ) : null}
             </div>
-            <p className="mt-4 text-sm text-[var(--text-secondary)] leading-relaxed">
-              {todayGuidance}
-            </p>
-          </div>
 
-          <div className="v2-panel">
-            <p className="v2-panel-label mb-4">Acció d&apos;avui</p>
-            <p className="text-2xl leading-relaxed text-balance font-medium">
-              {todayAction?.text}
-            </p>
-          </div>
-        </div>
-
-        {!state.feedbackJustGiven ? (
-          <div className="flex flex-col gap-4 mt-8 mb-8">
-            <div>
-              <p className="v2-panel-label mb-3">Check-in curt</p>
-              <div className="flex flex-col gap-3">
-                {FEEDBACK_ITEMS.map((item) => {
-                  const Icon = item.icon;
-                  const active = selectedFeedback === item.value;
-
-                  return (
-                    <button
-                      key={item.value}
-                      onClick={() => setSelectedFeedback(item.value)}
-                      className={`v2-feedback ${active ? 'v2-feedback-active' : ''}`}
-                    >
-                      <span className="mt-0.5">
-                        <Icon size={18} />
-                      </span>
-                      <span className="flex-1 text-left">
-                        <span className="block text-base text-[var(--text-primary)]">
-                          {item.label}
-                        </span>
-                        <span className="block text-sm text-[var(--text-secondary)]">
-                          {item.description}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
+            <div className="v2-timer-card">
+              <div
+                className="v2-timer-ring"
+                style={{ '--timer-progress': `${timerProgress}%` }}
+                aria-label={`Temps restant: ${formatSeconds(currentTimer.secondsLeft)}`}
+              >
+                <span>{formatSeconds(currentTimer.secondsLeft)}</span>
+              </div>
+              <div className="v2-timer-actions">
+                {currentTimer.active ? (
+                  <button type="button" onClick={pauseTimer}>
+                    <CirclePause size={17} />
+                    Pausar
+                  </button>
+                ) : (
+                  <button type="button" onClick={startTimer} disabled={currentTimer.secondsLeft === 0}>
+                    <CirclePlay size={17} />
+                    Iniciar
+                  </button>
+                )}
+                <button type="button" onClick={resetTimer}>
+                  <RotateCcw size={16} />
+                  Reiniciar
+                </button>
               </div>
             </div>
+          </section>
+        ) : null}
 
-            <label className="v2-panel">
-              <span className="v2-panel-label mb-3 flex items-center gap-2">
+        <section className="v2-day-context">
+          <p className="v2-ritual-kicker">Per què aquesta acció</p>
+          <p>
+            {hasDiagnostic
+              ? todayGuidance
+              : 'Això encara no és un resultat personalitzat. És una primera presa de contacte perquè entenguis Arrel fent-la servir.'}
+          </p>
+        </section>
+
+        <section className={`v2-focus-panel ${hasDiagnostic ? 'is-diagnostic' : 'is-starter'}`}>
+          <div className="v2-focus-panel-head">
+            <span>
+              <SlidersHorizontal size={16} />
+            </span>
+            <div>
+              <p className="v2-ritual-kicker">
+                {hasDiagnostic ? 'Focus personalitzat' : 'Millora la prova'}
+              </p>
+              <h2>
+                {hasDiagnostic
+                  ? `Aquesta setmana: ${areaLabel}`
+                  : 'Vols que Arrel triï millor per tu?'}
+              </h2>
+            </div>
+          </div>
+
+          {hasDiagnostic ? (
+            <div className="v2-focus-bars" aria-label="Resultat resumit de la diagnosi">
+              {rankedAreas.slice(0, 3).map(({ area, score }) => (
+                <div key={area} className="v2-focus-row">
+                  <span>{AREA_LABELS[area]}</span>
+                  <div className="v2-focus-track" aria-hidden="true">
+                    <i style={{ width: `${Math.max((score / maxScore) * 100, score > 0 ? 12 : 4)}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              <p>
+                Respon cinc preguntes i Arrel començarà un cicle amb el focus que encaixi
+                millor amb el teu moment.
+              </p>
+              <button type="button" onClick={personalizeFocus} className="v2-focus-cta">
+                Fer diagnosi
+                <ArrowRight size={16} />
+              </button>
+            </>
+          )}
+        </section>
+
+        {!currentDayCompleted ? (
+          <section className="v2-mark-panel" aria-label="Check-in curt">
+            <div className="v2-mark-head">
+              <p className="v2-ritual-kicker">Marca del dia</p>
+              <h2>Què ha passat?</h2>
+            </div>
+
+            <div className="v2-stamp-grid">
+              {FEEDBACK_ITEMS.map((item) => {
+                const Icon = item.icon;
+                const active = selectedFeedback === item.value;
+
+                return (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={() => setDraft({ dayKey, selectedFeedback: item.value, note })}
+                    className={`v2-stamp ${active ? 'is-selected' : ''}`}
+                  >
+                    <Icon size={18} />
+                    <strong>{item.label}</strong>
+                    <span>{item.description}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <label className="v2-note-field">
+              <span>
                 <PencilLine size={14} />
-                Nota opcional
+                Una línia opcional
               </span>
               <textarea
                 value={note}
-                onChange={(event) => setNote(event.target.value)}
+                onChange={(event) => setDraft({ dayKey, selectedFeedback, note: event.target.value })}
                 rows={3}
-                className="input-field min-h-24 resize-none"
-                placeholder="Què ha passat avui? Una línia ja és suficient."
+                placeholder="Què has notat?"
               />
             </label>
 
             <button
               onClick={saveFeedback}
               disabled={!selectedFeedback}
-              className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-40"
+              className="v2-commit-button"
             >
-              Guardar el check-in
+              Tancar el dia
             </button>
-          </div>
+          </section>
         ) : (
-          <div className="v2-panel flex flex-col items-start gap-4 mt-8 mb-8">
-            <p className="v2-panel-label">Check-in desat</p>
-            <p className="text-lg text-[var(--text-primary)] text-balance">
-              Avui ja està registrat. Demà continuem des del mateix lloc.
+          <section className="v2-mark-panel is-closed">
+            <p className="v2-ritual-kicker">Marca desada</p>
+            <h2>Avui ja té una petjada.</h2>
+            <p>
+              Arrel manté el ritme d’una acció al dia. No cal empènyer més avui.
             </p>
-            <button onClick={advanceDay} className="btn btn-primary w-full">
-              Passar al dia següent
+            {!dayCanOpenNow ? (
+              <div className="v2-next-day-card" aria-label="Temps fins al dia següent">
+                <span>El dia següent s’obre d’aquí a</span>
+                <strong>{waitUntilTomorrow}</strong>
+              </div>
+            ) : null}
+            <button onClick={advanceDay} disabled={!dayCanOpenNow} className="v2-commit-button">
+              {dayCanOpenNow ? 'Obrir el dia següent' : 'S’obre demà'}
             </button>
-          </div>
+          </section>
         )}
 
-        <div className="pb-2">
-          <CycleDots dayInCycle={state.dayInCycle} />
-        </div>
+        <CycleDots
+          dayInCycle={state.dayInCycle}
+          feedback={state.feedback}
+          cycleNumber={state.cycleNumber}
+        />
       </div>
     </Shell>
   );

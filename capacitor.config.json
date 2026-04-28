@@ -8,14 +8,14 @@
     },
     "ios": {
         "contentInset": "automatic",
-        "backgroundColor": "#050505",
+        "backgroundColor": "#EDF9FB",
         "preferredContentMode": "mobile"
     },
     "plugins": {
         "SplashScreen": {
             "launchShowDuration": 2000,
             "launchAutoHide": true,
-            "backgroundColor": "#050505",
+            "backgroundColor": "#EDF9FB",
             "androidSplashResourceName": "splash",
             "androidScaleType": "CENTER_CROP",
             "showSpinner": false,
@@ -24,7 +24,7 @@
         },
         "StatusBar": {
             "style": "dark",
-            "backgroundColor": "#050505"
+            "backgroundColor": "#EDF9FB"
         }
     }
 }

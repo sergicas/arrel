@@ -9,13 +9,14 @@ const SEO = ({
   canonical,
   image = '/hero-image.png',
   type = 'website',
+  robots = 'index, follow',
   schema,
 }) => {
   const siteTitle = 'Arrel';
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   const metaDesc =
     description ||
-    "Arrel detecta on el desgast ja ha començat i et dona una acció al dia per recuperar terreny. Criteri clar, sense sorolls.";
+    "Arrel et proposa una acció curta cada dia per cuidar cos, ment, estrès, vincles i rutina personal. Una cosa al dia, sense soroll.";
   const path = typeof window !== 'undefined' ? window.location.pathname : '/';
   const canonicalHref = canonical || `${CANONICAL_ORIGIN}${path}`;
   const absoluteImage = image.startsWith('http') ? image : `${CANONICAL_ORIGIN}${image}`;
@@ -25,6 +26,7 @@ const SEO = ({
       {/* Standard Meta */}
       <title>{fullTitle}</title>
       <meta name="description" content={metaDesc} />
+      <meta name="robots" content={robots} />
       <link rel="canonical" href={canonicalHref} />
 
       {/* Open Graph */}
@@ -49,11 +51,18 @@ const SEO = ({
         <script type="application/ld+json">
           {JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'Organization',
+            '@type': 'MobileApplication',
             name: 'Arrel',
+            applicationCategory: 'LifestyleApplication',
+            operatingSystem: 'iOS, Android, Web',
+            description: metaDesc,
             url: CANONICAL_ORIGIN,
-            logo: `${CANONICAL_ORIGIN}/vite.svg`,
-            sameAs: [],
+            logo: `${CANONICAL_ORIGIN}/pwa-512x512.png`,
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'EUR',
+            },
           })}
         </script>
       )}

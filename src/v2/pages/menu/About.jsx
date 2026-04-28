@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useArrel } from '../../state/useArrel.js';
 import Shell from '../../components/Shell.jsx';
 
@@ -15,7 +15,7 @@ export default function About() {
     }
 
     restartFromDiagnostic();
-    navigate('/');
+    navigate('/app');
   };
 
   const handleReset = () => {
@@ -27,7 +27,7 @@ export default function About() {
     }
 
     resetAll();
-    navigate('/');
+    navigate('/app');
   };
 
   return (
@@ -36,7 +36,7 @@ export default function About() {
         <div>
           <p className="v2-kicker mb-4">Sobre Arrel</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Una estructura petita per actuar on ara hi ha més desgast.
+            Una estructura petita per cuidar el dia sense soroll.
           </h2>
         </div>
 
@@ -45,15 +45,15 @@ export default function About() {
             <p className="v2-panel-label">Què és</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
               Arrel no és una app mèdica ni un dashboard de mètriques. És un sistema de
-              cicles curts que et diu on començar i què toca avui.
+              cicles curts que et dona una acció concreta per avui.
             </p>
           </div>
 
           <div className="v2-panel">
             <p className="v2-panel-label">Com funciona</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Detecta una àrea principal de desgast, treballa sis dies amb una sola acció
-              diària i reserva el setè per tancar el cicle sense soroll.
+              Tria un focus principal, treballa sis dies amb una sola acció diària i
+              reserva el setè per tancar el cicle amb calma.
             </p>
           </div>
 
@@ -73,6 +73,9 @@ export default function About() {
           <button onClick={handleReset} className="btn btn-ghost w-full">
             Esborrar les dades locals
           </button>
+          <Link to="/legal/privacitat" className="btn w-full border border-[var(--border-subtle)]">
+            Privacitat i termes
+          </Link>
         </div>
       </div>
     </Shell>

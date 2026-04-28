@@ -96,5 +96,10 @@ typings/
 # Vite build output
 dist/
 
+# Playwright output
+test-results/
+playwright-report/
+blob-report/
+
 # Local Netlify folder
 .netlify
