@@ -8,7 +8,7 @@ import {
 test('web reminder stores the preference with the installed-app fallback copy', async ({ page }) => {
   await seedState(page, makeActiveState(), '/menu/recordatori');
 
-  await expect(page.getByRole('heading', { name: /Un avís suau/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Un avís a l’hora que triïs.' })).toBeVisible();
   await expect(page.getByRole('status')).toContainText('Arrel no t’enviarà cap recordatori.');
 
   await page.locator('label.v2-reminder-toggle').click();

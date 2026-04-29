@@ -41,14 +41,13 @@ export default function Reminder() {
         <div>
           <p className="v2-kicker mb-4">Recordatori</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Un avís suau per tornar a la prova del dia.
+            Un avís a l’hora que triïs.
           </h2>
         </div>
 
         <div className="v2-panel">
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-            Arrel et pot recordar el moment del dia, no exigir-te’l. No hi ha ratxes,
-            penalitzacions ni soroll extra.
+            Activa’l si vols que Arrel et recordi fer la prova un cop al dia.
           </p>
         </div>
 

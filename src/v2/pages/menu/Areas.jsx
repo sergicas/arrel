@@ -16,7 +16,7 @@ export default function Areas() {
         <div>
           <p className="v2-kicker mb-4">Les cinc capacitats</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Arrel observa una sola capacitat cada cicle.
+            Cada cicle treballa una capacitat.
           </h2>
         </div>
 

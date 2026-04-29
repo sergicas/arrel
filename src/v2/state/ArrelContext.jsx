@@ -49,16 +49,32 @@ export function ArrelProvider({ children }) {
     if (storageReady) return undefined;
 
     let active = true;
+    let completed = false;
+
+    const finishLoading = (durableState) => {
+      if (!active || completed) return;
+      completed = true;
+      setState(durableState);
+      setStorageReady(true);
+    };
+
+    const timeout = window.setTimeout(() => {
+      finishLoading(loadState());
+    }, 2500);
+
     loadDurableState()
       .then((durableState) => {
-        if (active) setState(durableState);
+        window.clearTimeout(timeout);
+        finishLoading(durableState);
       })
-      .finally(() => {
-        if (active) setStorageReady(true);
+      .catch(() => {
+        window.clearTimeout(timeout);
+        finishLoading(loadState());
       });
 
     return () => {
       active = false;
+      window.clearTimeout(timeout);
     };
   }, [storageReady]);
 
@@ -68,16 +84,21 @@ export function ArrelProvider({ children }) {
   }, [state, storageReady]);
 
   const startDiagnostic = useCallback(() => {
-    setState((s) => ({ ...s, status: STATUS.DIAGNOSTIC }));
+    setState((s) => ({
+      ...s,
+      diagnosisJustCompleted: false,
+      cycleJustEnded: false,
+    }));
   }, []);
 
-  const startStarterCycle = useCallback(() => {
+  const startStarterCycle = useCallback((area = AREAS.STRESS) => {
+    const primaryArea = Object.values(AREAS).includes(area) ? area : AREAS.STRESS;
+
     setState((s) => ({
       ...s,
       status: STATUS.ACTIVE,
       entryMode: 'starter',
-      // Starter mode begins with stress because it is the most transversal first action.
-      primaryArea: AREAS.STRESS,
+      primaryArea,
       secondaryArea: null,
       diagnosisAnswers: [],
       diagnosisScores: null,
@@ -258,7 +279,6 @@ export function ArrelProvider({ children }) {
   const restartFromDiagnostic = useCallback(() => {
     setState((s) => ({
       ...initialState,
-      status: STATUS.DIAGNOSTIC,
       pace: s.pace,
       continuedAfterInitialPeriod: s.continuedAfterInitialPeriod,
     }));

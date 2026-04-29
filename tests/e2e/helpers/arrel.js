@@ -52,7 +52,9 @@ export async function advanceClock(page, { days = 0, hours = 0, minutes = 0, sec
 }
 
 export async function startStarterAction(page) {
-  await page.getByRole('button', { name: 'Comprovar avui' }).click();
+  await page.getByText('Triar per on començar', { exact: true }).click();
+  await page.getByRole('button', { name: /Triar la prova d’avui/ }).click();
+  await page.getByRole('button', { name: /Calma/ }).click();
   await expect(page).toHaveURL(/\/app$/);
 }
 
@@ -87,11 +89,8 @@ export async function closeRestDay(page) {
 }
 
 export async function acknowledgeTransition(page, previousCycle) {
-  const transition = page.getByRole('button', {
-    name: new RegExp(`El cicle ${previousCycle} ha acabat`),
-  });
-  await expect(transition).toBeVisible();
-  await transition.click();
+  await expect(page.getByText(`Has acabat el cicle ${previousCycle}.`)).toBeVisible();
+  await page.getByRole('button', { name: 'Obrir la prova d’avui' }).click();
 }
 
 export async function completeDiagnostic(page, optionIndex = 2) {

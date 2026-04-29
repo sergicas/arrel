@@ -7,17 +7,17 @@ const CONTENT = {
     title: 'Les teves dades es queden al teu dispositiu.',
     body: [
       'Arrel guarda localment les respostes de diagnosi, les lectures diàries i les notes opcionals perquè puguis continuar el teu cicle.',
-      'Ara mateix no hi ha compte d’usuari ni sincronització al núvol en aquesta versió. Si esborres les dades del navegador, també esborres el progrés local.',
+      'Aquesta versió no té compte d’usuari ni sincronització al núvol. Si esborres les dades del dispositiu, també esborres el progrés.',
       'No venem dades personals ni les fem servir per publicitat.',
     ],
   },
   termes: {
     kicker: 'Termes',
-    title: 'Arrel és una eina de cura quotidiana, no una eina mèdica.',
+    title: 'Arrel no és una eina mèdica.',
     body: [
-      'Les proves d’Arrel són propostes generals de cura quotidiana. No substitueixen cap diagnòstic, tractament ni consell professional.',
+      'Les proves d’Arrel són exercicis generals. No substitueixen cap diagnòstic, tractament ni consell professional.',
       'Si tens una condició mèdica, dolor persistent o malestar important, consulta un professional de salut abans de seguir qualsevol rutina.',
-      'La versió actual guarda el progrés localment i pot canviar mentre Arrel continua evolucionant.',
+      'Fes només les proves que puguis fer amb seguretat.',
     ],
   },
 };

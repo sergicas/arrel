@@ -4,6 +4,8 @@ import tailwind from '@tailwindcss/postcss';
 import sitemap from 'vite-plugin-sitemap';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const isNativeBuild = process.env.VITE_NATIVE_APP === '1';
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -34,7 +36,7 @@ export default defineConfig({
         },
       ],
     }),
-    VitePWA({
+    !isNativeBuild && VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['arrel-logo.svg', 'pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
@@ -100,7 +102,7 @@ export default defineConfig({
         ],
       },
     }),
-  ],
+  ].filter(Boolean),
   css: {
     postcss: {
       plugins: [tailwind()],

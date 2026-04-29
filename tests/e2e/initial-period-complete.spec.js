@@ -23,7 +23,7 @@ test('after two guided cycles the handoff is not a paywall and can continue to c
   await acknowledgeTransition(page, 2);
 
   await expect(page.getByText('Període inicial complet')).toBeVisible();
-  await expect(page.getByText('Ja tens dos cicles observats.')).toBeVisible();
+  await expect(page.getByText('Has acabat els dos primers cicles.')).toBeVisible();
   await expect(page.locator('body')).not.toContainText('5 €');
   await expect(page.locator('body')).not.toContainText('€/mes');
 

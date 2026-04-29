@@ -59,7 +59,7 @@ export default function DiagnosticResult() {
             Començarem per {primaryLabel}.
           </h2>
           <p className="text-[var(--text-secondary)] leading-relaxed">
-            Aquesta primera setmana Arrel et proposarà proves petites per observar aquesta capacitat.
+            Aquesta setmana Arrel et donarà proves curtes per treballar aquesta capacitat.
             {secondary ? ` També tindrem present ${AREA_WITH_ARTICLE[secondary.area]}.` : ''}
           </p>
         </div>

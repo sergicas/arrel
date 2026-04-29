@@ -55,10 +55,9 @@ export default function Rest() {
               <ArrelMascot mood="rest" />
             </div>
             <p className="v2-panel-label mb-4">Dia 7 · tancament</p>
-            <p className="text-3xl mb-5 text-balance font-medium">Avui toca llegir el senyal.</p>
+            <p className="text-3xl mb-5 text-balance font-medium">Avui toca revisar el cicle.</p>
             <p className="text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed">
-              El setè dia serveix per mirar què ha respost, què ha costat i quina
-              capacitat no vols deixar caure.
+              Mira les sis proves i decideix què vols repetir, ajustar o deixar descansar.
             </p>
           </div>
 
@@ -67,7 +66,7 @@ export default function Rest() {
             <div className="v2-cycle-summary-grid">
               <span>
                 <strong>{cycleEntries.length}</strong>
-                <small>senyals</small>
+                <small>proves</small>
               </span>
               <span>
                 <strong>{presentCount}</strong>
@@ -96,8 +95,7 @@ export default function Rest() {
               </div>
             ) : (
               <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-                Encara no hi ha senyals guardats en aquest cicle. Quan tanquis proves,
-                aquí hi veuràs què respon i què convé cuidar.
+                Encara no hi ha proves guardades en aquest cicle.
               </p>
             )}
           </section>

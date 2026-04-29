@@ -7,7 +7,7 @@ import Shell from '../components/Shell.jsx';
 const QUESTIONS = [
   {
     id: 'difficulty',
-    text: 'Quina capacitat no vols deixar caure aquests dies?',
+    text: 'Quina capacitat vols treballar aquests dies?',
     options: [
       {
         value: 'move_daily',
@@ -31,7 +31,7 @@ const QUESTIONS = [
       },
       {
         value: 'change_routine',
-        label: "Vull no quedar atrapat en una versió massa fixa de mi.",
+        label: 'Vull provar decisions petites fora de la rutina.',
         weights: { identity: 3, cognitive: 1 },
       },
     ],
@@ -52,7 +52,7 @@ const QUESTIONS = [
       },
       {
         value: 'routine',
-        label: 'Quan tot sembla igual i vaig en automàtic.',
+        label: 'Quan repeteixo el mateix sense decidir gaire.',
         weights: { identity: 2, physical: 1, cognitive: 1 },
       },
       {
@@ -83,23 +83,23 @@ const QUESTIONS = [
       },
       {
         value: 'contact',
-        label: 'Buscar o sostenir contacte amb algú.',
+        label: 'Contactar amb algú i mantenir la conversa.',
         weights: { relational: 3 },
       },
       {
         value: 'discomfort',
-        label: 'Fer una cosa que em tregui de la meva versió de sempre.',
+        label: 'Fer una cosa diferent de la meva rutina.',
         weights: { identity: 3 },
       },
     ],
   },
   {
     id: 'signal',
-    text: "Quin senyal t'agradaria notar d'aquí una setmana?",
+    text: "Quin canvi voldries notar d'aquí una setmana?",
     options: [
       {
         value: 'lighter_body',
-        label: 'El cos respon una mica millor.',
+        label: 'Em moc amb una mica més de seguretat.',
         weights: { physical: 2, stress: 1 },
       },
       {
@@ -109,7 +109,7 @@ const QUESTIONS = [
       },
       {
         value: 'slower_inside',
-        label: 'Tinc una mica més de marge abans de reaccionar.',
+        label: 'Puc fer una pausa abans de reaccionar.',
         weights: { stress: 2, relational: 1 },
       },
       {
@@ -135,7 +135,7 @@ const QUESTIONS = [
       },
       {
         value: 'mental_shift',
-        label: 'Una proposta que em faci mirar diferent.',
+        label: 'Una prova que em faci pensar d’una manera diferent.',
         weights: { cognitive: 2 },
       },
       {
@@ -190,8 +190,8 @@ export default function Diagnostic() {
         </p>
         <h2 className="v2-question-title text-balance">{q.text}</h2>
         <p className="text-[var(--text-secondary)] leading-relaxed mb-10 max-w-sm">
-          No busquem etiquetes definitives. Busquem quina capacitat convé observar
-          primer perquè no s’encongeixi sense adonar-te’n.
+          Respon segons el que et passa ara. Al final, Arrel triarà una capacitat
+          per començar el pròxim cicle.
         </p>
         <div className="flex flex-col gap-3">
           {q.options.map((opt, index) => (

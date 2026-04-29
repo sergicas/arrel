@@ -22,7 +22,10 @@ import Legal from './pages/Legal.jsx';
 
 function AppLoading() {
   return (
-    <main className="v2-app-loading" aria-label="Carregant Arrel" />
+    <main className="v2-app-loading" aria-label="Carregant Arrel">
+      <div className="v2-app-loading-mark" aria-hidden="true">A</div>
+      <p>Carregant Arrel...</p>
+    </main>
   );
 }
 
@@ -38,7 +41,7 @@ function StateRoot() {
     case STATUS.NEW:
       return <Navigate to="/inici" replace />;
     case STATUS.DIAGNOSTIC:
-      return <Diagnostic />;
+      return state.primaryArea ? (isToday7 ? <Rest /> : <Today />) : <Navigate to="/inici" replace />;
     case STATUS.INITIAL_PERIOD_COMPLETE:
       return <Paywall />;
     case STATUS.ACTIVE:
@@ -75,7 +78,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Les cinc capacitats"
-        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i identitat. Proves petites per conservar el que no vols deixar caure."
+        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i identitat. Proves curtes per practicar-les."
         canonical="https://arrel.eu/menu/arees"
       />
     );
@@ -95,7 +98,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Sobre Arrel"
-        description="Arrel és una estructura petita per frenar l’envelliment quotidià observant capacitats que encara vols preservar."
+        description="Arrel és una app de proves curtes per practicar capacitats que vols mantenir mentre et fas gran."
         canonical="https://arrel.eu/menu/sobre"
       />
     );
@@ -105,7 +108,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Privacitat i termes"
-        description="Informació legal d’Arrel: privacitat, dades locals, termes d’ús i límits de les proves de cura quotidiana."
+        description="Informació legal d’Arrel: privacitat, dades locals, termes d’ús i límits de les proves."
         canonical={`https://arrel.eu${pathname}`}
       />
     );
@@ -114,7 +117,7 @@ function RouteMeta() {
   return (
     <SEO
       title={state.status === STATUS.ACTIVE ? 'Prova d’avui' : 'App'}
-      description="Pantalla personal d’Arrel amb la prova del dia, la lectura del cicle i el senyal de capacitat."
+      description="Pantalla personal d’Arrel amb la prova del dia i la lectura del cicle."
       canonical={`https://arrel.eu${pathname}`}
       robots="noindex, follow"
     />

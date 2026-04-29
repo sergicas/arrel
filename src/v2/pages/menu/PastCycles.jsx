@@ -33,14 +33,14 @@ export default function PastCycles() {
         <div>
           <p className="v2-kicker mb-4">Històric</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            {grouped.length === 0 ? 'Encara cap senyal.' : 'Els teus senyals.'}
+            {grouped.length === 0 ? 'Encara cap prova guardada.' : 'Proves guardades.'}
           </h2>
         </div>
 
         {grouped.length === 0 ? (
           <div className="v2-panel">
             <p className="text-[var(--text-secondary)] leading-relaxed">
-              Torna aquí després de la primera prova. Hi veuràs què ha respost, què ha costat i les notes que hagis escrit.
+              Quan tanquis una prova, apareixerà aquí amb la lectura i la nota opcional.
             </p>
           </div>
         ) : (

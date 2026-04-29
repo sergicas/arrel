@@ -26,8 +26,7 @@ export default function Pace() {
 
         <div className="v2-panel">
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-            Arrel pot ser una pràctica lenta, regular o accelerada. El valor no és
-            fer més proves: és trobar un ritme que puguis sostenir sense abandonar-te.
+            Tria cada quan vols obrir una prova nova. Pots canviar-ho en qualsevol moment.
           </p>
         </div>
 
@@ -61,10 +60,10 @@ export default function Pace() {
         </div>
 
         <div className="v2-panel">
-          <p className="v2-panel-label mb-3">Criteri</p>
+          <p className="v2-panel-label mb-3">Canvi de ritme</p>
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             Si acabes una prova i canvies el ritme, Arrel recalcula quan pots obrir
-            la següent. Sempre pots tornar al mode lent.
+            la següent.
           </p>
         </div>
       </div>

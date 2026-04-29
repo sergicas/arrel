@@ -15,7 +15,7 @@ export default function About() {
     }
 
     restartFromDiagnostic();
-    navigate('/app');
+    navigate('/diagnostic');
   };
 
   const handleReset = () => {
@@ -36,7 +36,7 @@ export default function About() {
         <div>
           <p className="v2-kicker mb-4">Sobre Arrel</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Una estructura petita per frenar l’envelliment quotidià.
+            Una app de proves curtes per frenar l’envelliment.
           </h2>
         </div>
 
@@ -44,8 +44,8 @@ export default function About() {
           <div className="v2-panel">
             <p className="v2-panel-label">Què és</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Arrel no és una app mèdica ni un dashboard de mètriques. És un sistema de
-              proves petites per observar capacitats que vols preservar mentre et fas gran.
+              Arrel no és una app mèdica ni una pantalla de mètriques. És un sistema de
+              proves curtes per practicar capacitats que vols mantenir mentre et fas gran.
             </p>
           </div>
 
@@ -53,16 +53,14 @@ export default function About() {
             <p className="v2-panel-label">Com funciona</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
               Tria una capacitat principal, escull un ritme lent, regular o accelerat,
-              fes sis proves i reserva el setè dia per mirar què respon, què costa i
-              què no vols deixar caure.
+              fes sis proves i reserva el setè dia per revisar els resultats.
             </p>
           </div>
 
           <div className="v2-panel">
             <p className="v2-panel-label">Versió actual</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Aquesta és la nova base d&apos;Arrel: menys hàbit genèric i més mirada sobre
-              capacitat, memòria, presència i identitat.
+              Arrel guarda el progrés al dispositiu. No cal compte per fer servir aquesta versió.
             </p>
           </div>
         </div>

@@ -26,9 +26,9 @@ function renderToday(overrides = {}) {
       duration: '≈ 10 min',
       text: 'Camina deu minuts a un ritme còmode.',
       steps: [
-        'Prepara-ho: fes lloc a la prova.',
+        'Prepara-ho: deixa a mà el que necessitis.',
         'Camina deu minuts a un ritme còmode.',
-        'Tanca-ho: marca què has comprovat.',
+        'Tanca-ho: marca el resultat.',
       ],
     },
     todayArea: AREAS.STRESS,
@@ -61,8 +61,8 @@ describe('Today v2', () => {
     renderToday();
 
     expect(screen.getByText('Guia curta')).toBeInTheDocument();
-    expect(screen.getByText('Fes-la ara, petita i honesta.')).toBeInTheDocument();
-    expect(screen.getByText('Prepara-ho: fes lloc a la prova.')).toBeInTheDocument();
+    expect(screen.getByText('Fes la prova.')).toBeInTheDocument();
+    expect(screen.getByText('Prepara-ho: deixa a mà el que necessitis.')).toBeInTheDocument();
     expect(screen.getByText('10:00')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Iniciar' })).toBeInTheDocument();
   });
@@ -82,15 +82,12 @@ describe('Today v2', () => {
     expect(screen.getByText('9:59')).toBeInTheDocument();
   });
 
-  it('offers the diagnostic when the user is still in starter mode', () => {
-    const { startDiagnostic } = renderToday();
+  it('keeps starter mode on a single path without a diagnostic CTA', () => {
+    renderToday();
 
-    expect(screen.getByText('Troba la capacitat a cuidar')).toBeInTheDocument();
-    expect(screen.getByText('Vols que Arrel miri què convé preservar primer?')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Fer diagnosi' }));
-
-    expect(startDiagnostic).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('Capacitat d’inici')).toBeInTheDocument();
+    expect(screen.getByText('Aquesta setmana comences per Calma')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Fer diagnosi' })).not.toBeInTheDocument();
   });
 
   it('shows the personalized focus summary after a diagnostic', () => {
@@ -108,7 +105,7 @@ describe('Today v2', () => {
       },
     });
 
-    expect(screen.getByText('Capacitat prioritària')).toBeInTheDocument();
+    expect(screen.getByText('Capacitat personalitzada')).toBeInTheDocument();
     expect(screen.getByText('Aquesta setmana: Calma')).toBeInTheDocument();
     expect(screen.getByLabelText('Resultat resumit de la diagnosi')).toBeInTheDocument();
   });

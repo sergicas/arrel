@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Landing from './Landing.jsx';
 import { ArrelProvider } from '../state/ArrelContext.jsx';
 import { useArrel } from '../state/useArrel.js';
-import { STATUS } from '../lib/types.js';
+import { AREAS, STATUS } from '../lib/types.js';
 
 function StateProbe() {
   const location = useLocation();
@@ -13,7 +13,7 @@ function StateProbe() {
 
   return (
     <output data-testid="state">
-      {location.pathname}|{state.status}|{state.entryMode}|{todayAction?.duration || 'sense-durada'}
+      {location.pathname}|{state.status}|{state.entryMode}|{state.primaryArea}|{todayAction?.duration || 'sense-durada'}
     </output>
   );
 }
@@ -38,13 +38,25 @@ describe('Landing v2', () => {
     localStorage.clear();
   });
 
-  it('opens the starter action directly from the primary CTA', async () => {
+  it('lets the user choose where to start before opening today', async () => {
     renderLanding();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Comprovar avui' }));
+    fireEvent.click(screen.getByText('Triar per on començar'));
+
+    expect(screen.getByRole('button', { name: /Triar la prova d’avui/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Ajustar focus/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Tornar enrere' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Triar la prova d’avui/ }));
+
+    expect(screen.getByRole('button', { name: /Cos/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Memòria/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Tornar a les opcions' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
 
     await waitFor(() => {
-      expect(screen.getByTestId('state')).toHaveTextContent(`/app|${STATUS.ACTIVE}|starter|`);
+      expect(screen.getByTestId('state')).toHaveTextContent(`/app|${STATUS.ACTIVE}|starter|${AREAS.COGNITIVE}|`);
     });
     expect(screen.getByTestId('state')).toHaveTextContent('min');
   });

@@ -23,7 +23,7 @@ des d'una terminal normal o des de CI.
 
 ## Cobertura inicial
 
-- `landing-to-today.spec.js`: Landing -> Comprovar avui -> prova starter dia 1.
+- `landing-to-today.spec.js`: Landing -> opcions d’inici -> prova starter dia 1.
 - `daily-gating.spec.js`: lectura del dia -> bloqueig fins l’endemà -> avançar rellotge -> dia 2.
 - `diagnostic-flow.spec.js`: diagnosi de 5 preguntes -> resultat -> prova personalitzada.
 - `full-cycle.spec.js`: sis dies de prova -> dia 7 amb resum i CycleDots.

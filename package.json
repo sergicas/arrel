@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:e2e:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium",
     "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
-    "ios:sync": "npm run build && cap sync ios",
+    "ios:sync": "VITE_NATIVE_APP=1 npm run build && cap sync ios",
     "ios:open": "cap open ios",
     "preview": "vite preview"
   },

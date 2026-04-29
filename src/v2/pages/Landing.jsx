@@ -22,9 +22,10 @@ import {
   UsersRound,
   Wind,
 } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useArrel } from '../state/useArrel.js';
-import { STATUS } from '../lib/types.js';
+import { AREAS as AREA_IDS, AREA_LABELS } from '../lib/types.js';
 import ArrelLogo from '../components/ArrelLogo.jsx';
 import ArrelMascot from '../components/ArrelMascot.jsx';
 import SEO from '../../components/SEO.jsx';
@@ -33,17 +34,17 @@ const FEATURES = [
   {
     icon: Activity,
     title: 'Una prova petita al teu ritme',
-    text: 'Pots anar lent, regular o accelerat. La prova dura de 3 a 10 minuts; tu decideixes la cadència.',
+    text: 'Pots anar lent, regular o accelerat. Cada prova dura de 3 a 10 minuts.',
   },
   {
     icon: Compass,
-    title: 'Comences pel que encara respon',
-    text: 'Primer pots provar-ho sense diagnosi. Si vols més precisió, després respon cinc preguntes sobre on notes que perds terreny.',
+    title: 'Comences amb una prova concreta',
+    text: 'Arrel et dona una prova inicial i una lectura simple: hi és, costava o l’has evitat.',
   },
   {
     icon: Timer,
     title: 'Funciona per setmanes',
-    text: 'Cada cicle té sis dies de prova i un dia per mirar què ha resistit, què costa i què convé cuidar.',
+    text: 'Cada cicle té sis dies de prova i un setè dia per revisar els resultats.',
   },
 ];
 
@@ -51,20 +52,20 @@ const APP_MOCKUPS = [
   {
     preview: 'quiz',
     icon: PenLine,
-    title: 'Lectura de capacitats',
-    text: 'Cinc preguntes per veure què convé preservar primer.',
+    title: 'Capacitat setmanal',
+    text: 'Cada cicle se centra en una capacitat que vols mantenir.',
   },
   {
     preview: 'action',
     icon: AlarmClockCheck,
     title: 'Proves concretes',
-    text: 'Gestos curts que donen senyal, no una llista d’obligacions.',
+    text: 'Accions curtes amb un final clar.',
   },
   {
     preview: 'results',
     icon: BadgeCheck,
-    title: 'Senyals visibles',
-    text: 'Una lectura clara del que respon, costa o s’evita.',
+    title: 'Resultats visibles',
+    text: 'Una lectura clara: hi és, costava o evitat.',
   },
 ];
 
@@ -72,22 +73,22 @@ const EXPLAINERS = [
   {
     icon: BookOpen,
     title: 'Què és Arrel?',
-    text: 'Una app per frenar l’envelliment en el lloc on es nota cada dia: cos, memòria, calma, vincles i identitat.',
+    text: 'Una app amb proves curtes per practicar cos, memòria, calma, vincles i identitat.',
   },
   {
     icon: Gauge,
     title: 'A qui va dirigida?',
-    text: 'A persones que noten que la vellesa ja no és una idea llunyana i volen seguir sent capaces, presents i curioses.',
+    text: 'A persones que es fan grans i volen mantenir capacitats concretes.',
   },
   {
     icon: ShieldCheck,
     title: 'Què no és?',
-    text: 'No és una app mèdica ni promet revertir l’edat biològica. Parla de frenar l’envelliment com una pràctica quotidiana i observable.',
+    text: 'No és una app mèdica i no promet rejovenir. T’ajuda a practicar capacitats concretes.',
   },
   {
     icon: Lightbulb,
     title: 'Què fas cada dia?',
-    text: 'Obres l’app, fas una prova petita i tanques amb una lectura: què ha respost, què ha costat o què has evitat.',
+    text: 'Obres l’app, fas una prova curta i marques el resultat: hi és, costava o evitat.',
   },
 ];
 
@@ -113,8 +114,8 @@ const FIRST_DAY_STEPS = [
   {
     step: '04',
     icon: CheckCircle2,
-    title: 'Llegeixes què diu',
-    text: 'Marques si la capacitat hi és, si ha costat o si l’has evitat. Això dona sentit al cicle.',
+    title: 'Guardes el resultat',
+    text: 'Marques si la capacitat hi és, si ha costat o si l’has evitat.',
   },
 ];
 
@@ -122,35 +123,58 @@ const AREAS = [
   {
     icon: Dumbbell,
     name: 'Cos',
-    text: 'Mobilitat, força bàsica i confiança per continuar habitant el cos.',
+    text: 'Caminar, aixecar-te, fer força i mantenir l’equilibri.',
   },
   {
     icon: Brain,
     name: 'Memòria',
-    text: 'Atenció, record, aprenentatge i flexibilitat per no tancar els camins mentals.',
+    text: 'Recordar, aprendre, calcular i explicar idees.',
   },
   {
     icon: Wind,
     name: 'Calma',
-    text: 'Marge intern, pausa i capacitat de no viure sempre en reacció.',
+    text: 'Fer pausa, respirar i baixar la tensió.',
   },
   {
     icon: UsersRound,
     name: 'Vincles',
-    text: 'Presència, contacte i cura dels fils que et mantenen vinculat.',
+    text: 'Trucar, saludar, escoltar i fer una pregunta real.',
   },
   {
     icon: Leaf,
     name: 'Identitat',
-    text: 'Moviment personal, decisió i continuïtat amb qui encara vols ser.',
+    text: 'Provar una decisió diferent i veure com et queda.',
   },
 ];
 
 const USE_CASES = [
-  'Quan notes que una part de tu s’està encongint sense fer soroll.',
+  'Quan vols comprovar com tens el cos, la memòria, la calma, els vincles o la identitat.',
   'Quan vols conservar mobilitat, memòria, calma, vincles o identitat.',
-  'Quan no vols una app d’hàbits, sinó una manera de comprovar què encara respon.',
+  'Quan vols saber si una capacitat avui és fàcil, costa o l’estàs evitant.',
   'Quan prefereixes una estructura petita abans que un programa complicat.',
+];
+
+const START_PROOF_OPTIONS = [
+  {
+    area: AREA_IDS.PHYSICAL,
+    text: 'Caminar, força bàsica i equilibri.',
+  },
+  {
+    area: AREA_IDS.COGNITIVE,
+    text: 'Recordar, aprendre i calcular.',
+  },
+  {
+    area: AREA_IDS.STRESS,
+    text: 'Fer pausa, respirar i baixar tensió.',
+  },
+  {
+    area: AREA_IDS.RELATIONAL,
+    text: 'Contactar, escoltar i parlar.',
+  },
+  {
+    area: AREA_IDS.IDENTITY,
+    text: 'Fer una decisió diferent.',
+  },
 ];
 
 function AppPreview({ type = 'action', compact = false }) {
@@ -164,8 +188,8 @@ function AppPreview({ type = 'action', compact = false }) {
         <div className="landing-phone-card">
           {type === 'quiz' ? (
             <>
-              <p>Diagnosi</p>
-              <h3>Com vols començar avui?</h3>
+              <p>Capacitat</p>
+              <h3>Què treballes aquesta setmana?</h3>
               <span />
               <span />
               <span />
@@ -184,7 +208,7 @@ function AppPreview({ type = 'action', compact = false }) {
           {type === 'action' ? (
             <>
               <p>Prova d’avui · 5 min</p>
-              <h3>Comprova què encara respon.</h3>
+              <h3>Mesura una capacitat avui.</h3>
               <div className="landing-preview-checks">
                 <span>Hi és</span>
                 <span>Costava</span>
@@ -200,21 +224,33 @@ function AppPreview({ type = 'action', compact = false }) {
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { state, startStarterCycle } = useArrel();
-  const hasStarted = state.status !== STATUS.NEW;
+  const startPanelRef = useRef(null);
+  const { startStarterCycle } = useArrel();
+  const [showStartOptions, setShowStartOptions] = useState(false);
+  const [startStep, setStartStep] = useState('main');
 
-  const begin = () => {
-    if (!hasStarted) {
-      startStarterCycle();
-    }
+  const openStartOptions = () => {
+    setShowStartOptions(true);
+    setStartStep('main');
+    window.setTimeout(() => {
+      startPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 0);
+  };
+
+  const chooseTodayProof = (area) => {
+    startStarterCycle(area);
     navigate('/app');
+  };
+
+  const goTo = (path) => {
+    navigate(path);
   };
 
   return (
     <div className="landing-page">
       <SEO
         title="Frena el teu envelliment"
-        description="Arrel et proposa proves petites per frenar l’envelliment quotidià: cos, memòria, calma, vincles i identitat."
+        description="Arrel et proposa proves petites per practicar cos, memòria, calma, vincles i identitat."
         canonical="https://arrel.eu/"
       />
       <header className="landing-nav">
@@ -226,13 +262,17 @@ export default function Landing() {
           <a href="#que-es">Què és</a>
           <a href="#primer-dia">Primer dia</a>
           <a href="#arees">Capacitats</a>
-          <button type="button" onClick={begin}>
-            {hasStarted ? 'Continuar' : 'Provar'}
+          <Link to="/menu">Mapa</Link>
+          <button type="button" onClick={openStartOptions}>
+            Començar
           </button>
         </nav>
-        <button type="button" onClick={begin} className="landing-mobile-action" aria-label="Provar Arrel">
-          <ArrowRight size={18} />
-        </button>
+        <div className="landing-mobile-actions">
+          <Link to="/menu" className="landing-mobile-link">Mapa</Link>
+          <button type="button" onClick={openStartOptions} className="landing-mobile-action" aria-label="Obrir opcions d’inici">
+            <ArrowRight size={18} />
+          </button>
+        </div>
       </header>
 
       <main>
@@ -247,19 +287,72 @@ export default function Landing() {
           </div>
 
           <div className="landing-hero-content">
-            <p className="landing-kicker">Una pràctica petita contra el desgast</p>
+            <p className="landing-kicker">Proves curtes per mantenir capacitats</p>
             <h1>Frena el teu envelliment.</h1>
             <p className="landing-lead">
-              Arrel et proposa proves petites per protegir cos, memòria, calma,
-              vincles i identitat mentre et fas gran. Sense miracles: una manera
-              clara de no abandonar-te.
+              Arrel et proposa proves curtes per practicar cos, memòria, calma,
+              vincles i identitat mentre et fas gran. Sense miracles: accions
+              concretes de 3 a 10 minuts.
             </p>
             <div className="landing-actions">
-              <button type="button" onClick={begin} className="landing-primary">
-                {hasStarted ? 'Continuar avui' : 'Comprovar avui'}
+              <button type="button" onClick={openStartOptions} className="landing-primary">
+                Triar per on començar
                 <ArrowRight size={18} />
               </button>
             </div>
+            {showStartOptions ? (
+              <section ref={startPanelRef} className="landing-start-panel" aria-label="Opcions per començar">
+                {startStep === 'main' ? (
+                  <>
+                    <p className="landing-kicker">Com vols començar?</p>
+                    <div className="landing-start-options">
+                      <button type="button" onClick={() => setStartStep('proof')}>
+                        <strong>Triar la prova d’avui</strong>
+                        <span>Escull una capacitat i obre una prova de 3 a 10 minuts.</span>
+                      </button>
+                      <button type="button" onClick={() => goTo('/diagnostic')}>
+                        <strong>Ajustar focus</strong>
+                        <span>Respon cinc preguntes i tria la capacitat principal.</span>
+                      </button>
+                      <button type="button" onClick={() => goTo('/menu/ritme')}>
+                        <strong>Triar ritme</strong>
+                        <span>Lent, regular o accelerat.</span>
+                      </button>
+                      <button type="button" onClick={() => goTo('/menu/arees')}>
+                        <strong>Veure capacitats</strong>
+                        <span>Cos, memòria, calma, vincles i identitat.</span>
+                      </button>
+                      <button type="button" onClick={() => goTo('/menu')}>
+                        <strong>Veure el mapa complet</strong>
+                        <span>Totes les pantalles de l’app.</span>
+                      </button>
+                    </div>
+                    <button type="button" className="landing-start-back" onClick={() => setShowStartOptions(false)}>
+                      Tornar enrere
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="landing-kicker">Tria la prova d’avui</p>
+                    <div className="landing-start-options">
+                      {START_PROOF_OPTIONS.map((option) => (
+                        <button
+                          key={option.area}
+                          type="button"
+                          onClick={() => chooseTodayProof(option.area)}
+                        >
+                          <strong>{AREA_LABELS[option.area]}</strong>
+                          <span>{option.text}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <button type="button" className="landing-start-back" onClick={() => setStartStep('main')}>
+                      Tornar a les opcions
+                    </button>
+                  </>
+                )}
+              </section>
+            ) : null}
             <div className="landing-proof-strip" aria-label="Resum d'Arrel">
               <span>
                 <ShieldCheck size={17} />
@@ -280,13 +373,12 @@ export default function Landing() {
         <section id="que-es" className="landing-section landing-explain">
           <div className="landing-section-head">
             <p className="landing-kicker">Què és</p>
-            <h2>Arrel és simple: una capacitat per setmana i proves petites al ritme que puguis sostenir.</h2>
+            <h2>Arrel és simple: una capacitat per setmana i una prova curta cada vegada.</h2>
           </div>
           <div className="landing-definition">
             <p>
-              No has de competir amb el teu passat ni convertir la vellesa en un projecte
-              de rendiment. Obres Arrel, fas una prova petita i mires què diu sobre
-              allò que vols conservar.
+              No has de competir amb el teu passat. Obres Arrel, fas una prova curta
+              i marques un resultat: hi és, costava o evitat.
             </p>
           </div>
           <div className="landing-explainer-grid">
@@ -326,7 +418,7 @@ export default function Landing() {
         <section id="metode" className="landing-section">
           <div className="landing-section-head">
             <p className="landing-kicker">Mètode</p>
-            <h2>Pots provar-ho abans de posar-li nom a res.</h2>
+            <h2>Comença amb una prova guiada i una lectura simple.</h2>
           </div>
           <div className="landing-feature-grid">
             {FEATURES.map((feature) => {
@@ -367,7 +459,7 @@ export default function Landing() {
         <section id="arees" className="landing-section landing-areas">
           <div className="landing-section-head">
             <p className="landing-kicker">Les cinc capacitats</p>
-            <h2>Les proves observen cinc capacitats que val la pena preservar.</h2>
+            <h2>Les proves treballen cinc capacitats.</h2>
           </div>
           <div className="landing-area-list">
             {AREAS.map((area) => {
@@ -387,7 +479,7 @@ export default function Landing() {
         <section className="landing-section landing-use-cases">
           <div className="landing-section-head">
             <p className="landing-kicker">Quan serveix</p>
-            <h2>Serveix quan vols no deixar que la vida s’encongeixi sense adonar-te’n.</h2>
+            <h2>Serveix quan vols actuar abans que una capacitat es perdi.</h2>
           </div>
           <ul>
             {USE_CASES.map((item) => (
@@ -402,13 +494,13 @@ export default function Landing() {
         <section className="landing-final">
           <div>
             <Sprout size={28} />
-            <h2>Fes una prova i mira si et diu alguna cosa real.</h2>
+            <h2>Fes una prova i decideix què cal practicar.</h2>
             <p>
-              Pots començar sense diagnosi. Si després vols que Arrel miri millor què
-              convé preservar, respondràs cinc preguntes.
+              Arrel et proposa una acció curta, tu la fas i marques què ha passat:
+              hi és, costava o avui l’has evitat.
             </p>
-            <button type="button" onClick={begin} className="landing-primary">
-              {hasStarted ? 'Tornar a avui' : 'Obrir Arrel'}
+            <button type="button" onClick={openStartOptions} className="landing-primary">
+              Veure opcions
               <ArrowRight size={18} />
             </button>
           </div>

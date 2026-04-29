@@ -42,26 +42,26 @@ export const AREA_DESCRIPTIONS = {
   [AREAS.PHYSICAL]:
     'Proves petites per conservar mobilitat, força bàsica i confiança corporal sense convertir-ho en entrenament.',
   [AREAS.COGNITIVE]:
-    'Proves per sostenir atenció, memòria, curiositat i flexibilitat mental quan els camins de sempre s’estrenyen.',
+    'Proves per practicar atenció, record i aprenentatge amb exercicis curts.',
   [AREAS.STRESS]:
-    'Proves de calma per no viure sempre en reacció, recuperar marge i respirar abans de respondre.',
+    'Proves per fer pauses breus i baixar la tensió abans de continuar.',
   [AREAS.RELATIONAL]:
-    'Gestos senzills per no retirar-se dels altres i mantenir presència amb la gent que importa.',
+    'Gestos senzills per parlar, escoltar i mantenir contacte amb persones concretes.',
   [AREAS.IDENTITY]:
-    'Proves per no quedar tancat en una versió fixa de tu mateix i seguir reconeixent moviment propi.',
+    'Proves per provar decisions petites i mantenir curiositat sobre tu mateix.',
 };
 
 export const AREA_GUIDANCE = {
   [AREAS.PHYSICAL]:
-    'Aquesta setmana observarem el cos: mobilitat, força mínima i confiança per continuar habitant-lo.',
+    'Aquesta setmana treballes el cos: mobilitat, força bàsica i equilibri.',
   [AREAS.COGNITIVE]:
-    'Aquesta setmana observarem memòria i atenció: recordar, aprendre i canviar de perspectiva.',
+    'Aquesta setmana treballes memòria i atenció: recordar, aprendre i concentrar-te.',
   [AREAS.STRESS]:
-    'Aquesta setmana observarem la calma: menys reactivitat i més marge abans de respondre.',
+    'Aquesta setmana treballes la calma: fer pausa, respirar i continuar amb menys tensió.',
   [AREAS.RELATIONAL]:
-    'Aquesta setmana observarem els vincles: contacte, presència i menys retirada automàtica.',
+    'Aquesta setmana treballes els vincles: contactar, escoltar i estar present.',
   [AREAS.IDENTITY]:
-    'Aquesta setmana observarem la identitat: no quedar-te enganxat a la versió de sempre.',
+    'Aquesta setmana treballes la identitat: fer una cosa diferent i veure com et queda.',
 };
 
 export const FEEDBACK = {
@@ -86,7 +86,7 @@ export const PACE_OPTIONS = {
   [PACE.SLOW]: {
     label: 'Lent',
     meta: '1 prova al dia',
-    description: 'Per a qui vol un ritme calmat, amb temps de pair què ha comprovat.',
+    description: 'Per fer una prova i esperar fins demà.',
     closedTitle: 'Prova guardada.',
     closedCopy:
       'En ritme lent, la prova següent s’obre demà. Avui no cal fer res més.',
@@ -98,7 +98,7 @@ export const PACE_OPTIONS = {
   [PACE.REGULAR]: {
     label: 'Regular',
     meta: 'cada 6 hores',
-    description: 'Per a qui vol avançar una mica més ràpid sense perdre pausa entre proves.',
+    description: 'Per obrir fins a quatre proves al dia.',
     closedTitle: 'Prova guardada.',
     closedCopy:
       'En ritme regular, la prova següent s’obre al cap d’unes hores.',
@@ -110,7 +110,7 @@ export const PACE_OPTIONS = {
   [PACE.ACCELERATED]: {
     label: 'Accelerat',
     meta: 'sense espera',
-    description: 'Per a qui vol explorar el cicle seguit, sabent que no cal forçar-lo tot el mateix dia.',
+    description: 'Per obrir la prova següent immediatament.',
     closedTitle: 'Prova guardada.',
     closedCopy:
       'En ritme accelerat, pots obrir ara la prova següent.',

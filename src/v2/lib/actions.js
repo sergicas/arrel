@@ -37,7 +37,7 @@ export const ACTIONS = {
     { day: 1, duration: '≈ 5 min', text: "Canvia una microdecisió habitual: ruta, beguda, música o seient. Observa com et queda durant cinc minuts." },
     { day: 2, duration: '≈ 5 min', text: "Acaba aquesta frase: \"Sóc algú que sempre...\". Després escriu un cas concret en què no ho vas ser." },
     { day: 3, duration: '≈ 4 min', text: "Tria una opinió teva ferma. Defensa la posició contrària dos minuts." },
-    { day: 4, duration: '≈ 6 min', text: "Recorda una cosa que t'agradava fer als trenta i fa temps que no fas. Escriu si pots tornar-hi en una versió petita." },
+    { day: 4, duration: '≈ 6 min', text: "Recorda una cosa que t'agradava fer als trenta i fa temps que no fas. Escriu una manera curta de tornar-hi aquesta setmana." },
     { day: 5, duration: '≈ 5 min', text: "Surt al carrer amb una cosa que avui no és habitual: una jaqueta diferent, un barret o un mocador. Camina cinc minuts amb ella." },
     { day: 6, duration: '≈ 5 min', text: "Anota una cosa nova sobre tu que has descobert aquesta setmana." },
   ],
@@ -60,9 +60,9 @@ export function getAllActions() {
 
 function buildActionSteps(action) {
   return [
-    'Prepara-ho: fes lloc a la prova i no hi afegeixis cap extra.',
+    'Prepara-ho: deixa a mà el que necessitis.',
     action.text,
-    'Tanca-ho: respira un cop i marca què has comprovat sense corregir-ho.',
+    'Tanca-ho: marca el resultat.',
   ];
 }
 

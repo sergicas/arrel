@@ -13,11 +13,11 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await completeCycleDays(page, ['Hi és', 'Hi és', 'Hi és', 'Costava', 'Costava', 'Evitat']);
 
   await expect(page.getByText('Dia 7 · tancament')).toBeVisible();
-  await expect(page.getByText('Avui toca llegir el senyal.')).toBeVisible();
+  await expect(page.getByText('Avui toca revisar el cicle.')).toBeVisible();
 
   const summary = page.getByLabel('Resum del cicle');
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(0)).toContainText('6');
-  await expect(summary.locator('.v2-cycle-summary-grid span').nth(0)).toContainText('senyals');
+  await expect(summary.locator('.v2-cycle-summary-grid span').nth(0)).toContainText('proves');
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(1)).toContainText('3');
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(1)).toContainText('hi és');
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(2)).toContainText('2');

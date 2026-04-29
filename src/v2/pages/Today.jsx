@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight,
   Check,
   CirclePause,
   CirclePlay,
@@ -30,19 +28,19 @@ const FEEDBACK_ITEMS = [
   {
     value: FEEDBACK.DONE,
     label: 'Hi és',
-    description: 'La capacitat ha respost.',
+    description: 'L’has pogut fer.',
     icon: Check,
   },
   {
     value: FEEDBACK.PARTIAL,
     label: 'Costava',
-    description: "M'ha costat més del que pensava.",
+    description: 'Ha costat.',
     icon: Sparkles,
   },
   {
     value: FEEDBACK.SKIPPED,
     label: 'Evitat',
-    description: 'Avui no hi he entrat.',
+    description: 'No l’has fet avui.',
     icon: CircleSlash,
   },
 ];
@@ -77,7 +75,6 @@ function getMascotMood({ feedbackJustGiven, dayFeedback, previousDayFeedback }) 
 }
 
 export default function Today() {
-  const navigate = useNavigate();
   const {
     state,
     todayAction,
@@ -89,7 +86,6 @@ export default function Today() {
     canAdvanceDay,
     submitFeedback,
     advanceDay,
-    startDiagnostic,
   } = useArrel();
   const dayKey = `${state.cycleNumber}-${state.dayInCycle}`;
   const totalSeconds = useMemo(
@@ -204,11 +200,6 @@ export default function Today() {
     });
   };
 
-  const personalizeFocus = () => {
-    startDiagnostic();
-    navigate('/diagnostic');
-  };
-
   return (
     <Shell showBack backTo="/inici" showMenu className="v2-ritual-shell">
       <div className="v2-ritual-day" style={areaStyle}>
@@ -222,17 +213,17 @@ export default function Today() {
             <span>Dia {state.dayInCycle}</span>
             {todayAction?.duration ? <span>{todayAction.duration}</span> : null}
             <span>Ritme {paceOption.label.toLowerCase()}</span>
-            <span>{hasDiagnostic ? 'personalitzat' : 'exploració'}</span>
+            <span>{hasDiagnostic ? 'personalitzat' : 'inici'}</span>
           </div>
 
           <p className="v2-ledger-area">{areaLabel}</p>
           <h1 className="v2-ledger-action">{todayAction?.text}</h1>
 
           <div className="v2-ledger-rule">
-            <span>Regla d’avui</span>
+            <span>Com fer-la</span>
             <p>
-              No busquem rendiment. Busquem senyal: comprovar què encara respon,
-              què costa i què tendeixes a deixar caure.
+              Fes aquesta prova sense buscar nota ni marca. Quan acabis, tria
+              una lectura: hi és, costava o avui l’has evitat.
             </p>
           </div>
         </section>
@@ -241,9 +232,9 @@ export default function Today() {
           <section className="v2-action-guide" aria-label="Guia curta de la prova">
             <div className="v2-guide-copy">
               <p className="v2-ritual-kicker">Guia curta</p>
-              <h2>{currentTimer.completed ? 'Ja tens el temps fet.' : 'Fes-la ara, petita i honesta.'}</h2>
+              <h2>{currentTimer.completed ? 'Ja tens el temps fet.' : 'Fes la prova.'}</h2>
               <p>
-                Mantén el gest tal com està escrit. Quan acabis, marca només què has comprovat.
+                Quan acabis, marca el resultat.
               </p>
               {todayAction?.steps?.length ? (
                 <ol className="v2-action-steps">
@@ -283,15 +274,6 @@ export default function Today() {
           </section>
         ) : null}
 
-        <section className="v2-day-context">
-          <p className="v2-ritual-kicker">Per què aquesta prova</p>
-          <p>
-            {hasDiagnostic
-              ? todayGuidance
-              : 'Això encara no és un resultat personalitzat. És una primera presa de contacte per veure si Arrel et pot ajudar a frenar l’envelliment quotidià.'}
-          </p>
-        </section>
-
         <section className={`v2-focus-panel ${hasDiagnostic ? 'is-diagnostic' : 'is-starter'}`}>
           <div className="v2-focus-panel-head">
             <span>
@@ -299,38 +281,34 @@ export default function Today() {
             </span>
             <div>
               <p className="v2-ritual-kicker">
-                {hasDiagnostic ? 'Capacitat prioritària' : 'Troba la capacitat a cuidar'}
+                {hasDiagnostic ? 'Capacitat personalitzada' : 'Capacitat d’inici'}
               </p>
               <h2>
                 {hasDiagnostic
                   ? `Aquesta setmana: ${areaLabel}`
-                  : 'Vols que Arrel miri què convé preservar primer?'}
+                  : `Aquesta setmana comences per ${areaLabel}`}
               </h2>
             </div>
           </div>
 
           {hasDiagnostic ? (
-            <div className="v2-focus-bars" aria-label="Resultat resumit de la diagnosi">
-              {rankedAreas.slice(0, 3).map(({ area, score }) => (
-                <div key={area} className="v2-focus-row">
-                  <span>{AREA_LABELS[area]}</span>
-                  <div className="v2-focus-track" aria-hidden="true">
-                    <i style={{ width: `${Math.max((score / maxScore) * 100, score > 0 ? 12 : 4)}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
             <>
-              <p>
-                Respon cinc preguntes i Arrel començarà un cicle amb la capacitat que
-                sembla més fràgil o més urgent ara mateix.
-              </p>
-              <button type="button" onClick={personalizeFocus} className="v2-focus-cta">
-                Fer diagnosi
-                <ArrowRight size={16} />
-              </button>
+              <p>{todayGuidance}</p>
+              <div className="v2-focus-bars" aria-label="Resultat resumit de la diagnosi">
+                {rankedAreas.slice(0, 3).map(({ area, score }) => (
+                  <div key={area} className="v2-focus-row">
+                    <span>{AREA_LABELS[area]}</span>
+                    <div className="v2-focus-track" aria-hidden="true">
+                      <i style={{ width: `${Math.max((score / maxScore) * 100, score > 0 ? 12 : 4)}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </>
+          ) : (
+            <p>
+              {todayGuidance} Pots canviar la capacitat a Mapa &gt; Ajustar focus.
+            </p>
           )}
         </section>
 
@@ -338,7 +316,7 @@ export default function Today() {
           <section className="v2-mark-panel" aria-label="Lectura curta">
             <div className="v2-mark-head">
               <p className="v2-ritual-kicker">Lectura del dia</p>
-              <h2>Què has comprovat?</h2>
+              <h2>Què ha passat?</h2>
             </div>
 
             <div className="v2-stamp-grid">
@@ -370,7 +348,7 @@ export default function Today() {
                 value={note}
                 onChange={(event) => setDraft({ dayKey, selectedFeedback, note: event.target.value })}
                 rows={3}
-                placeholder="Què no vols deixar caure?"
+                placeholder="Escriu què ha passat, si ho vols recordar."
               />
             </label>
 
