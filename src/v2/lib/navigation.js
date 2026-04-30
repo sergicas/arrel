@@ -17,7 +17,7 @@ export const NAV_SECTIONS = [
   {
     title: 'Configuració',
     items: [
-      { to: '/menu/ritme', label: 'Ritme', description: 'Lent, regular o accelerat.' },
+      { to: '/menu/ritme', label: 'Ritme', description: 'Lent o regular.' },
       { to: '/menu/recordatori', label: 'Recordatori', description: 'Un avís diari opcional.' },
       { to: '/menu/sobre', label: 'Sobre Arrel', description: 'Què és, com funciona i dades locals.' },
     ],

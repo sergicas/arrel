@@ -7,7 +7,7 @@ import ArrelMascot from '../components/ArrelMascot.jsx';
 export default function Transition() {
   const { state, acknowledgeTransition } = useArrel();
   const previousCycle = Math.max(1, state.cycleNumber - 1);
-  const nextArea = getAreaForCycle(state.cycleNumber, state.primaryArea);
+  const nextArea = getAreaForCycle(state.cycleNumber, state.primaryArea, state.currentCycleArea);
   const initialPeriodComplete = state.status === STATUS.INITIAL_PERIOD_COMPLETE;
 
   return (

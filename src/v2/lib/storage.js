@@ -15,6 +15,7 @@ export const initialState = {
   entryMode: null,
   primaryArea: null,
   secondaryArea: null,
+  currentCycleArea: null,
   cycleNumber: 1,
   dayInCycle: 1,
   diagnosisAnswers: [],

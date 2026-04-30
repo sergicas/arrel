@@ -96,7 +96,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Ritme de proves"
-        description="Configura el ritme d’Arrel: lent, regular o accelerat segons com vulguis avançar en les proves."
+        description="Configura el ritme d’Arrel: lent o regular segons com vulguis avançar en les proves."
         canonical="https://arrel.eu/menu/ritme"
       />
     );

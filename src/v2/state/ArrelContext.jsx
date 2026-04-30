@@ -103,23 +103,27 @@ export function ArrelProvider({ children }) {
   const startStarterCycle = useCallback((area = AREAS.STRESS) => {
     const primaryArea = Object.values(AREAS).includes(area) ? area : AREAS.STRESS;
 
-    setState((s) => ({
-      ...s,
-      status: STATUS.ACTIVE,
-      entryMode: 'starter',
-      primaryArea,
-      secondaryArea: null,
-      diagnosisAnswers: [],
-      diagnosisScores: null,
-      cycleNumber: 1,
-      dayInCycle: 1,
-      currentDayAvailableOn: getLocalDateKey(),
-      nextDayAvailableAt: null,
-      feedback: [],
-      feedbackJustGiven: false,
-      diagnosisJustCompleted: false,
-      cycleJustEnded: false,
-    }));
+    setState((s) => {
+      const cycleNumber = s.diagnosisJustCompleted ? s.cycleNumber : nextCycleAfterCurrentProgress(s);
+      return {
+        ...s,
+        status: STATUS.ACTIVE,
+        entryMode: 'starter',
+        primaryArea,
+        secondaryArea: null,
+        currentCycleArea: primaryArea,
+        diagnosisAnswers: [],
+        diagnosisScores: null,
+        cycleNumber,
+        dayInCycle: 1,
+        currentDayAvailableOn: getLocalDateKey(),
+        nextDayAvailableAt: null,
+        feedback: s.feedback || [],
+        feedbackJustGiven: false,
+        diagnosisJustCompleted: false,
+        cycleJustEnded: false,
+      };
+    });
   }, []);
 
   const completeDiagnostic = useCallback((answers) => {
@@ -133,6 +137,7 @@ export function ArrelProvider({ children }) {
       diagnosisAnswers: answers,
       primaryArea: primary,
       secondaryArea: ranked.find((area) => area !== primary) || null,
+      currentCycleArea: primary,
       diagnosisScores: scores,
       cycleNumber: s.diagnosisJustCompleted ? s.cycleNumber : nextCycleAfterCurrentProgress(s),
       dayInCycle: 1,
@@ -148,7 +153,7 @@ export function ArrelProvider({ children }) {
   const submitFeedback = useCallback((value, note = '') => {
     setState((s) => {
       if (s.feedbackJustGiven || hasFeedbackForDay(s.feedback, s.cycleNumber, s.dayInCycle)) return s;
-      const action = getActionForDay(s.cycleNumber, s.dayInCycle, s.primaryArea);
+      const action = getActionForDay(s.cycleNumber, s.dayInCycle, s.primaryArea, s.currentCycleArea);
       const entry = {
         cycle: s.cycleNumber,
         day: s.dayInCycle,
@@ -186,9 +191,11 @@ export function ArrelProvider({ children }) {
       if (isCycleEnd(s.dayInCycle)) {
         const newCycle = s.cycleNumber + 1;
         const initialPeriodComplete = newCycle > INITIAL_GUIDED_CYCLES && !s.continuedAfterInitialPeriod;
+        const currentCycleArea = getAreaForCycle(newCycle, s.primaryArea);
         return {
           ...s,
           cycleNumber: newCycle,
+          currentCycleArea,
           dayInCycle: 1,
           currentDayAvailableOn: currentDate,
           nextDayAvailableAt: null,
@@ -300,13 +307,13 @@ export function ArrelProvider({ children }) {
 
   const todayAction = useMemo(() => {
     if (!state.primaryArea) return null;
-    return getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea);
-  }, [state.cycleNumber, state.dayInCycle, state.primaryArea]);
+    return getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
+  }, [state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea]);
 
   const todayArea = useMemo(() => {
     if (!state.primaryArea) return null;
-    return getAreaForCycle(state.cycleNumber, state.primaryArea);
-  }, [state.cycleNumber, state.primaryArea]);
+    return getAreaForCycle(state.cycleNumber, state.primaryArea, state.currentCycleArea);
+  }, [state.cycleNumber, state.primaryArea, state.currentCycleArea]);
 
   const isToday7 = isRestDay(state.dayInCycle);
   const todayGuidance = todayArea ? AREA_GUIDANCE[todayArea] : null;

@@ -34,7 +34,7 @@ const FEATURES = [
   {
     icon: Activity,
     title: 'Una prova curta al teu ritme',
-    text: 'Pots anar lent, regular o accelerat. Cada prova dura de 3 a 10 minuts.',
+    text: 'Pots anar lent o regular. Cada prova dura de 3 a 10 minuts.',
   },
   {
     icon: Compass,
@@ -103,7 +103,7 @@ const FIRST_DAY_STEPS = [
     step: '02',
     icon: Compass,
     title: 'Tries com avançar',
-    text: 'Comences en ritme lent, però pots passar a regular o accelerat si vols explorar més proves.',
+    text: 'Comences en ritme lent, però pots passar a regular si vols obrir més proves en un mateix dia.',
   },
   {
     step: '03',
@@ -340,7 +340,7 @@ export default function Landing() {
                       </button>
                       <button type="button" onClick={() => goTo('/menu/ritme')}>
                         <strong>Triar ritme</strong>
-                        <span>Lent, regular o accelerat.</span>
+                        <span>Lent o regular.</span>
                       </button>
                       <button type="button" onClick={() => goTo('/menu')}>
                         <strong>Veure el mapa complet</strong>
@@ -354,18 +354,18 @@ export default function Landing() {
                 ) : null}
                 {startStep === 'confirm' && pendingArea ? (
                   <div className="landing-start-confirm">
-                    <p className="landing-kicker">Començar de nou?</p>
+                    <p className="landing-kicker">Obrir cicle nou?</p>
                     <h2>Ja tens un cicle començat.</h2>
                     <p>
-                      Si comences amb {AREA_LABELS[pendingArea]}, Arrel esborrarà el cicle actual
-                      i les lectures guardades en aquesta versió local.
+                      Si comences 7 dies de {AREA_LABELS[pendingArea]}, Arrel conservarà l’històric
+                      i obrirà un cicle nou.
                     </p>
                     <div className="landing-start-confirm-actions">
                       <button type="button" className="landing-primary" onClick={() => navigate('/app')}>
                         Obrir la prova actual
                       </button>
                       <button type="button" className="landing-danger-action" onClick={confirmNewProof}>
-                        Començar de nou amb {AREA_LABELS[pendingArea]}
+                        Sí, començar 7 dies de {AREA_LABELS[pendingArea]}
                       </button>
                     </div>
                     <button type="button" className="landing-start-back" onClick={() => setStartStep('main')}>

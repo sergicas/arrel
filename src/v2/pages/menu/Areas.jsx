@@ -54,21 +54,21 @@ export default function Areas() {
                 {AREA_DESCRIPTIONS[area]}
               </p>
               <button type="button" className="btn btn-primary w-full mt-5" onClick={() => chooseArea(area)}>
-                {area === AREAS.IDENTITY ? 'Activar un Propòsit' : `Fer una prova de ${AREA_LABELS[area]}`}
+                Començar 7 dies de {AREA_LABELS[area]}
               </button>
               {pendingArea === area ? (
                 <div className="v2-area-confirm" role="status">
-                  <p className="v2-panel-label">Començar de nou?</p>
+                  <p className="v2-panel-label">Obrir cicle nou?</p>
                   <p>
-                    Ja tens un cicle començat. Si comences amb {AREA_LABELS[area]},
-                    Arrel esborrarà el cicle actual i les lectures guardades en aquesta versió local.
+                    Ja tens un cicle començat. Si comences 7 dies de {AREA_LABELS[area]},
+                    Arrel conservarà l’històric i obrirà un cicle nou.
                   </p>
                   <div className="v2-area-confirm-actions">
                     <button type="button" className="btn btn-ghost" onClick={() => navigate('/app')}>
                       Obrir la prova actual
                     </button>
                     <button type="button" className="btn border border-[var(--border-subtle)]" onClick={confirmArea}>
-                      Començar de nou amb {AREA_LABELS[area]}
+                      Sí, començar 7 dies de {AREA_LABELS[area]}
                     </button>
                   </div>
                 </div>

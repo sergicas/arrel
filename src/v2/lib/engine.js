@@ -42,7 +42,8 @@ export function diagnosisToPrimaryArea(answers) {
   return ranked[0] || AREAS.PHYSICAL;
 }
 
-export function getAreaForCycle(cycleNumber, primaryArea) {
+export function getAreaForCycle(cycleNumber, primaryArea, currentCycleArea = null) {
+  if (currentCycleArea) return currentCycleArea;
   if (cycleNumber === 1) return primaryArea;
   const startIdx = AREA_ROTATION.indexOf(primaryArea);
   if (startIdx < 0) return AREA_ROTATION[0];
@@ -54,9 +55,9 @@ export function isRestDay(dayInCycle) {
   return dayInCycle === REST_DAY;
 }
 
-export function getActionForDay(cycleNumber, dayInCycle, primaryArea) {
+export function getActionForDay(cycleNumber, dayInCycle, primaryArea, currentCycleArea = null) {
   if (isRestDay(dayInCycle)) return null;
-  const area = getAreaForCycle(cycleNumber, primaryArea);
+  const area = getAreaForCycle(cycleNumber, primaryArea, currentCycleArea);
   return { ...getAction(area, dayInCycle), area };
 }
 
