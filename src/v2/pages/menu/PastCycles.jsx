@@ -1,8 +1,8 @@
+import { Link } from 'react-router-dom';
 import { useArrel } from '../../state/useArrel.js';
 import Shell from '../../components/Shell.jsx';
 import CycleDots from '../../components/CycleDots.jsx';
-import { CYCLE_LENGTH } from '../../lib/types.js';
-import { AREA_LABELS, FEEDBACK } from '../../lib/types.js';
+import { AREA_LABELS, CYCLE_LENGTH, FEEDBACK, STATUS } from '../../lib/types.js';
 
 const FEEDBACK_LABEL = {
   [FEEDBACK.DONE]: 'hi és',
@@ -23,9 +23,22 @@ function groupByCycle(feedback) {
     .sort((a, b) => b[0] - a[0]);
 }
 
+function getEmptyAction(status) {
+  if (status === STATUS.NEW) {
+    return { to: '/inici', label: 'Triar per on començar' };
+  }
+
+  if (status === STATUS.INITIAL_PERIOD_COMPLETE) {
+    return { to: '/app', label: 'Veure opcions per continuar' };
+  }
+
+  return { to: '/app', label: 'Obrir la prova d’avui' };
+}
+
 export default function PastCycles() {
   const { state } = useArrel();
   const grouped = groupByCycle(state.feedback);
+  const emptyAction = getEmptyAction(state.status);
 
   return (
     <Shell showBack backTo="/menu">
@@ -42,6 +55,9 @@ export default function PastCycles() {
             <p className="text-[var(--text-secondary)] leading-relaxed">
               Quan tanquis una prova, apareixerà aquí amb la lectura i la nota opcional.
             </p>
+            <Link to={emptyAction.to} className="btn btn-primary w-full mt-5">
+              {emptyAction.label}
+            </Link>
           </div>
         ) : (
           <ul className="flex flex-col gap-4">

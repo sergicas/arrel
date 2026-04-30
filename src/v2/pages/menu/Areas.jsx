@@ -68,7 +68,7 @@ export default function Areas() {
                       Obrir la prova actual
                     </button>
                     <button type="button" className="btn border border-[var(--border-subtle)]" onClick={confirmArea}>
-                      Començar amb {AREA_LABELS[area]}
+                      Començar de nou amb {AREA_LABELS[area]}
                     </button>
                   </div>
                 </div>

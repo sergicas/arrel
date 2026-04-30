@@ -43,7 +43,7 @@ export default function DiagnosticResult() {
   };
 
   const handleRetake = () => {
-    startDiagnostic();
+    startDiagnostic({ preservePendingResult: true });
     navigate('/diagnostic');
   };
 

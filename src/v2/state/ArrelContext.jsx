@@ -92,10 +92,10 @@ export function ArrelProvider({ children }) {
     void saveDurableState(state);
   }, [state, storageReady]);
 
-  const startDiagnostic = useCallback(() => {
+  const startDiagnostic = useCallback(({ preservePendingResult = false } = {}) => {
     setState((s) => ({
       ...s,
-      diagnosisJustCompleted: false,
+      diagnosisJustCompleted: preservePendingResult ? s.diagnosisJustCompleted : false,
       cycleJustEnded: false,
     }));
   }, []);
@@ -134,7 +134,7 @@ export function ArrelProvider({ children }) {
       primaryArea: primary,
       secondaryArea: ranked.find((area) => area !== primary) || null,
       diagnosisScores: scores,
-      cycleNumber: nextCycleAfterCurrentProgress(s),
+      cycleNumber: s.diagnosisJustCompleted ? s.cycleNumber : nextCycleAfterCurrentProgress(s),
       dayInCycle: 1,
       currentDayAvailableOn: getLocalDateKey(),
       nextDayAvailableAt: null,

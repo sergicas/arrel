@@ -159,12 +159,24 @@ export default function Diagnostic() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
   const hasProgress = state.status !== STATUS.NEW || Boolean(state.primaryArea) || (state.feedback || []).length > 0;
+  const shouldConfirmNewCycle = hasProgress && !state.diagnosisJustCompleted;
 
   const handleSelect = (option) => {
+    const isFinalStep = step + 1 >= QUESTIONS.length;
+
+    if (
+      isFinalStep
+      && shouldConfirmNewCycle
+      && typeof window !== 'undefined'
+      && !window.confirm('Ajustar el focus conservarà l’històric i obrirà un cicle nou. Vols continuar?')
+    ) {
+      return;
+    }
+
     const next = [...answers, option];
     setAnswers(next);
 
-    if (step + 1 < QUESTIONS.length) {
+    if (!isFinalStep) {
       setStep(step + 1);
       return;
     }

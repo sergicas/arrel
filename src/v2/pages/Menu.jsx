@@ -1,8 +1,25 @@
 import { Link } from 'react-router-dom';
 import Shell from '../components/Shell.jsx';
 import { NAV_SECTIONS } from '../lib/navigation.js';
+import { STATUS } from '../lib/types.js';
+import { useArrel } from '../state/useArrel.js';
+
+function getPrimaryAction(status) {
+  if (status === STATUS.NEW) {
+    return { to: '/inici', label: 'Triar per on començar' };
+  }
+
+  if (status === STATUS.INITIAL_PERIOD_COMPLETE) {
+    return { to: '/app', label: 'Veure opcions per continuar' };
+  }
+
+  return { to: '/app', label: 'Obrir la prova d’avui' };
+}
 
 export default function Menu() {
+  const { state } = useArrel();
+  const primaryAction = getPrimaryAction(state.status);
+
   return (
     <Shell>
       <div className="flex-1 flex flex-col pt-8 gap-8">
@@ -11,8 +28,8 @@ export default function Menu() {
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             Des d’aquí pots anar a qualsevol pantalla d’Arrel.
           </p>
-          <Link to="/app" className="inline-flex mt-4 text-sm text-[var(--text-primary)] underline">
-            Obrir la prova d’avui
+          <Link to={primaryAction.to} className="inline-flex mt-4 text-sm text-[var(--text-primary)] underline">
+            {primaryAction.label}
           </Link>
         </div>
 

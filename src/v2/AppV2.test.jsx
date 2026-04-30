@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import AppV2 from './AppV2.jsx';
 import { AREAS, STATUS } from './lib/types.js';
 
@@ -10,6 +10,10 @@ describe('AppV2 routing', () => {
   beforeEach(() => {
     localStorage.clear();
     window.history.pushState({}, '', '/');
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('redirects /app to /inici when the user has not started', async () => {
@@ -28,6 +32,7 @@ describe('AppV2 routing', () => {
   });
 
   it('opens a new diagnostic cycle without mixing existing feedback', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       status: STATUS.ACTIVE,
       entryMode: 'starter',
@@ -62,5 +67,6 @@ describe('AppV2 routing', () => {
         feedback: [{ cycle: 1, day: 1, area: AREAS.STRESS, value: 'done' }],
       });
     });
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('obrirà un cicle nou'));
   });
 });
