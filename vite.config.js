@@ -42,7 +42,7 @@ export default defineConfig({
       manifest: {
         name: 'Arrel',
         short_name: 'Arrel',
-        description: 'Proves curtes per cuidar autonomia, capacitat i il·lusió: cos, memòria, calma, vincles i projectes.',
+        description: 'Proves curtes per cuidar autonomia, capacitat i il·lusió: cos, memòria, calma, vincles i propòsit.',
         theme_color: '#fff3df',
         background_color: '#fff3df',
         lang: 'ca',

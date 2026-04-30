@@ -11,7 +11,7 @@ export const NAV_SECTIONS = [
     title: 'Seguiment',
     items: [
       { to: '/menu/cicles', label: 'Històric', description: 'Les proves que ja has tancat.' },
-      { to: '/menu/arees', label: 'Capacitats', description: 'Cos, memòria, calma, vincles i projectes.' },
+      { to: '/menu/arees', label: 'Capacitats', description: 'Cos, memòria, calma, vincles i propòsit.' },
     ],
   },
   {

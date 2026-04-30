@@ -45,7 +45,7 @@ export default function About() {
             <p className="v2-panel-label">Què és</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
               Arrel és un sistema de proves curtes per cuidar capacitats que vols
-              mantenir actives: cos, memòria, calma, vincles i projectes.
+              mantenir actives: cos, memòria, calma, vincles i propòsit.
             </p>
           </div>
 

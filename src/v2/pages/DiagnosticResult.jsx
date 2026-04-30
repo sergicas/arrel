@@ -19,7 +19,7 @@ const AREA_WITH_ARTICLE = {
   [AREAS.COGNITIVE]: 'la memòria',
   [AREAS.STRESS]: 'la calma',
   [AREAS.RELATIONAL]: 'els vincles',
-  [AREAS.IDENTITY]: 'els projectes',
+  [AREAS.IDENTITY]: 'el propòsit',
 };
 
 export default function DiagnosticResult() {

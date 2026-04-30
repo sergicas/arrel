@@ -32,7 +32,7 @@ const QUESTIONS = [
       },
       {
         value: 'change_routine',
-        label: 'Vull donar espai a projectes i decisions petites.',
+        label: 'Vull donar espai al propòsit i a decisions petites.',
         weights: { identity: 3, cognitive: 1 },
       },
     ],

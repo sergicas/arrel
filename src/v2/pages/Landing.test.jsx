@@ -98,4 +98,11 @@ describe('Landing v2', () => {
     expect(screen.getByRole('link', { name: 'Termes' })).toHaveAttribute('href', '/legal/termes');
     expect(screen.getByRole('link', { name: 'Contacte' })).toHaveAttribute('href', 'mailto:hola@arrel.eu');
   });
+
+  it('links each capacity to its details section', () => {
+    renderLanding();
+
+    expect(screen.getByRole('link', { name: 'Veure Cos' })).toHaveAttribute('href', '/menu/arees#cos');
+    expect(screen.getByRole('link', { name: 'Veure Propòsit' })).toHaveAttribute('href', '/menu/arees#proposit');
+  });
 });

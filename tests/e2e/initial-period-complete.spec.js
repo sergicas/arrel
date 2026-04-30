@@ -29,7 +29,7 @@ test('after two guided cycles the handoff is not a paywall and can continue to c
 
   await page.getByRole('button', { name: 'Continuar amb un nou cicle' }).click();
 
-  await expect(page.locator('.v2-ledger-area')).toHaveText('Projectes');
+  await expect(page.locator('.v2-ledger-area')).toHaveText('Propòsit');
   await expect(page.getByText('Cicle 3')).toBeVisible();
   await expect(page.getByText('Dia 1')).toBeVisible();
 

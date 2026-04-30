@@ -25,7 +25,7 @@ import {
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useArrel } from '../state/useArrel.js';
-import { AREAS as AREA_IDS, AREA_LABELS, STATUS } from '../lib/types.js';
+import { AREAS as AREA_IDS, AREA_LABELS, AREA_SLUGS, STATUS } from '../lib/types.js';
 import ArrelLogo from '../components/ArrelLogo.jsx';
 import ArrelMascot from '../components/ArrelMascot.jsx';
 import SEO from '../../components/SEO.jsx';
@@ -73,7 +73,7 @@ const EXPLAINERS = [
   {
     icon: BookOpen,
     title: 'Què és Arrel?',
-    text: 'Una app amb proves curtes per cuidar cos, memòria, calma, vincles i projectes.',
+    text: 'Una app amb proves curtes per cuidar cos, memòria, calma, vincles i propòsit.',
   },
   {
     icon: Gauge,
@@ -121,35 +121,40 @@ const FIRST_DAY_STEPS = [
 
 const AREAS = [
   {
+    area: AREA_IDS.PHYSICAL,
     icon: Dumbbell,
     name: 'Cos',
     text: 'Caminar, aixecar-te, fer força i mantenir l’equilibri.',
   },
   {
+    area: AREA_IDS.COGNITIVE,
     icon: Brain,
     name: 'Memòria',
     text: 'Recordar, aprendre, calcular i explicar idees.',
   },
   {
+    area: AREA_IDS.STRESS,
     icon: Wind,
     name: 'Calma',
     text: 'Fer pausa, respirar i baixar la tensió.',
   },
   {
+    area: AREA_IDS.RELATIONAL,
     icon: UsersRound,
     name: 'Vincles',
     text: 'Trucar, saludar, escoltar i fer una pregunta real.',
   },
   {
+    area: AREA_IDS.IDENTITY,
     icon: Leaf,
-    name: 'Projectes',
-    text: 'Decidir, reprendre una idea i fer una acció petita.',
+    name: 'Propòsit',
+    text: 'Decidir, reprendre una idea i donar-li forma petita.',
   },
 ];
 
 const USE_CASES = [
-  'Quan vols veure com tens el cos, la memòria, la calma, els vincles o els projectes.',
-  'Quan vols cuidar mobilitat, memòria, calma, vincles o projectes.',
+  'Quan vols veure com tens el cos, la memòria, la calma, els vincles o el propòsit.',
+  'Quan vols cuidar mobilitat, memòria, calma, vincles o propòsit.',
   'Quan vols saber si una capacitat avui és fàcil, demana esforç o necessita pausa.',
   'Quan prefereixes una estructura petita abans que un programa complicat.',
 ];
@@ -305,7 +310,7 @@ export default function Landing() {
             <h1>Autonomia, capacitat i il·lusió cada dia.</h1>
             <p className="landing-lead">
               Arrel t’ajuda a cuidar el que et manté actiu, lúcid i amb ganes.
-              Cos, memòria, calma, vincles i projectes en accions petites.
+              Cos, memòria, calma, vincles i propòsit en accions petites.
             </p>
             <div className="landing-actions">
               <button type="button" onClick={openStartOptions} className="landing-primary">
@@ -333,7 +338,7 @@ export default function Landing() {
                       </button>
                       <button type="button" onClick={() => goTo('/menu/arees')}>
                         <strong>Veure capacitats</strong>
-                        <span>Cos, memòria, calma, vincles i projectes.</span>
+                        <span>Cos, memòria, calma, vincles i propòsit.</span>
                       </button>
                       <button type="button" onClick={() => goTo('/menu')}>
                         <strong>Veure el mapa complet</strong>
@@ -501,11 +506,16 @@ export default function Landing() {
               const Icon = area.icon;
 
               return (
-                <article key={area.name}>
+                <Link
+                  key={area.name}
+                  to={`/menu/arees#${AREA_SLUGS[area.area]}`}
+                  className="landing-area-card"
+                  aria-label={`Veure ${area.name}`}
+                >
                   <Icon size={21} />
                   <h3>{area.name}</h3>
                   <p>{area.text}</p>
-                </article>
+                </Link>
               );
             })}
           </div>

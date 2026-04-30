@@ -58,12 +58,20 @@ function RootRoute() {
 }
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const { state } = useArrel();
 
   useEffect(() => {
+    if (hash) {
+      const id = decodeURIComponent(hash.slice(1));
+      window.requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ block: 'start', behavior: 'auto' });
+      });
+      return;
+    }
+
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [pathname, state.status, state.cycleNumber, state.dayInCycle, state.cycleJustEnded]);
+  }, [pathname, hash, state.status, state.cycleNumber, state.dayInCycle, state.cycleJustEnded]);
 
   return null;
 }
@@ -78,7 +86,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Les cinc capacitats"
-        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i projectes. Proves curtes per cuidar-les."
+        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i propòsit. Proves curtes per cuidar-les."
         canonical="https://arrel.eu/menu/arees"
       />
     );

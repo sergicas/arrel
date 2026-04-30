@@ -11,7 +11,7 @@ export const AREA_LABELS = {
   [AREAS.COGNITIVE]: 'Memòria',
   [AREAS.STRESS]: 'Calma',
   [AREAS.RELATIONAL]: 'Vincles',
-  [AREAS.IDENTITY]: 'Projectes',
+  [AREAS.IDENTITY]: 'Propòsit',
 };
 
 export const AREA_SHORT_LABELS = {
@@ -19,7 +19,15 @@ export const AREA_SHORT_LABELS = {
   [AREAS.COGNITIVE]: 'Memòria',
   [AREAS.STRESS]: 'Calma',
   [AREAS.RELATIONAL]: 'Vincles',
-  [AREAS.IDENTITY]: 'Projectes',
+  [AREAS.IDENTITY]: 'Propòsit',
+};
+
+export const AREA_SLUGS = {
+  [AREAS.PHYSICAL]: 'cos',
+  [AREAS.COGNITIVE]: 'memoria',
+  [AREAS.STRESS]: 'calma',
+  [AREAS.RELATIONAL]: 'vincles',
+  [AREAS.IDENTITY]: 'proposit',
 };
 
 export const AREA_ACCENTS = {
@@ -48,7 +56,7 @@ export const AREA_DESCRIPTIONS = {
   [AREAS.RELATIONAL]:
     'Gestos senzills per parlar, escoltar i mantenir contacte amb persones concretes.',
   [AREAS.IDENTITY]:
-    'Proves per activar decisions petites, curiositat i projectes personals.',
+    'Proves per activar decisions petites, curiositat i sentit personal.',
 };
 
 export const AREA_GUIDANCE = {
@@ -61,7 +69,7 @@ export const AREA_GUIDANCE = {
   [AREAS.RELATIONAL]:
     'Aquesta setmana treballes els vincles: contactar, escoltar i estar present.',
   [AREAS.IDENTITY]:
-    'Aquesta setmana treballes projectes: fer una cosa diferent i veure com et queda.',
+    'Aquesta setmana treballes el propòsit: fer una cosa diferent i veure com et queda.',
 };
 
 export const FEEDBACK = {
