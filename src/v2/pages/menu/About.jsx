@@ -36,7 +36,7 @@ export default function About() {
         <div>
           <p className="v2-kicker mb-4">Sobre Arrel</p>
           <h2 className="text-3xl font-medium text-balance max-w-sm">
-            Una app de proves curtes per frenar l’envelliment.
+            Una app de proves curtes per cuidar autonomia, capacitat i il·lusió.
           </h2>
         </div>
 
@@ -44,8 +44,8 @@ export default function About() {
           <div className="v2-panel">
             <p className="v2-panel-label">Què és</p>
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-              Arrel no és una app mèdica ni una pantalla de mètriques. És un sistema de
-              proves curtes per practicar capacitats que vols mantenir mentre et fas gran.
+              Arrel és un sistema de proves curtes per cuidar capacitats que vols
+              mantenir actives: cos, memòria, calma, vincles i projectes.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export default function About() {
 
         <div className="flex flex-col gap-3">
           <button onClick={handleRestart} className="btn w-full border border-[var(--border-subtle)]">
-            Refer el diagnòstic
+            Ajustar el focus
           </button>
           <button onClick={handleReset} className="btn btn-ghost w-full">
             Esborrar les dades locals

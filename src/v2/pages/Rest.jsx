@@ -15,8 +15,8 @@ import {
 
 const FEEDBACK_LABELS = {
   [FEEDBACK.DONE]: 'Hi és',
-  [FEEDBACK.PARTIAL]: 'Costava',
-  [FEEDBACK.SKIPPED]: 'Evitat',
+  [FEEDBACK.PARTIAL]: 'Amb esforç',
+  [FEEDBACK.SKIPPED]: 'Avui no',
 };
 
 export default function Rest() {
@@ -74,7 +74,7 @@ export default function Rest() {
               </span>
               <span>
                 <strong>{frictionCount}</strong>
-                <small>costava</small>
+                <small>amb esforç</small>
               </span>
             </div>
 

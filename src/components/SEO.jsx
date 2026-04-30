@@ -16,7 +16,7 @@ const SEO = ({
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   const metaDesc =
     description ||
-    "Arrel et proposa proves petites per frenar l’envelliment quotidià: cos, memòria, calma, vincles i identitat.";
+    "Arrel t’ajuda a cuidar autonomia, capacitat i il·lusió amb proves curtes de 3 a 10 minuts.";
   const path = typeof window !== 'undefined' ? window.location.pathname : '/';
   const canonicalHref = canonical || `${CANONICAL_ORIGIN}${path}`;
   const absoluteImage = image.startsWith('http') ? image : `${CANONICAL_ORIGIN}${image}`;

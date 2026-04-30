@@ -87,7 +87,7 @@ describe('Today v2', () => {
 
     expect(screen.getByText('Capacitat d’inici')).toBeInTheDocument();
     expect(screen.getByText('Aquesta setmana comences per Calma')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Fer diagnosi' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Ajustar focus' })).not.toBeInTheDocument();
   });
 
   it('shows the personalized focus summary after a diagnostic', () => {
@@ -107,7 +107,7 @@ describe('Today v2', () => {
 
     expect(screen.getByText('Capacitat personalitzada')).toBeInTheDocument();
     expect(screen.getByText('Aquesta setmana: Calma')).toBeInTheDocument();
-    expect(screen.getByLabelText('Resultat resumit de la diagnosi')).toBeInTheDocument();
+    expect(screen.getByLabelText('Resultat resumit del focus')).toBeInTheDocument();
   });
 
   it('shows when the next day opens after the current day is closed', () => {

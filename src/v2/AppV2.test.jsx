@@ -24,7 +24,7 @@ describe('AppV2 routing', () => {
     await waitFor(() => {
       expect(window.location.pathname).toBe('/inici');
     });
-    expect(screen.getByRole('heading', { name: 'Frena el teu envelliment.' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Autonomia, capacitat i il·lusió cada dia.' })).toBeInTheDocument();
   });
 
   it('opens a new diagnostic cycle without mixing existing feedback', async () => {

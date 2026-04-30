@@ -78,7 +78,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Les cinc capacitats"
-        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i identitat. Proves curtes per practicar-les."
+        description="Les cinc capacitats d’Arrel: cos, memòria, calma, vincles i projectes. Proves curtes per cuidar-les."
         canonical="https://arrel.eu/menu/arees"
       />
     );
@@ -98,7 +98,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Sobre Arrel"
-        description="Arrel és una app de proves curtes per practicar capacitats que vols mantenir mentre et fas gran."
+        description="Arrel és una app de proves curtes per cuidar autonomia, capacitat i il·lusió cada dia."
         canonical="https://arrel.eu/menu/sobre"
       />
     );
@@ -108,7 +108,7 @@ function RouteMeta() {
     return (
       <SEO
         title="Privacitat i termes"
-        description="Informació legal d’Arrel: privacitat, dades locals, termes d’ús i límits de les proves."
+        description="Informació legal d’Arrel: privacitat, dades locals, termes d’ús i avisos de seguretat."
         canonical={`https://arrel.eu${pathname}`}
       />
     );

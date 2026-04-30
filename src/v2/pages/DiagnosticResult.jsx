@@ -19,7 +19,7 @@ const AREA_WITH_ARTICLE = {
   [AREAS.COGNITIVE]: 'la memòria',
   [AREAS.STRESS]: 'la calma',
   [AREAS.RELATIONAL]: 'els vincles',
-  [AREAS.IDENTITY]: 'la identitat',
+  [AREAS.IDENTITY]: 'els projectes',
 };
 
 export default function DiagnosticResult() {
@@ -54,18 +54,18 @@ export default function DiagnosticResult() {
           <div className="v2-card-mascot">
             <ArrelMascot mood="welcome" />
           </div>
-          <p className="v2-panel-label mb-4">Diagnosi completada</p>
+          <p className="v2-panel-label mb-4">Focus ajustat</p>
           <h2 className="text-3xl font-medium text-balance mb-4">
             Començarem per {primaryLabel}.
           </h2>
           <p className="text-[var(--text-secondary)] leading-relaxed">
-            Aquesta setmana Arrel et donarà proves curtes per treballar aquesta capacitat.
+            Aquesta setmana Arrel et donarà proves curtes per cuidar aquesta capacitat.
             {secondary ? ` També tindrem present ${AREA_WITH_ARTICLE[secondary.area]}.` : ''}
           </p>
         </div>
 
         <div className="v2-panel">
-          <p className="v2-panel-label mb-4">Lectura ràpida</p>
+          <p className="v2-panel-label mb-4">Mapa del focus</p>
           <div className="v2-diagnostic-bars">
             {ranked.map(({ area, score }) => (
               <div key={area} className="v2-diagnostic-row">
@@ -87,7 +87,7 @@ export default function DiagnosticResult() {
           </button>
           <button type="button" onClick={handleRetake} className="btn btn-ghost w-full">
             <RotateCcw size={17} />
-            Canviar respostes
+            Ajustar respostes
           </button>
         </div>
       </div>

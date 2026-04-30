@@ -10,7 +10,7 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await completeCycleDays(page, ['Hi és', 'Hi és', 'Hi és', 'Costava', 'Costava', 'Evitat']);
+  await completeCycleDays(page, ['Hi és', 'Hi és', 'Hi és', 'Amb esforç', 'Amb esforç', 'Avui no']);
 
   await expect(page.getByText('Dia 7 · tancament')).toBeVisible();
   await expect(page.getByText('Avui toca revisar el cicle.')).toBeVisible();
@@ -21,15 +21,15 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(1)).toContainText('3');
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(1)).toContainText('hi és');
   await expect(summary.locator('.v2-cycle-summary-grid span').nth(2)).toContainText('2');
-  await expect(summary.locator('.v2-cycle-summary-grid span').nth(2)).toContainText('costava');
+  await expect(summary.locator('.v2-cycle-summary-grid span').nth(2)).toContainText('amb esforç');
   await expect(summary.locator('.v2-cycle-entry')).toHaveCount(6);
   await expect(summary.locator('.v2-feedback-pill.is-done')).toHaveCount(3);
   await expect(summary.locator('.v2-feedback-pill.is-partial')).toHaveCount(2);
   await expect(summary.locator('.v2-feedback-pill.is-skipped')).toHaveCount(1);
 
   await expect(page.getByLabel('Dia 1: hi és')).toBeVisible();
-  await expect(page.getByLabel('Dia 4: costava')).toBeVisible();
-  await expect(page.getByLabel('Dia 6: evitat')).toBeVisible();
+  await expect(page.getByLabel('Dia 4: amb esforç')).toBeVisible();
+  await expect(page.getByLabel('Dia 6: avui no')).toBeVisible();
   await expect(page.getByLabel('Dia 7: lectura')).toBeVisible();
   await expect(page.getByRole('button', { name: 'El cicle nou s’obre demà' })).toBeDisabled();
 

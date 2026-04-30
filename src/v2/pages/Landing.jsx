@@ -33,13 +33,13 @@ import SEO from '../../components/SEO.jsx';
 const FEATURES = [
   {
     icon: Activity,
-    title: 'Una prova petita al teu ritme',
+    title: 'Una prova curta al teu ritme',
     text: 'Pots anar lent, regular o accelerat. Cada prova dura de 3 a 10 minuts.',
   },
   {
     icon: Compass,
-    title: 'Comences amb una prova concreta',
-    text: 'Arrel et dona una prova inicial i una lectura simple: hi és, costava o l’has evitat.',
+    title: 'Comences amb un focus clar',
+    text: 'Arrel et dona una prova inicial i una lectura simple: hi és, amb esforç o avui no.',
   },
   {
     icon: Timer,
@@ -52,8 +52,8 @@ const APP_MOCKUPS = [
   {
     preview: 'quiz',
     icon: PenLine,
-    title: 'Capacitat setmanal',
-    text: 'Cada cicle se centra en una capacitat que vols mantenir.',
+    title: 'Focus setmanal',
+    text: 'Cada cicle se centra en una capacitat que vols cuidar.',
   },
   {
     preview: 'action',
@@ -65,7 +65,7 @@ const APP_MOCKUPS = [
     preview: 'results',
     icon: BadgeCheck,
     title: 'Resultats visibles',
-    text: 'Una lectura clara: hi és, costava o evitat.',
+    text: 'Una lectura clara: hi és, amb esforç o avui no.',
   },
 ];
 
@@ -73,22 +73,22 @@ const EXPLAINERS = [
   {
     icon: BookOpen,
     title: 'Què és Arrel?',
-    text: 'Una app amb proves curtes per practicar cos, memòria, calma, vincles i identitat.',
+    text: 'Una app amb proves curtes per cuidar cos, memòria, calma, vincles i projectes.',
   },
   {
     icon: Gauge,
     title: 'A qui va dirigida?',
-    text: 'A persones que es fan grans i volen mantenir capacitats concretes.',
+    text: 'A persones que volen mantenir-se actives, lúcides i amb ganes.',
   },
   {
     icon: ShieldCheck,
-    title: 'Què no és?',
-    text: 'No és una app mèdica i no promet rejovenir. T’ajuda a practicar capacitats concretes.',
+    title: 'Què aporta?',
+    text: 'Pràctica clara, lectures simples i accions petites.',
   },
   {
     icon: Lightbulb,
     title: 'Què fas cada dia?',
-    text: 'Obres l’app, fas una prova curta i marques el resultat: hi és, costava o evitat.',
+    text: 'Obres l’app, fas una prova curta i marques el resultat: hi és, amb esforç o avui no.',
   },
 ];
 
@@ -97,7 +97,7 @@ const FIRST_DAY_STEPS = [
     step: '01',
     icon: SmilePlus,
     title: 'Entres a l’app',
-    text: 'Arrel t’explica la idea central: frenar l’envelliment amb una prova petita cada dia.',
+    text: 'Arrel et presenta el marc: autonomia, capacitat i il·lusió en una prova petita cada dia.',
   },
   {
     step: '02',
@@ -115,7 +115,7 @@ const FIRST_DAY_STEPS = [
     step: '04',
     icon: CheckCircle2,
     title: 'Guardes el resultat',
-    text: 'Marques si la capacitat hi és, si ha costat o si l’has evitat.',
+    text: 'Marques si ha anat bé, si ha demanat esforç o si avui no tocava.',
   },
 ];
 
@@ -142,15 +142,15 @@ const AREAS = [
   },
   {
     icon: Leaf,
-    name: 'Identitat',
-    text: 'Provar una decisió diferent i veure com et queda.',
+    name: 'Projectes',
+    text: 'Decidir, reprendre una idea i fer una acció petita.',
   },
 ];
 
 const USE_CASES = [
-  'Quan vols comprovar com tens el cos, la memòria, la calma, els vincles o la identitat.',
-  'Quan vols conservar mobilitat, memòria, calma, vincles o identitat.',
-  'Quan vols saber si una capacitat avui és fàcil, costa o l’estàs evitant.',
+  'Quan vols veure com tens el cos, la memòria, la calma, els vincles o els projectes.',
+  'Quan vols cuidar mobilitat, memòria, calma, vincles o projectes.',
+  'Quan vols saber si una capacitat avui és fàcil, demana esforç o necessita pausa.',
   'Quan prefereixes una estructura petita abans que un programa complicat.',
 ];
 
@@ -173,7 +173,7 @@ const START_PROOF_OPTIONS = [
   },
   {
     area: AREA_IDS.IDENTITY,
-    text: 'Fer una decisió diferent.',
+    text: 'Activar un projecte o una decisió petita.',
   },
 ];
 
@@ -208,11 +208,11 @@ function AppPreview({ type = 'action', compact = false }) {
           {type === 'action' ? (
             <>
               <p>Prova d’avui · 5 min</p>
-              <h3>Mesura una capacitat avui.</h3>
+              <h3>Cuida una capacitat avui.</h3>
               <div className="landing-preview-checks">
                 <span>Hi és</span>
-                <span>Costava</span>
-                <span>Evitat</span>
+                <span>Amb esforç</span>
+                <span>Avui no</span>
               </div>
             </>
           ) : null}
@@ -263,8 +263,8 @@ export default function Landing() {
   return (
     <div className="landing-page">
       <SEO
-        title="Frena el teu envelliment"
-        description="Arrel et proposa proves petites per practicar cos, memòria, calma, vincles i identitat."
+        title="Autonomia, capacitat i il·lusió"
+        description="Arrel t’ajuda a cuidar autonomia, capacitat i il·lusió amb proves curtes de 3 a 10 minuts."
         canonical="https://arrel.eu/"
       />
       <header className="landing-nav">
@@ -301,12 +301,11 @@ export default function Landing() {
           </div>
 
           <div className="landing-hero-content">
-            <p className="landing-kicker">Proves curtes per mantenir capacitats</p>
-            <h1>Frena el teu envelliment.</h1>
+            <p className="landing-kicker">Proves curtes de 3 a 10 minuts</p>
+            <h1>Autonomia, capacitat i il·lusió cada dia.</h1>
             <p className="landing-lead">
-              Arrel et proposa proves curtes per practicar cos, memòria, calma,
-              vincles i identitat mentre et fas gran. Sense miracles: accions
-              concretes de 3 a 10 minuts.
+              Arrel t’ajuda a cuidar el que et manté actiu, lúcid i amb ganes.
+              Cos, memòria, calma, vincles i projectes en accions petites.
             </p>
             <div className="landing-actions">
               <button type="button" onClick={openStartOptions} className="landing-primary">
@@ -334,7 +333,7 @@ export default function Landing() {
                       </button>
                       <button type="button" onClick={() => goTo('/menu/arees')}>
                         <strong>Veure capacitats</strong>
-                        <span>Cos, memòria, calma, vincles i identitat.</span>
+                        <span>Cos, memòria, calma, vincles i projectes.</span>
                       </button>
                       <button type="button" onClick={() => goTo('/menu')}>
                         <strong>Veure el mapa complet</strong>
@@ -413,8 +412,8 @@ export default function Landing() {
           </div>
           <div className="landing-definition">
             <p>
-              No has de competir amb el teu passat. Obres Arrel, fas una prova curta
-              i marques un resultat: hi és, costava o evitat.
+              Obres Arrel, fas una prova curta i marques un resultat: hi és,
+              amb esforç o avui no.
             </p>
           </div>
           <div className="landing-explainer-grid">
@@ -515,7 +514,7 @@ export default function Landing() {
         <section className="landing-section landing-use-cases">
           <div className="landing-section-head">
             <p className="landing-kicker">Quan serveix</p>
-            <h2>Serveix quan vols actuar abans que una capacitat es perdi.</h2>
+            <h2>Serveix quan vols cuidar una capacitat amb una acció concreta.</h2>
           </div>
           <ul>
             {USE_CASES.map((item) => (
@@ -530,10 +529,10 @@ export default function Landing() {
         <section className="landing-final">
           <div>
             <Sprout size={28} />
-            <h2>Fes una prova i decideix què cal practicar.</h2>
+            <h2>Fes una prova i decideix què vols practicar.</h2>
             <p>
               Arrel et proposa una acció curta, tu la fas i marques què ha passat:
-              hi és, costava o avui l’has evitat.
+              hi és, amb esforç o avui no.
             </p>
             <button type="button" onClick={openStartOptions} className="landing-primary">
               Veure opcions

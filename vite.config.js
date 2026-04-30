@@ -42,7 +42,7 @@ export default defineConfig({
       manifest: {
         name: 'Arrel',
         short_name: 'Arrel',
-        description: 'Proves petites per frenar l’envelliment quotidià: cos, memòria, calma, vincles i identitat.',
+        description: 'Proves curtes per cuidar autonomia, capacitat i il·lusió: cos, memòria, calma, vincles i projectes.',
         theme_color: '#fff3df',
         background_color: '#fff3df',
         lang: 'ca',
@@ -79,7 +79,7 @@ export default defineConfig({
           {
             name: 'Les cinc capacitats',
             short_name: 'Capacitats',
-            description: 'Consulta les capacitats que Arrel observa',
+            description: 'Consulta les capacitats que Arrel cuida',
             url: '/menu/arees',
             icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }],
           },

@@ -25,7 +25,7 @@ des d'una terminal normal o des de CI.
 
 - `landing-to-today.spec.js`: Landing -> opcions d’inici -> prova starter dia 1.
 - `daily-gating.spec.js`: lectura del dia -> bloqueig fins l’endemà -> avançar rellotge -> dia 2.
-- `diagnostic-flow.spec.js`: diagnosi de 5 preguntes -> resultat -> prova personalitzada.
+- `diagnostic-flow.spec.js`: focus de 5 preguntes -> resultat -> prova personalitzada.
 - `full-cycle.spec.js`: sis dies de prova -> dia 7 amb resum i CycleDots.
 - `initial-period-complete.spec.js`: dos cicles guiats -> handoff sense preu -> cicle 3.
 - `pace.spec.js`: canvi a ritme regular -> espera de sis hores -> dia següent.

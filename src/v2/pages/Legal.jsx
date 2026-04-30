@@ -6,14 +6,14 @@ const CONTENT = {
     kicker: 'Privacitat',
     title: 'Les teves dades es queden al teu dispositiu.',
     body: [
-      'Arrel guarda localment les respostes de diagnosi, les lectures diàries i les notes opcionals perquè puguis continuar el teu cicle.',
+      'Arrel guarda localment les respostes del focus, les lectures diàries i les notes opcionals perquè puguis continuar el teu cicle.',
       'Aquesta versió no té compte d’usuari ni sincronització al núvol. Si esborres les dades del dispositiu, també esborres el progrés.',
       'No venem dades personals ni les fem servir per publicitat.',
     ],
   },
   termes: {
     kicker: 'Termes',
-    title: 'Arrel no és una eina mèdica.',
+    title: 'Proves generals, no consell professional.',
     body: [
       'Les proves d’Arrel són exercicis generals. No substitueixen cap diagnòstic, tractament ni consell professional.',
       'Si tens una condició mèdica, dolor persistent o malestar important, consulta un professional de salut abans de seguir qualsevol rutina.',

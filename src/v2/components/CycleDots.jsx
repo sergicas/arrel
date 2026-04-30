@@ -3,8 +3,8 @@ import { CYCLE_LENGTH, FEEDBACK } from '../lib/types.js';
 
 const STATUS_LABELS = {
   [FEEDBACK.DONE]: 'hi és',
-  [FEEDBACK.PARTIAL]: 'costava',
-  [FEEDBACK.SKIPPED]: 'evitat',
+  [FEEDBACK.PARTIAL]: 'amb esforç',
+  [FEEDBACK.SKIPPED]: 'avui no',
   today: 'avui',
   rest: 'lectura',
   pending: 'pendent',

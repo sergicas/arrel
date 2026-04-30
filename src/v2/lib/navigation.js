@@ -2,7 +2,7 @@ export const NAV_SECTIONS = [
   {
     title: 'Ús principal',
     items: [
-      { to: '/inici', label: 'Presentació', description: 'La promesa d’Arrel i com començar.' },
+      { to: '/inici', label: 'Presentació', description: 'Autonomia, capacitat i il·lusió, i com començar.' },
       { to: '/app', label: 'Prova d’avui', description: 'La prova actual i la lectura del dia.' },
       { to: '/diagnostic', label: 'Ajustar focus', description: 'Cinc preguntes per triar la capacitat prioritària.' },
     ],
@@ -11,7 +11,7 @@ export const NAV_SECTIONS = [
     title: 'Seguiment',
     items: [
       { to: '/menu/cicles', label: 'Històric', description: 'Les proves que ja has tancat.' },
-      { to: '/menu/arees', label: 'Capacitats', description: 'Cos, memòria, calma, vincles i identitat.' },
+      { to: '/menu/arees', label: 'Capacitats', description: 'Cos, memòria, calma, vincles i projectes.' },
     ],
   },
   {
@@ -26,7 +26,7 @@ export const NAV_SECTIONS = [
     title: 'Legal',
     items: [
       { to: '/legal/privacitat', label: 'Privacitat', description: 'Quines dades guarda Arrel.' },
-      { to: '/legal/termes', label: 'Termes', description: 'Límits d’ús i avisos de salut.' },
+      { to: '/legal/termes', label: 'Termes', description: 'Ús de les proves i avisos de seguretat.' },
     ],
   },
 ];

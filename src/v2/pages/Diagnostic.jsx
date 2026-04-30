@@ -17,29 +17,29 @@ const QUESTIONS = [
       },
       {
         value: 'learn_new',
-        label: 'Vull conservar memòria, atenció i curiositat.',
+        label: 'Vull cuidar memòria, atenció i curiositat.',
         weights: { cognitive: 3, identity: 1 },
       },
       {
         value: 'be_silent',
-        label: 'Vull recuperar calma abans de viure en reacció.',
+        label: 'Vull fer pauses amb més facilitat.',
         weights: { stress: 3, physical: 1 },
       },
       {
         value: 'see_people',
-        label: 'Vull no retirar-me dels vincles que m’importen.',
+        label: 'Vull estar present en els vincles que m’importen.',
         weights: { relational: 3, stress: 1 },
       },
       {
         value: 'change_routine',
-        label: 'Vull provar decisions petites fora de la rutina.',
+        label: 'Vull donar espai a projectes i decisions petites.',
         weights: { identity: 3, cognitive: 1 },
       },
     ],
   },
   {
     id: 'when',
-    text: 'Quan notes més que estàs perdent terreny?',
+    text: 'En quin moment vols posar-hi més atenció?',
     options: [
       {
         value: 'pressure',
@@ -48,28 +48,28 @@ const QUESTIONS = [
       },
       {
         value: 'solitude',
-        label: 'Quan em quedo massa sol amb mi mateix.',
+        label: 'Quan tinc una estona per contactar amb algú.',
         weights: { relational: 2, identity: 2 },
       },
       {
         value: 'routine',
-        label: 'Quan repeteixo el mateix sense decidir gaire.',
+        label: 'Quan vull sortir de la rutina automàtica.',
         weights: { identity: 2, physical: 1, cognitive: 1 },
       },
       {
         value: 'always',
-        label: 'Bastant sovint, fins i tot sense un motiu clar.',
+        label: 'Quan vull una prova molt simple.',
         weights: { stress: 1, physical: 1, cognitive: 1, relational: 1, identity: 1 },
       },
     ],
   },
   {
     id: 'avoid',
-    text: 'Quina prova petita estàs evitant més últimament?',
+    text: 'Quina prova petita et serviria més aquests dies?',
     options: [
       {
         value: 'body',
-        label: 'Moure el cos o exigir-li una mica més.',
+        label: 'Moure el cos o demanar-li una mica més.',
         weights: { physical: 3 },
       },
       {
@@ -105,7 +105,7 @@ const QUESTIONS = [
       },
       {
         value: 'clearer_mind',
-        label: 'La memòria o l’atenció no s’han adormit.',
+        label: 'La memòria o l’atenció estan més despertes.',
         weights: { cognitive: 2, identity: 1 },
       },
       {
@@ -120,7 +120,7 @@ const QUESTIONS = [
       },
       {
         value: 'more_alive',
-        label: 'Encara puc sorprendre’m una mica de mi mateix.',
+        label: 'Tinc una mica més de ganes de provar coses.',
         weights: { identity: 2, cognitive: 1 },
       },
     ],
@@ -146,7 +146,7 @@ const QUESTIONS = [
       },
       {
         value: 'warm_contact',
-        label: 'Un motiu concret per reconnectar amb algú o amb mi.',
+        label: 'Un motiu concret per contactar amb algú o ordenar idees.',
         weights: { relational: 1, identity: 1 },
       },
     ],
@@ -188,11 +188,11 @@ export default function Diagnostic() {
 
       <div className="flex-1 flex flex-col justify-center pt-8 pb-12">
         <p className="v2-kicker mb-4">
-          Diagnòstic curt · pas {step + 1} de {QUESTIONS.length}
+          Ajustar focus · pas {step + 1} de {QUESTIONS.length}
         </p>
         <h2 className="v2-question-title text-balance">{q.text}</h2>
         <p className="text-[var(--text-secondary)] leading-relaxed mb-10 max-w-sm">
-          Respon segons el que et passa ara. Al final, Arrel triarà una capacitat.
+          Respon segons el moment d’ara. Al final, Arrel triarà una capacitat per començar.
           {hasProgress ? ' Si ja tens lectures guardades, les conservarà i obrirà un cicle nou.' : ''}
         </p>
         <div className="flex flex-col gap-3">

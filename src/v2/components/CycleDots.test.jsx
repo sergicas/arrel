@@ -17,7 +17,7 @@ describe('CycleDots', () => {
     );
 
     expect(screen.getByLabelText('Dia 1: hi és')).toBeInTheDocument();
-    expect(screen.getByLabelText('Dia 2: costava')).toBeInTheDocument();
+    expect(screen.getByLabelText('Dia 2: amb esforç')).toBeInTheDocument();
     expect(screen.getByLabelText('Dia 3: avui')).toBeInTheDocument();
     expect(screen.getByLabelText('Dia 4: pendent')).toBeInTheDocument();
     expect(screen.getByLabelText('Dia 7: lectura')).toBeInTheDocument();

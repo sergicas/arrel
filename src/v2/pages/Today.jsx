@@ -33,13 +33,13 @@ const FEEDBACK_ITEMS = [
   },
   {
     value: FEEDBACK.PARTIAL,
-    label: 'Costava',
-    description: 'Ha costat.',
+    label: 'Amb esforç',
+    description: 'Ha demanat una mica més.',
     icon: Sparkles,
   },
   {
     value: FEEDBACK.SKIPPED,
-    label: 'Evitat',
+    label: 'Avui no',
     description: 'No l’has fet avui.',
     icon: CircleSlash,
   },
@@ -223,7 +223,7 @@ export default function Today() {
             <span>Com fer-la</span>
             <p>
               Fes aquesta prova sense buscar nota ni marca. Quan acabis, tria
-              una lectura: hi és, costava o avui l’has evitat.
+              una lectura: hi és, amb esforç o avui no.
             </p>
           </div>
         </section>
@@ -294,7 +294,7 @@ export default function Today() {
           {hasDiagnostic ? (
             <>
               <p>{todayGuidance}</p>
-              <div className="v2-focus-bars" aria-label="Resultat resumit de la diagnosi">
+              <div className="v2-focus-bars" aria-label="Resultat resumit del focus">
                 {rankedAreas.slice(0, 3).map(({ area, score }) => (
                   <div key={area} className="v2-focus-row">
                     <span>{AREA_LABELS[area]}</span>
