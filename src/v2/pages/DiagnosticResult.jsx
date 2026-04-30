@@ -48,7 +48,7 @@ export default function DiagnosticResult() {
   };
 
   return (
-    <Shell showBack backTo="/inici">
+    <Shell showBack backTo="/menu">
       <div className="flex-1 w-full min-w-0 flex flex-col justify-center pt-8 pb-10 gap-6">
         <div className="v2-hero-card v2-diagnostic-result-card">
           <div className="v2-card-mascot">

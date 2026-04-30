@@ -10,14 +10,14 @@ import {
 test('regular rhythm opens the next proof after six hours', async ({ page }) => {
   await seedState(page, makeActiveState());
 
-  await page.getByRole('link', { name: 'Menú' }).click();
-  await page.getByRole('link', { name: 'Ritme de proves' }).click();
+  await page.locator('header').getByRole('link', { name: 'Mapa' }).click();
+  await page.getByRole('link', { name: 'Ritme' }).click();
   await page.getByRole('radio', { name: /Regular/i }).click();
 
   await expectStoredState(page, { pace: 'regular' });
 
   await page.getByRole('link', { name: 'Tornar' }).click();
-  await page.getByRole('link', { name: 'Tornar a avui' }).click();
+  await page.locator('header').getByRole('link', { name: 'Avui' }).click();
   await markToday(page, 'Hi és');
 
   await expect(page.getByLabel('Temps fins a la prova següent')).toContainText('6 h');
@@ -50,8 +50,8 @@ test('accelerated rhythm unlocks an already closed day immediately', async ({ pa
 
   await expect(page.getByRole('button', { name: 'S’obre demà' })).toBeDisabled();
 
-  await page.getByRole('link', { name: 'Menú' }).click();
-  await page.getByRole('link', { name: 'Ritme de proves' }).click();
+  await page.locator('header').getByRole('link', { name: 'Mapa' }).click();
+  await page.getByRole('link', { name: 'Ritme' }).click();
   await page.getByRole('radio', { name: /Accelerat/i }).click();
 
   await expectStoredState(page, {
@@ -60,7 +60,7 @@ test('accelerated rhythm unlocks an already closed day immediately', async ({ pa
   });
 
   await page.getByRole('link', { name: 'Tornar' }).click();
-  await page.getByRole('link', { name: 'Tornar a avui' }).click();
+  await page.locator('header').getByRole('link', { name: 'Avui' }).click();
 
   const nextDayButton = page.getByRole('button', { name: 'Obrir la prova següent' });
   await expect(nextDayButton).toBeEnabled();

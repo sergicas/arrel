@@ -41,6 +41,15 @@ function canAdvanceState(state, date = new Date()) {
   return getLocalDateKey(date) > (state.currentDayAvailableOn || getLocalDateKey(date));
 }
 
+function nextCycleAfterCurrentProgress(state) {
+  const highestFeedbackCycle = Math.max(0, ...(state.feedback || []).map((entry) => Number(entry.cycle) || 0));
+  const currentCycle = Number(state.cycleNumber) || 1;
+  const hasProgress = state.status !== STATUS.NEW || Boolean(state.primaryArea) || highestFeedbackCycle > 0;
+
+  if (!hasProgress) return 1;
+  return Math.max(currentCycle + 1, highestFeedbackCycle + 1, 1);
+}
+
 export function ArrelProvider({ children }) {
   const [state, setState] = useState(loadState);
   const [storageReady, setStorageReady] = useState(() => !shouldUseNativePreferences());
@@ -125,7 +134,7 @@ export function ArrelProvider({ children }) {
       primaryArea: primary,
       secondaryArea: ranked.find((area) => area !== primary) || null,
       diagnosisScores: scores,
-      cycleNumber: 1,
+      cycleNumber: nextCycleAfterCurrentProgress(s),
       dayInCycle: 1,
       currentDayAvailableOn: getLocalDateKey(),
       nextDayAvailableAt: null,
@@ -278,9 +287,9 @@ export function ArrelProvider({ children }) {
 
   const restartFromDiagnostic = useCallback(() => {
     setState((s) => ({
-      ...initialState,
-      pace: s.pace,
-      continuedAfterInitialPeriod: s.continuedAfterInitialPeriod,
+      ...s,
+      diagnosisJustCompleted: false,
+      cycleJustEnded: false,
     }));
   }, []);
 

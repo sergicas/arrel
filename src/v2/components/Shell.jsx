@@ -1,4 +1,4 @@
-import { Home, LayoutGrid, Target } from 'lucide-react';
+import { ArrowLeft, Home, LayoutGrid, Target } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import ArrelLogo from './ArrelLogo.jsx';
 
@@ -10,6 +10,9 @@ const HEADER_LINKS = [
 
 export default function Shell({
   children,
+  showBack = false,
+  backTo = '/menu',
+  showMenu = false,
   showChrome = true,
   className = '',
 }) {
@@ -58,6 +61,22 @@ export default function Shell({
         </header>
       ) : null}
       <main className={mainClassName}>
+        {showChrome && (showBack || showMenu) ? (
+          <nav className="v2-shell-secondary-nav" aria-label="Navegació de pantalla">
+            {showBack ? (
+              <Link to={backTo} className="v2-shell-back">
+                <ArrowLeft size={16} />
+                <span>Tornar</span>
+              </Link>
+            ) : null}
+            {showMenu && backTo !== '/menu' ? (
+              <Link to="/menu" className="v2-shell-back">
+                <LayoutGrid size={16} />
+                <span>Mapa</span>
+              </Link>
+            ) : null}
+          </nav>
+        ) : null}
         {children}
       </main>
     </div>

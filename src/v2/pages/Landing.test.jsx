@@ -7,6 +7,8 @@ import { ArrelProvider } from '../state/ArrelContext.jsx';
 import { useArrel } from '../state/useArrel.js';
 import { AREAS, STATUS } from '../lib/types.js';
 
+const STORAGE_KEY = 'arrel-v2-state';
+
 function StateProbe() {
   const location = useLocation();
   const { state, todayAction } = useArrel();
@@ -59,6 +61,34 @@ describe('Landing v2', () => {
       expect(screen.getByTestId('state')).toHaveTextContent(`/app|${STATUS.ACTIVE}|starter|${AREAS.COGNITIVE}|`);
     });
     expect(screen.getByTestId('state')).toHaveTextContent('min');
+  });
+
+  it('does not restart an active cycle without a clear in-app confirmation', async () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      status: STATUS.ACTIVE,
+      entryMode: 'starter',
+      primaryArea: AREAS.STRESS,
+      cycleNumber: 1,
+      dayInCycle: 2,
+      currentDayAvailableOn: '2026-04-27',
+      feedback: [{ cycle: 1, day: 1, value: 'done' }],
+    }));
+
+    renderLanding();
+
+    fireEvent.click(screen.getByText('Triar per on començar'));
+    fireEvent.click(screen.getByRole('button', { name: /Triar la prova d’avui/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
+
+    expect(screen.getByText('Ja tens un cicle començat.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Obrir la prova actual' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Començar de nou amb Memòria' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Obrir la prova actual' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('state')).toHaveTextContent(`/app|${STATUS.ACTIVE}|starter|${AREAS.STRESS}|`);
+    });
   });
 
   it('exposes privacy and terms before the user starts', () => {

@@ -25,7 +25,7 @@ import {
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useArrel } from '../state/useArrel.js';
-import { AREAS as AREA_IDS, AREA_LABELS } from '../lib/types.js';
+import { AREAS as AREA_IDS, AREA_LABELS, STATUS } from '../lib/types.js';
 import ArrelLogo from '../components/ArrelLogo.jsx';
 import ArrelMascot from '../components/ArrelMascot.jsx';
 import SEO from '../../components/SEO.jsx';
@@ -225,9 +225,11 @@ function AppPreview({ type = 'action', compact = false }) {
 export default function Landing() {
   const navigate = useNavigate();
   const startPanelRef = useRef(null);
-  const { startStarterCycle } = useArrel();
+  const { state, startStarterCycle } = useArrel();
   const [showStartOptions, setShowStartOptions] = useState(false);
   const [startStep, setStartStep] = useState('main');
+  const [pendingArea, setPendingArea] = useState(null);
+  const hasProgress = state.status !== STATUS.NEW || Boolean(state.primaryArea) || (state.feedback || []).length > 0;
 
   const openStartOptions = () => {
     setShowStartOptions(true);
@@ -238,7 +240,19 @@ export default function Landing() {
   };
 
   const chooseTodayProof = (area) => {
+    if (hasProgress) {
+      setPendingArea(area);
+      setStartStep('confirm');
+      return;
+    }
+
     startStarterCycle(area);
+    navigate('/app');
+  };
+
+  const confirmNewProof = () => {
+    if (!pendingArea) return;
+    startStarterCycle(pendingArea);
     navigate('/app');
   };
 
@@ -331,7 +345,8 @@ export default function Landing() {
                       Tornar enrere
                     </button>
                   </>
-                ) : (
+                ) : null}
+                {startStep === 'proof' ? (
                   <>
                     <p className="landing-kicker">Tria la prova d’avui</p>
                     <div className="landing-start-options">
@@ -350,7 +365,28 @@ export default function Landing() {
                       Tornar a les opcions
                     </button>
                   </>
-                )}
+                ) : null}
+                {startStep === 'confirm' && pendingArea ? (
+                  <div className="landing-start-confirm">
+                    <p className="landing-kicker">Començar de nou?</p>
+                    <h2>Ja tens un cicle començat.</h2>
+                    <p>
+                      Si comences amb {AREA_LABELS[pendingArea]}, Arrel esborrarà el cicle actual
+                      i les lectures guardades en aquesta versió local.
+                    </p>
+                    <div className="landing-start-confirm-actions">
+                      <button type="button" className="landing-primary" onClick={() => navigate('/app')}>
+                        Obrir la prova actual
+                      </button>
+                      <button type="button" className="landing-danger-action" onClick={confirmNewProof}>
+                        Començar de nou amb {AREA_LABELS[pendingArea]}
+                      </button>
+                    </div>
+                    <button type="button" className="landing-start-back" onClick={() => setStartStep('proof')}>
+                      Tornar a les capacitats
+                    </button>
+                  </div>
+                ) : null}
               </section>
             ) : null}
             <div className="landing-proof-strip" aria-label="Resum d'Arrel">

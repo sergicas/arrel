@@ -12,7 +12,7 @@ async function expectPrivacy(page) {
 
 async function expectTerms(page) {
   await expect(page).toHaveURL(/\/legal\/termes$/);
-  await expect(page.getByRole('heading', { name: 'Arrel és una eina de cura quotidiana, no una eina mèdica.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Arrel no és una eina mèdica.' })).toBeVisible();
 }
 
 test('landing footer links to privacy and can switch to terms', async ({ page }) => {
@@ -40,7 +40,7 @@ test('about page exposes legal information', async ({ page }) => {
 test('menu exposes legal information', async ({ page }) => {
   await seedState(page, makeActiveState(), '/menu');
 
-  await page.getByRole('link', { name: 'Privacitat i termes' }).click();
+  await page.getByRole('link', { name: 'Privacitat' }).click();
   await expectPrivacy(page);
   await page.getByRole('link', { name: 'Termes d’ús' }).click();
   await expectTerms(page);

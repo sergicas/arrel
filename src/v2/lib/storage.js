@@ -28,6 +28,7 @@ export const initialState = {
   cycleJustEnded: false,
   currentDayAvailableOn: null,
   nextDayAvailableAt: null,
+  updatedAt: null,
 };
 
 function getCapacitorRuntime() {
@@ -64,7 +65,7 @@ function normalizeState(parsed = {}) {
   return merged;
 }
 
-function persistentState(state) {
+function persistentState(state, updatedAt = Date.now()) {
   const {
     feedbackJustGiven: _feedbackJustGiven,
     diagnosisJustCompleted: _diagnosisJustCompleted,
@@ -72,7 +73,14 @@ function persistentState(state) {
     subscribed: _subscribed,
     ...persistent
   } = state;
-  return persistent;
+  return {
+    ...persistent,
+    updatedAt,
+  };
+}
+
+function getUpdatedAt(state) {
+  return Number.isFinite(Number(state?.updatedAt)) ? Number(state.updatedAt) : 0;
 }
 
 async function resolvePreferences() {
@@ -92,9 +100,12 @@ export function loadState() {
 
 export function saveState(state) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(persistentState(state)));
+    const storedState = persistentState(state);
+    localStorage.setItem(KEY, JSON.stringify(storedState));
+    return storedState;
   } catch (e) {
     console.warn('arrel: no s\'ha pogut desar l\'estat', e);
+    return persistentState(state);
   }
 }
 
@@ -114,8 +125,16 @@ export async function loadDurableState() {
     const { value } = await Preferences.get({ key: KEY });
     if (!value) return loadState();
 
-    const state = normalizeState(JSON.parse(value));
-    saveState(state);
+    const localState = loadState();
+    const preferencesState = normalizeState(JSON.parse(value));
+    const state = getUpdatedAt(localState) > getUpdatedAt(preferencesState)
+      ? localState
+      : preferencesState;
+
+    const storedState = saveState(state);
+    if (state === localState) {
+      await Preferences.set({ key: KEY, value: JSON.stringify(storedState) });
+    }
     return state;
   } catch (e) {
     console.warn('arrel: no s\'ha pogut carregar l\'estat durable', e);
@@ -124,14 +143,14 @@ export async function loadDurableState() {
 }
 
 export async function saveDurableState(state) {
-  saveState(state);
+  const storedState = saveState(state);
   if (!shouldUseNativePreferences()) return;
 
   try {
     const Preferences = await resolvePreferences();
     await Preferences.set({
       key: KEY,
-      value: JSON.stringify(persistentState(state)),
+      value: JSON.stringify(storedState),
     });
   } catch (e) {
     console.warn('arrel: no s\'ha pogut desar l\'estat durable', e);

@@ -62,6 +62,7 @@ describe('v2 storage', () => {
     expect(stored).not.toHaveProperty('feedbackJustGiven');
     expect(stored).not.toHaveProperty('diagnosisJustCompleted');
     expect(stored).not.toHaveProperty('cycleJustEnded');
+    expect(stored.updatedAt).toEqual(expect.any(Number));
   });
 
   it('detects native Capacitor runtimes for durable preferences', () => {

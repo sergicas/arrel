@@ -411,6 +411,30 @@ body {
     gap: 0.35rem;
   }
 
+  .v2-shell-secondary-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.4rem;
+  }
+
+  .v2-shell-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2.35rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+
   .v2-shell::before {
     content: '';
     position: fixed;
@@ -2523,6 +2547,43 @@ body {
     color: rgba(51, 36, 43, 0.68);
     font-size: 0.92rem;
     text-decoration: underline;
+  }
+
+  .landing-start-confirm {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .landing-start-confirm h2 {
+    margin: 0;
+    color: #33242b;
+    font-size: clamp(1.35rem, 4vw, 1.85rem);
+    line-height: 1.08;
+  }
+
+  .landing-start-confirm p {
+    margin: 0;
+    color: rgba(51, 36, 43, 0.72);
+    line-height: 1.5;
+  }
+
+  .landing-start-confirm-actions {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .landing-start-confirm-actions button {
+    width: 100%;
+    min-height: 3rem;
+    justify-content: center;
+    border-radius: 16px;
+    font-weight: 750;
+  }
+
+  .landing-danger-action {
+    border: 1px solid rgba(201, 88, 59, 0.24);
+    background: #fff3df;
+    color: #8f3325;
   }
 
   .landing-proof-strip {

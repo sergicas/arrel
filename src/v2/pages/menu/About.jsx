@@ -9,7 +9,7 @@ export default function About() {
   const handleRestart = () => {
     if (
       typeof window !== 'undefined' &&
-      !window.confirm('Vols refer el diagnòstic? El cicle actual es reinicia.')
+      !window.confirm('Vols ajustar el focus? Arrel conservarà l’històric i obrirà un cicle nou quan acabis.')
     ) {
       return;
     }

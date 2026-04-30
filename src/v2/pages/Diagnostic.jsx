@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useArrel } from '../state/useArrel.js';
 import Shell from '../components/Shell.jsx';
+import { STATUS } from '../lib/types.js';
 
 const QUESTIONS = [
   {
@@ -154,9 +155,10 @@ const QUESTIONS = [
 
 export default function Diagnostic() {
   const navigate = useNavigate();
-  const { completeDiagnostic } = useArrel();
+  const { state, completeDiagnostic } = useArrel();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const hasProgress = state.status !== STATUS.NEW || Boolean(state.primaryArea) || (state.feedback || []).length > 0;
 
   const handleSelect = (option) => {
     const next = [...answers, option];
@@ -174,7 +176,7 @@ export default function Diagnostic() {
   const q = QUESTIONS[step];
 
   return (
-    <Shell showBack backTo="/inici">
+    <Shell showBack backTo={hasProgress ? '/menu' : '/inici'}>
       <div className="v2-progress-line mt-6" aria-label={`Pas ${step + 1} de ${QUESTIONS.length}`}>
         {QUESTIONS.map((_, i) => (
           <span
@@ -190,8 +192,8 @@ export default function Diagnostic() {
         </p>
         <h2 className="v2-question-title text-balance">{q.text}</h2>
         <p className="text-[var(--text-secondary)] leading-relaxed mb-10 max-w-sm">
-          Respon segons el que et passa ara. Al final, Arrel triarà una capacitat
-          per començar el pròxim cicle.
+          Respon segons el que et passa ara. Al final, Arrel triarà una capacitat.
+          {hasProgress ? ' Si ja tens lectures guardades, les conservarà i obrirà un cicle nou.' : ''}
         </p>
         <div className="flex flex-col gap-3">
           {q.options.map((opt, index) => (
