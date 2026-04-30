@@ -27,19 +27,19 @@ import {
 const FEEDBACK_ITEMS = [
   {
     value: FEEDBACK.DONE,
-    label: 'Hi és',
+    label: 'Fet',
     description: 'L’has pogut fer.',
     icon: Check,
   },
   {
     value: FEEDBACK.PARTIAL,
-    label: 'Amb esforç',
+    label: 'Fet amb esforç',
     description: 'Ha demanat una mica més.',
     icon: Sparkles,
   },
   {
     value: FEEDBACK.SKIPPED,
-    label: 'Avui no',
+    label: 'Avui no he pogut',
     description: 'No l’has fet avui.',
     icon: CircleSlash,
   },
@@ -112,6 +112,7 @@ export default function Today() {
   };
   const timerProgress = Math.round(((totalSeconds - currentTimer.secondsLeft) / totalSeconds) * 100);
   const areaLabel = todayArea ? AREA_LABELS[todayArea] : 'Avui';
+  const showPhysicalSafetyNote = todayArea === AREAS.PHYSICAL;
   const paceOption = getPaceOption(state.pace);
   const nextStepIsRest = isRestDay(state.dayInCycle + 1);
   const nextStepTimerLabel = nextStepIsRest ? 'Temps fins al descans' : 'Temps fins a la prova següent';
@@ -201,7 +202,7 @@ export default function Today() {
   };
 
   return (
-    <Shell showBack backTo="/inici" showMenu className="v2-ritual-shell">
+    <Shell showBack backTo="/inici" className="v2-ritual-shell">
       <div className="v2-ritual-day" style={areaStyle}>
         <section className="v2-day-ledger" aria-label="Prova d’avui">
           <div className="v2-day-mascot" data-mood={mascotMood}>
@@ -236,6 +237,11 @@ export default function Today() {
               <p>
                 Quan acabis, marca el resultat.
               </p>
+              {showPhysicalSafetyNote ? (
+                <p className="v2-safety-note">
+                  Avís: Si sents dolor, atura't immediatament i marca «Avui no he pogut».
+                </p>
+              ) : null}
               {todayAction?.steps?.length ? (
                 <ol className="v2-action-steps">
                   {todayAction.steps.map((step) => (

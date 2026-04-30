@@ -45,15 +45,10 @@ describe('Landing v2', () => {
 
     fireEvent.click(screen.getByText('Triar per on començar'));
 
-    expect(screen.getByRole('button', { name: /Triar la prova d’avui/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Ajustar focus/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Tornar enrere' })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /Triar la prova d’avui/ }));
-
     expect(screen.getByRole('button', { name: /Cos/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Memòria/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Tornar a les opcions' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Ajustar focus/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Tornar enrere' })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
 
@@ -77,7 +72,6 @@ describe('Landing v2', () => {
     renderLanding();
 
     fireEvent.click(screen.getByText('Triar per on començar'));
-    fireEvent.click(screen.getByRole('button', { name: /Triar la prova d’avui/ }));
     fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
 
     expect(screen.getByText('Ja tens un cicle començat.')).toBeInTheDocument();

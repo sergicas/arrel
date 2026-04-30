@@ -987,6 +987,19 @@ body {
     line-height: 1.45;
   }
 
+  .v2-guide-copy > p.v2-safety-note {
+    margin-top: 0.85rem;
+    padding: 0.78rem 0.86rem;
+    border: 1px solid rgba(201, 88, 59, 0.2);
+    border-left: 4px solid var(--area-accent);
+    border-radius: 16px;
+    background: rgba(255, 247, 232, 0.92);
+    color: var(--text-primary);
+    font-size: 0.98rem;
+    font-weight: 560;
+    line-height: 1.5;
+  }
+
   .v2-action-steps {
     display: grid;
     gap: 0.45rem;

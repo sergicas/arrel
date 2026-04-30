@@ -53,13 +53,12 @@ export async function advanceClock(page, { days = 0, hours = 0, minutes = 0, sec
 
 export async function startStarterAction(page) {
   await page.getByText('Triar per on començar', { exact: true }).click();
-  await page.getByRole('button', { name: /Triar la prova d’avui/ }).click();
   await page.getByRole('button', { name: /Calma/ }).click();
   await expect(page).toHaveURL(/\/app$/);
 }
 
-export async function markToday(page, label = 'Hi és') {
-  await page.locator('.v2-stamp').filter({ hasText: label }).click();
+export async function markToday(page, label = 'Fet') {
+  await page.locator('.v2-stamp').filter({ has: page.getByText(label, { exact: true }) }).click();
   await page.getByRole('button', { name: 'Guardar la lectura' }).click();
 }
 
@@ -70,7 +69,7 @@ export async function openNextActionDay(page) {
   await nextDayButton.click();
 }
 
-export async function completeCycleDays(page, labelsOrCount = 6, label = 'Hi és') {
+export async function completeCycleDays(page, labelsOrCount = 6, label = 'Fet') {
   const labels = Array.isArray(labelsOrCount)
     ? labelsOrCount
     : Array.from({ length: labelsOrCount }, () => label);

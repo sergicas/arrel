@@ -31,19 +31,19 @@ function renderPace(overrides = {}) {
 }
 
 describe('Pace settings', () => {
-  it('shows the three available rhythms', () => {
+  it('shows the selectable rhythms', () => {
     renderPace();
 
     expect(screen.getByRole('radio', { name: /Lent/i })).toHaveAttribute('aria-checked', 'true');
     expect(screen.getByRole('radio', { name: /Regular/i })).toBeInTheDocument();
-    expect(screen.getByRole('radio', { name: /Accelerat/i })).toBeInTheDocument();
+    expect(screen.queryByRole('radio', { name: /Accelerat/i })).not.toBeInTheDocument();
   });
 
   it('stores the selected rhythm', () => {
     const { setPace } = renderPace();
 
-    fireEvent.click(screen.getByRole('radio', { name: /Accelerat/i }));
+    fireEvent.click(screen.getByRole('radio', { name: /Regular/i }));
 
-    expect(setPace).toHaveBeenCalledWith('accelerated');
+    expect(setPace).toHaveBeenCalledWith('regular');
   });
 });

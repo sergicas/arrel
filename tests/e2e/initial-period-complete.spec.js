@@ -12,13 +12,13 @@ test('after two guided cycles the handoff is not a paywall and can continue to c
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await completeCycleDays(page, 6, 'Hi és');
+  await completeCycleDays(page, 6, 'Fet');
   await closeRestDay(page);
   await acknowledgeTransition(page, 1);
   await expect(page.getByText('Cicle 2')).toBeVisible();
   await expect(page.getByText('Dia 1')).toBeVisible();
 
-  await completeCycleDays(page, 6, 'Hi és');
+  await completeCycleDays(page, 6, 'Fet');
   await closeRestDay(page);
   await expect(page.getByText('Has acabat el cicle 2.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Veure opcions per continuar' })).toBeVisible();

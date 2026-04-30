@@ -26,20 +26,20 @@ export const ACTIONS = {
     { day: 6, duration: '≈ 5 min', text: "Mentre fas una activitat habitual, com rentar plats o caminar, compta cinc respiracions completes sense interrompre l'activitat." },
   ],
   [AREAS.RELATIONAL]: [
-    { day: 1, duration: '≈ 5 min', text: "Truca a algú amb qui no parlis fa més d'un mes. Si no respon, deixa-li un missatge de veu curt." },
+    { day: 1, duration: '≈ 5 min', text: "Truca a algú amb qui no parlis fa més d'un mes. Si no respon o no pot contestar ara, deixa-li un missatge de veu curt o escriu-li un missatge." },
     { day: 2, duration: '≈ 3 min', text: "Saluda algú que veus sovint però no coneixes. Si no es dona el moment, envia un missatge curt a algú proper." },
     { day: 3, duration: '≈ 4 min', text: "Escriu un missatge curt a algú només per dir-li que l'has pensat. Sense demanar res." },
-    { day: 4, duration: '≈ 3 min', text: "Tingues una conversa de tres minuts sense mirar el mòbil. Si no pots, envia un àudio curt." },
-    { day: 5, duration: '≈ 6 min', text: "Pregunta a algú una cosa que no li havies preguntat mai, com què recorda d'una etapa que no t'ha explicat. Si no pots parlar ara, escriu-la i envia-la." },
+    { day: 4, duration: '≈ 3 min', text: "Tingues una conversa de tres minuts sense mirar el mòbil. Si no hi ha ningú disponible ara, envia un àudio o un missatge curt amb una pregunta concreta." },
+    { day: 5, duration: '≈ 6 min', text: "Pregunta a algú una cosa que no li havies preguntat mai, com què recorda d'una etapa que no t'ha explicat. Si no pot contestar ara, escriu la pregunta i envia-la per missatge." },
     { day: 6, duration: '≈ 4 min', text: "Reconeix una virtut d'una persona amb qui sovint discrepes. En directe o en un missatge molt breu." },
   ],
   [AREAS.IDENTITY]: [
     { day: 1, duration: '≈ 5 min', text: "Canvia una microdecisió habitual: ruta, beguda, música o seient. Observa com et queda durant cinc minuts." },
-    { day: 2, duration: '≈ 5 min', text: "Acaba aquesta frase: \"Sóc algú que sempre...\". Després escriu un cas concret en què no ho vas ser." },
-    { day: 3, duration: '≈ 4 min', text: "Tria una opinió teva ferma. Defensa la posició contrària dos minuts." },
-    { day: 4, duration: '≈ 6 min', text: "Recorda una cosa que t'agradava fer als trenta i fa temps que no fas. Escriu una manera curta de tornar-hi aquesta setmana." },
+    { day: 2, duration: '≈ 5 min', text: "Agafa un paper i completa dues línies: \"Sovint faig...\" i \"Avui faré una excepció petita: ...\". Fes aquesta excepció abans de tancar el dia." },
+    { day: 3, duration: '≈ 4 min', text: "Escriu en un paper una opinió ferma en una frase. A sota, escriu dues raons que defensarien la posició contrària i llegeix-les en veu alta." },
+    { day: 4, duration: '≈ 6 min', text: "Escriu el nom d'una activitat que t'agradava fer als trenta. A sota, apunta el primer pas petit per reprendre-la aquesta setmana i deixa'l en un lloc visible." },
     { day: 5, duration: '≈ 5 min', text: "Surt al carrer amb una cosa que avui no és habitual: una jaqueta diferent, un barret o un mocador. Camina cinc minuts amb ella." },
-    { day: 6, duration: '≈ 5 min', text: "Anota una cosa nova sobre tu que has descobert aquesta setmana." },
+    { day: 6, duration: '≈ 5 min', text: "Agafa un paper i completa tres frases: \"Aquesta setmana he provat...\", \"M'ha costat...\" i \"Demà repetiré o deixaré descansar...\"." },
   ],
 };
 

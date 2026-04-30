@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 import {
   expectStoredState,
   prepareFreshPage,
-  startStarterAction,
 } from './helpers/arrel.js';
 
 test('landing starts the starter day 1 action without an account', async ({ page }) => {
@@ -11,7 +10,9 @@ test('landing starts the starter day 1 action without an account', async ({ page
   await expect(page.getByRole('heading', { name: 'Autonomia, capacitat i il·lusió cada dia.' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Privacitat' })).toHaveAttribute('href', '/legal/privacitat');
 
-  await startStarterAction(page);
+  await page.getByText('Triar per on començar', { exact: true }).click();
+  await page.getByRole('button', { name: /Calma/ }).click();
+  await expect(page).toHaveURL(/\/app$/);
 
   await expect(page.locator('.v2-ledger-area')).toHaveText('Calma');
   await expect(page.getByText('Cicle 1')).toBeVisible();

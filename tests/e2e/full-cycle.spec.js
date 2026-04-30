@@ -10,7 +10,7 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await completeCycleDays(page, ['Hi és', 'Hi és', 'Hi és', 'Amb esforç', 'Amb esforç', 'Avui no']);
+  await completeCycleDays(page, ['Fet', 'Fet', 'Fet', 'Fet amb esforç', 'Fet amb esforç', 'Avui no he pogut']);
 
   await expect(page.getByText('Dia 7 · tancament')).toBeVisible();
   await expect(page.getByText('Avui toca revisar el cicle.')).toBeVisible();

@@ -14,9 +14,9 @@ import {
 } from '../lib/pace.js';
 
 const FEEDBACK_LABELS = {
-  [FEEDBACK.DONE]: 'Hi és',
-  [FEEDBACK.PARTIAL]: 'Amb esforç',
-  [FEEDBACK.SKIPPED]: 'Avui no',
+  [FEEDBACK.DONE]: 'Fet',
+  [FEEDBACK.PARTIAL]: 'Fet amb esforç',
+  [FEEDBACK.SKIPPED]: 'Avui no he pogut',
 };
 
 export default function Rest() {
@@ -43,7 +43,7 @@ export default function Rest() {
   }, [dayCanOpenNow]);
 
   return (
-    <Shell showBack backTo="/inici" showMenu>
+    <Shell showBack backTo="/inici">
       <div className="flex-1 flex flex-col">
         <p className="text-sm text-[var(--text-tertiary)] pt-6">
           Cicle {state.cycleNumber} · dia {state.dayInCycle}

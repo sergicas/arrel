@@ -87,7 +87,6 @@ export const PACE = {
 export const PACE_ORDER = [
   PACE.SLOW,
   PACE.REGULAR,
-  PACE.ACCELERATED,
 ];
 
 export const PACE_OPTIONS = {

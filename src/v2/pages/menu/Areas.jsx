@@ -54,7 +54,7 @@ export default function Areas() {
                 {AREA_DESCRIPTIONS[area]}
               </p>
               <button type="button" className="btn btn-primary w-full mt-5" onClick={() => chooseArea(area)}>
-                Fer una prova de {AREA_LABELS[area]}
+                {area === AREAS.IDENTITY ? 'Activar un Propòsit' : `Fer una prova de ${AREA_LABELS[area]}`}
               </button>
               {pendingArea === area ? (
                 <div className="v2-area-confirm" role="status">

@@ -12,7 +12,7 @@ test('daily reading locks the next day until local midnight', async ({ page }) =
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await markToday(page, 'Hi és');
+  await markToday(page, 'Fet');
 
   await expect(page.getByText('Prova guardada.')).toBeVisible();
   await expect(page.getByLabel('Temps fins a la prova següent')).toContainText('15 h');

@@ -63,8 +63,18 @@ describe('Today v2', () => {
     expect(screen.getByText('Guia curta')).toBeInTheDocument();
     expect(screen.getByText('Fes la prova.')).toBeInTheDocument();
     expect(screen.getByText('Prepara-ho: deixa a mà el que necessitis.')).toBeInTheDocument();
+    expect(screen.queryByText("Avís: Si sents dolor, atura't immediatament i marca «Avui no he pogut».")).not.toBeInTheDocument();
     expect(screen.getByText('10:00')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Iniciar' })).toBeInTheDocument();
+  });
+
+  it('shows the safety note only for physical actions', () => {
+    renderToday({
+      todayArea: AREAS.PHYSICAL,
+      todayGuidance: 'Avui treballes mobilitat.',
+    });
+
+    expect(screen.getByText("Avís: Si sents dolor, atura't immediatament i marca «Avui no he pogut».")).toBeInTheDocument();
   });
 
   it('starts and pauses the action timer', () => {

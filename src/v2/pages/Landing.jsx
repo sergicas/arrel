@@ -215,9 +215,9 @@ function AppPreview({ type = 'action', compact = false }) {
               <p>Prova d’avui · 5 min</p>
               <h3>Cuida una capacitat avui.</h3>
               <div className="landing-preview-checks">
-                <span>Hi és</span>
-                <span>Amb esforç</span>
-                <span>Avui no</span>
+                <span>Fet</span>
+                <span>Fet amb esforç</span>
+                <span>Avui no he pogut</span>
               </div>
             </>
           ) : null}
@@ -310,7 +310,7 @@ export default function Landing() {
             <h1>Autonomia, capacitat i il·lusió cada dia.</h1>
             <p className="landing-lead">
               Arrel t’ajuda a cuidar el que et manté actiu, lúcid i amb ganes.
-              Cos, memòria, calma, vincles i propòsit en accions petites.
+              Cos, memòria, calma, vincles i propòsit amb reptes pràctics de 3 a 10 minuts.
             </p>
             <div className="landing-actions">
               <button type="button" onClick={openStartOptions} className="landing-primary">
@@ -322,37 +322,7 @@ export default function Landing() {
               <section ref={startPanelRef} className="landing-start-panel" aria-label="Opcions per començar">
                 {startStep === 'main' ? (
                   <>
-                    <p className="landing-kicker">Com vols començar?</p>
-                    <div className="landing-start-options">
-                      <button type="button" onClick={() => setStartStep('proof')}>
-                        <strong>Triar la prova d’avui</strong>
-                        <span>Escull una capacitat i obre una prova de 3 a 10 minuts.</span>
-                      </button>
-                      <button type="button" onClick={() => goTo('/diagnostic')}>
-                        <strong>Ajustar focus</strong>
-                        <span>Respon cinc preguntes i tria la capacitat principal.</span>
-                      </button>
-                      <button type="button" onClick={() => goTo('/menu/ritme')}>
-                        <strong>Triar ritme</strong>
-                        <span>Lent, regular o accelerat.</span>
-                      </button>
-                      <button type="button" onClick={() => goTo('/menu/arees')}>
-                        <strong>Veure capacitats</strong>
-                        <span>Cos, memòria, calma, vincles i propòsit.</span>
-                      </button>
-                      <button type="button" onClick={() => goTo('/menu')}>
-                        <strong>Veure el mapa complet</strong>
-                        <span>Totes les pantalles de l’app.</span>
-                      </button>
-                    </div>
-                    <button type="button" className="landing-start-back" onClick={() => setShowStartOptions(false)}>
-                      Tornar enrere
-                    </button>
-                  </>
-                ) : null}
-                {startStep === 'proof' ? (
-                  <>
-                    <p className="landing-kicker">Tria la prova d’avui</p>
+                    <p className="landing-kicker">Tria una capacitat</p>
                     <div className="landing-start-options">
                       {START_PROOF_OPTIONS.map((option) => (
                         <button
@@ -364,9 +334,21 @@ export default function Landing() {
                           <span>{option.text}</span>
                         </button>
                       ))}
+                      <button type="button" onClick={() => goTo('/diagnostic')}>
+                        <strong>Ajustar focus</strong>
+                        <span>Respon cinc preguntes i tria la capacitat principal.</span>
+                      </button>
+                      <button type="button" onClick={() => goTo('/menu/ritme')}>
+                        <strong>Triar ritme</strong>
+                        <span>Lent, regular o accelerat.</span>
+                      </button>
+                      <button type="button" onClick={() => goTo('/menu')}>
+                        <strong>Veure el mapa complet</strong>
+                        <span>Totes les pantalles de l’app.</span>
+                      </button>
                     </div>
-                    <button type="button" className="landing-start-back" onClick={() => setStartStep('main')}>
-                      Tornar a les opcions
+                    <button type="button" className="landing-start-back" onClick={() => setShowStartOptions(false)}>
+                      Tornar enrere
                     </button>
                   </>
                 ) : null}
@@ -386,7 +368,7 @@ export default function Landing() {
                         Començar de nou amb {AREA_LABELS[pendingArea]}
                       </button>
                     </div>
-                    <button type="button" className="landing-start-back" onClick={() => setStartStep('proof')}>
+                    <button type="button" className="landing-start-back" onClick={() => setStartStep('main')}>
                       Tornar a les capacitats
                     </button>
                   </div>
