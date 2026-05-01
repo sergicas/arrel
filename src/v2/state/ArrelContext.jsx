@@ -21,6 +21,7 @@ import {
 import { AREA_GUIDANCE, AREAS, STATUS, INITIAL_GUIDED_CYCLES } from '../lib/types.js';
 import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePace } from '../lib/pace.js';
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
+import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycleReading.js';
 
 function hasFeedbackForDay(feedback, cycleNumber, dayInCycle) {
   return feedback.some((entry) => entry.cycle === cycleNumber && entry.day === dayInCycle);
@@ -292,6 +293,25 @@ export function ArrelProvider({ children }) {
     }
   }, []);
 
+  const generateCycleReading = useCallback(() => {
+    setState((s) => {
+      const payload = buildCycleReadingPayload(s);
+      const reading = generateMockCycleReading(payload);
+      const cycleReadings = Array.isArray(s.cycleReadings) ? s.cycleReadings : [];
+      return {
+        ...s,
+        cycleReadings: [
+          ...cycleReadings.filter((entry) => entry.cycle !== payload.cycleNumber),
+          {
+            cycle: payload.cycleNumber,
+            createdAt: Date.now(),
+            reading,
+          },
+        ],
+      };
+    });
+  }, []);
+
   const restartFromDiagnostic = useCallback(() => {
     setState((s) => ({
       ...s,
@@ -346,6 +366,7 @@ export function ArrelProvider({ children }) {
     acknowledgeDiagnosisResult,
     continueAfterInitialPeriod,
     setDailyReminder,
+    generateCycleReading,
     restartFromDiagnostic,
     resetAll,
   };

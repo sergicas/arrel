@@ -32,6 +32,12 @@ describe('v2 storage', () => {
     expect(loadState().pace).toBe('slow');
   });
 
+  it('fills missing cycle readings for older stored states', () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ status: 'active', feedback: [] }));
+
+    expect(loadState().cycleReadings).toEqual([]);
+  });
+
   it('does not persist transient UI flags or the old subscribed flag', () => {
     saveState({
       status: 'active',

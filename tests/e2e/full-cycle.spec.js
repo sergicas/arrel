@@ -44,4 +44,30 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
 
   const state = await page.evaluate((key) => JSON.parse(window.localStorage.getItem(key)), 'arrel-v2-state');
   expect(state.feedback).toHaveLength(6);
+
+  const reading = page.getByLabel('Lectura personal');
+  await expect(reading.getByText('Arrel pot llegir aquest cicle i proposar-te un següent pas.')).toBeVisible();
+  await page.getByRole('button', { name: 'Generar lectura personal' }).click();
+
+  await expect(reading.getByText('Lectura del cicle')).toBeVisible();
+  await expect(reading.getByText(/Amb les dades d’aquest cicle/)).toBeVisible();
+
+  await expectStoredState(page, {
+    cycleReadings: [
+      {
+        cycle: 1,
+        reading: {
+          title: 'Lectura del cicle',
+          confidence: 'alta',
+        },
+      },
+    ],
+  });
+
+  const stateWithReading = await page.evaluate((key) => JSON.parse(window.localStorage.getItem(key)), 'arrel-v2-state');
+  expect(stateWithReading.cycleReadings).toHaveLength(1);
+
+  await page.reload();
+  await expect(page.getByLabel('Lectura personal').getByText('Lectura del cicle')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Actualitzar lectura' })).toBeVisible();
 });

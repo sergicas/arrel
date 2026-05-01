@@ -20,11 +20,14 @@ const FEEDBACK_LABELS = {
 };
 
 export default function Rest() {
-  const { state, canAdvanceDay, advanceDay } = useArrel();
+  const { state, canAdvanceDay, advanceDay, generateCycleReading } = useArrel();
   const [now, setNow] = useState(() => new Date());
-  const cycleEntries = state.feedback
+  const cycleEntries = (state.feedback || [])
     .filter((entry) => entry.cycle === state.cycleNumber)
     .sort((a, b) => a.day - b.day);
+  const cycleReadingEntry = (state.cycleReadings || [])
+    .find((entry) => entry.cycle === state.cycleNumber);
+  const cycleReading = cycleReadingEntry?.reading || null;
   const presentCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.DONE).length;
   const frictionCount = cycleEntries.filter((entry) => entry.value === FEEDBACK.PARTIAL).length;
   const paceOption = getPaceOption(state.pace);
@@ -97,6 +100,42 @@ export default function Rest() {
               <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
                 Encara no hi ha proves guardades en aquest cicle.
               </p>
+            )}
+          </section>
+
+          <section className="v2-panel v2-cycle-reading mt-5" aria-label="Lectura personal">
+            <div className="v2-cycle-reading-head">
+              <p className="v2-panel-label">Lectura personal</p>
+              {cycleReading ? (
+                <button
+                  type="button"
+                  onClick={generateCycleReading}
+                  className="btn btn-ghost v2-cycle-reading-update"
+                >
+                  Actualitzar lectura
+                </button>
+              ) : null}
+            </div>
+
+            {cycleReading ? (
+              <div className="v2-cycle-reading-body">
+                <h2>{cycleReading.title}</h2>
+                <p>{cycleReading.pattern}</p>
+                <p>{cycleReading.availableCapacity}</p>
+                <p>{cycleReading.carePoint}</p>
+                <p>{cycleReading.nextActionStyle}</p>
+                <div className="v2-cycle-reading-confidence">
+                  <span>Confiança</span>
+                  <strong>{cycleReading.confidence}</strong>
+                </div>
+              </div>
+            ) : (
+              <div className="v2-cycle-reading-empty">
+                <p>Arrel pot llegir aquest cicle i proposar-te un següent pas.</p>
+                <button type="button" onClick={generateCycleReading} className="btn btn-primary w-full">
+                  Generar lectura personal
+                </button>
+              </div>
             )}
           </section>
 

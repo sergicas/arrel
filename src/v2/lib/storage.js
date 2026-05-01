@@ -21,6 +21,7 @@ export const initialState = {
   diagnosisAnswers: [],
   diagnosisScores: null,
   feedback: [],
+  cycleReadings: [],
   pace: PACE.SLOW,
   continuedAfterInitialPeriod: false,
   reminder: DEFAULT_REMINDER,
@@ -51,6 +52,8 @@ function normalizeState(parsed = {}) {
     ...initialState,
     ...storedState,
     continuedAfterInitialPeriod: storedState.continuedAfterInitialPeriod ?? Boolean(subscribed),
+    feedback: Array.isArray(storedState.feedback) ? storedState.feedback : [],
+    cycleReadings: Array.isArray(storedState.cycleReadings) ? storedState.cycleReadings : [],
     pace: normalizePace(storedState.pace),
     reminder: {
       ...DEFAULT_REMINDER,

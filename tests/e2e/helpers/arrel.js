@@ -21,7 +21,12 @@ export function makeActiveState(overrides = {}) {
 
 export async function prepareFreshPage(page, path = '/inici', time = START_TIME) {
   await page.clock.install({ time: new Date(time) });
-  await page.addInitScript((key) => window.localStorage.removeItem(key), STORAGE_KEY);
+  await page.addInitScript((key) => {
+    const clearFlag = `${key}-fresh-cleared`;
+    if (window.sessionStorage.getItem(clearFlag)) return;
+    window.localStorage.removeItem(key);
+    window.sessionStorage.setItem(clearFlag, 'true');
+  }, STORAGE_KEY);
   await page.goto(path);
 }
 

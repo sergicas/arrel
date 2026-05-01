@@ -1750,6 +1750,65 @@ body {
     color: var(--text-secondary);
   }
 
+  .v2-cycle-reading {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .v2-cycle-reading-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .v2-cycle-reading-update {
+    height: 2.35rem;
+    padding: 0 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .v2-cycle-reading-empty,
+  .v2-cycle-reading-body {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .v2-cycle-reading-empty p,
+  .v2-cycle-reading-body p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .v2-cycle-reading-body h2 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 620;
+    line-height: 1.2;
+  }
+
+  .v2-cycle-reading-confidence {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 0.8rem;
+    border-radius: 16px;
+    background: rgba(242, 111, 79, 0.08);
+  }
+
+  .v2-cycle-reading-confidence span {
+    color: var(--text-tertiary);
+    font-size: 0.78rem;
+  }
+
+  .v2-cycle-reading-confidence strong {
+    color: var(--text-primary);
+    font-size: 0.86rem;
+    text-transform: capitalize;
+  }
+
   .v2-display {
     font-size: 3.75rem;
     line-height: 0.95;
