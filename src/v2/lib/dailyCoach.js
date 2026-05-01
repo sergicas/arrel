@@ -1,4 +1,5 @@
 import { FEEDBACK, AREA_LABELS } from './types.js';
+import { analyzeEvolution } from './evolutionEngine.js';
 
 function detectSentiment(note = '') {
   const clean = note.toLowerCase();
@@ -14,10 +15,13 @@ function detectSentiment(note = '') {
 }
 
 export function getDailyCoachDecision(state) {
+  const evolutionInsights = analyzeEvolution(state);
+  const evolutionText = Array.isArray(evolutionInsights) ? ` ${evolutionInsights[0]}` : '';
+
   if (state.dayInCycle <= 1) {
     return {
       difficulty: 'standard',
-      insight: 'Avui és un bon dia per començar amb energia.',
+      insight: `Avui és un bon dia per començar amb energia.${evolutionText}`,
     };
   }
 
@@ -28,7 +32,7 @@ export function getDailyCoachDecision(state) {
   if (!yesterday) {
     return {
       difficulty: 'standard',
-      insight: 'Continuem amb el pla previst per a aquesta setmana.',
+      insight: `Continuem amb el pla previst per a aquesta setmana.${evolutionText}`,
     };
   }
 
@@ -39,26 +43,26 @@ export function getDailyCoachDecision(state) {
   if (sentiment === 'fatigue' || yesterday.value === FEEDBACK.SKIPPED) {
     return {
       difficulty: 'easy',
-      insight: `Ahir vas notar que la prova de ${areaName} demanava força. Avui prioritzem la constància amb una versió més suau.`,
+      insight: `Ahir vas notar que la prova de ${areaName} demanava força. Avui prioritzem la constància amb una versió més suau.${evolutionText}`,
     };
   }
 
   if (sentiment === 'momentum' && yesterday.value === FEEDBACK.DONE) {
     return {
       difficulty: 'standard',
-      insight: `Ahir et vas sentir molt bé amb la prova de ${areaName}. Avui mantenim el ritme per consolidar aquesta sensació.`,
+      insight: `Ahir et vas sentir molt bé amb la prova de ${areaName}. Avui mantenim el ritme per consolidar aquesta sensació.${evolutionText}`,
     };
   }
 
   if (friction) {
     return {
       difficulty: 'easy',
-      insight: `Com que ahir va costar una mica, avui fem un pas més petit per assegurar que el camí sigui amable.`,
+      insight: `Com que ahir va costar una mica, avui fem un pas més petit per assegurar que el camí sigui amable.${evolutionText}`,
     };
   }
 
   return {
     difficulty: 'standard',
-    insight: 'Bon dia. Seguim avançant en el cicle amb la prova que toca avui.',
+    insight: `Bon dia. Seguim avançant en el cicle amb la prova que toca avui.${evolutionText}`,
   };
 }
