@@ -62,8 +62,11 @@ export async function startStarterAction(page) {
   await expect(page).toHaveURL(/\/app$/);
 }
 
-export async function markToday(page, label = 'Fet') {
+export async function markToday(page, label = 'Fet', note = '') {
   await page.locator('.v2-stamp').filter({ has: page.getByText(label, { exact: true }) }).click();
+  if (note) {
+    await page.getByPlaceholder('Exemple: m’ha costat començar, però després m’ha anat bé.').fill(note);
+  }
   await page.getByRole('button', { name: 'Guardar la lectura' }).click();
 }
 
@@ -79,8 +82,10 @@ export async function completeCycleDays(page, labelsOrCount = 6, label = 'Fet') 
     ? labelsOrCount
     : Array.from({ length: labelsOrCount }, () => label);
 
-  for (const dayLabel of labels) {
-    await markToday(page, dayLabel);
+  for (const day of labels) {
+    const dayLabel = typeof day === 'string' ? day : day.label;
+    const note = typeof day === 'string' ? '' : day.note || '';
+    await markToday(page, dayLabel, note);
     await openNextActionDay(page);
   }
 }

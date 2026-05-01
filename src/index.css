@@ -1483,6 +1483,12 @@ body {
     text-transform: uppercase;
   }
 
+  .v2-note-field p {
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
   .v2-note-field textarea {
     min-height: 5.6rem;
     width: 100%;
@@ -1497,6 +1503,29 @@ body {
 
   .v2-note-field textarea:focus {
     border-color: var(--area-accent);
+  }
+
+  .v2-note-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .v2-note-prompts button {
+    min-height: 2.1rem;
+    padding: 0 0.65rem;
+    border: 1px solid rgba(242, 151, 93, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1;
+  }
+
+  .v2-note-prompts button:hover {
+    border-color: var(--area-accent);
+    background: var(--area-soft);
+    color: var(--text-primary);
   }
 
   .v2-commit-button {

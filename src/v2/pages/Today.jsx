@@ -45,6 +45,12 @@ const FEEDBACK_ITEMS = [
   },
 ];
 
+const NOTE_PROMPTS = [
+  'M’ha anat bé quan…',
+  'M’ha costat perquè…',
+  'Voldria repetir…',
+];
+
 const AREA_ORDER = [
   AREAS.PHYSICAL,
   AREAS.COGNITIVE,
@@ -178,6 +184,11 @@ export default function Today() {
   const saveFeedback = () => {
     if (!selectedFeedback) return;
     submitFeedback(selectedFeedback, note.trim());
+  };
+
+  const applyNotePrompt = (prompt) => {
+    if (note.trim()) return;
+    setDraft({ dayKey, selectedFeedback, note: prompt });
   };
 
   const startTimer = () => {
@@ -348,15 +359,23 @@ export default function Today() {
             <label className="v2-note-field">
               <span>
                 <PencilLine size={14} />
-                Una línia opcional
+                Una frase sobre avui
               </span>
+              <p>Ajudarà Arrel a llegir millor el cicle.</p>
               <textarea
                 value={note}
                 onChange={(event) => setDraft({ dayKey, selectedFeedback, note: event.target.value })}
                 rows={3}
-                placeholder="Escriu què ha passat, si ho vols recordar."
+                placeholder="Exemple: m’ha costat començar, però després m’ha anat bé."
               />
             </label>
+            <div className="v2-note-prompts" aria-label="Suggeriments per la frase">
+              {NOTE_PROMPTS.map((prompt) => (
+                <button key={prompt} type="button" onClick={() => applyNotePrompt(prompt)}>
+                  {prompt}
+                </button>
+              ))}
+            </div>
 
             <button
               onClick={saveFeedback}

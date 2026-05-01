@@ -10,7 +10,17 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await completeCycleDays(page, ['Fet', 'Fet', 'Fet', 'Fet amb esforç', 'Fet amb esforç', 'Ho deixo per avui']);
+  await completeCycleDays(page, [
+    'Fet',
+    'Fet',
+    'Fet',
+    'Fet amb esforç',
+    'Fet amb esforç',
+    {
+      label: 'Ho deixo per avui',
+      note: 'M’ha costat mantenir-ho mentre feia altres coses.',
+    },
+  ]);
 
   await expect(page.getByText('Dia 7 · tancament')).toBeVisible();
   await expect(page.getByText('Avui toca revisar el cicle.')).toBeVisible();
@@ -51,6 +61,7 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
 
   await expect(reading.getByText('Un cicle que va començar amb més entrada')).toBeVisible();
   await expect(reading.getByText(/inici va entrar amb més disponibilitat/)).toBeVisible();
+  await expect(reading.getByText(/M’ha costat mantenir-ho mentre feia altres coses/).first()).toBeVisible();
   await expect(reading.getByText(/compta tres respiracions/)).toBeVisible();
 
   await expectStoredState(page, {

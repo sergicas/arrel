@@ -68,6 +68,34 @@ describe('Today v2', () => {
     expect(screen.getByRole('button', { name: 'Iniciar' })).toBeInTheDocument();
   });
 
+  it('frames the daily note as a useful sentence for the cycle reading', () => {
+    renderToday();
+
+    expect(screen.getByText('Una frase sobre avui')).toBeInTheDocument();
+    expect(screen.getByText('Ajudarà Arrel a llegir millor el cicle.')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Exemple: m’ha costat començar, però després m’ha anat bé.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'M’ha anat bé quan…' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'M’ha costat perquè…' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Voldria repetir…' })).toBeInTheDocument();
+  });
+
+  it('uses quick note chips as optional writing helpers', () => {
+    renderToday();
+
+    fireEvent.click(screen.getByRole('button', { name: 'M’ha costat perquè…' }));
+
+    expect(screen.getByPlaceholderText('Exemple: m’ha costat començar, però després m’ha anat bé.')).toHaveValue('M’ha costat perquè…');
+  });
+
+  it('keeps the note optional when saving a reading', () => {
+    const { submitFeedback } = renderToday();
+
+    fireEvent.click(screen.getByText('Fet'));
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar la lectura' }));
+
+    expect(submitFeedback).toHaveBeenCalledWith(FEEDBACK.DONE, '');
+  });
+
   it('shows the safety note only for physical actions', () => {
     renderToday({
       todayArea: AREAS.PHYSICAL,

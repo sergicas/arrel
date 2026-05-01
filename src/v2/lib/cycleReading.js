@@ -69,6 +69,15 @@ function noteExcerpt(note) {
   return clean.length > 96 ? `${clean.slice(0, 93)}...` : clean;
 }
 
+function endsWithSentencePunctuation(text) {
+  return /[.!?…]$/.test(text);
+}
+
+function getContextNote(days, careDay, availableDay) {
+  const preferred = [careDay, availableDay].find((day) => noteExcerpt(day?.note));
+  return preferred || days.find((day) => noteExcerpt(day.note)) || null;
+}
+
 function metadataFor(day) {
   return day.metadata || {};
 }
@@ -229,7 +238,9 @@ function buildCarePoint(careDay) {
 
   const metadata = metadataFor(careDay);
   const note = noteExcerpt(careDay.note);
-  const noteText = note ? ` La nota del dia diu: “${note}”.` : '';
+  const noteText = note
+    ? ` La nota del dia diu: “${note}”${endsWithSentencePunctuation(note) ? '' : '.'}`
+    : '';
   const autonomy = metadata.autonomySignal ? ` Aquí pot ajudar recordar que ${metadata.autonomySignal}.` : '';
 
   if (careDay.result === FEEDBACK.SKIPPED) {
@@ -263,6 +274,13 @@ function buildNextActionStyle(careDay, availableDay) {
     if (metadata.intensity === 'low') return 'Estil recomanat: acció curta, baixa intensitat i inici fàcil.';
   }
   return 'Estil recomanat: acció curta, concreta i fàcil de començar.';
+}
+
+function buildConfidenceReason(confidence, noteDay) {
+  if (noteDay) {
+    return `Confiança ${confidence}: hi ha resultats del cicle i una frase escrita que dona més context.`;
+  }
+  return `Confiança ${confidence}: basada només en els resultats marcats del cicle.`;
 }
 
 export function buildCycleReadingPayload(state = {}) {
@@ -310,6 +328,8 @@ export function generateMockCycleReading(payload = {}) {
   const trajectory = buildTrajectory(days);
   const availableDay = getMostAvailableDay(days);
   const careDay = getMostCostlyDay(days);
+  const noteDay = getContextNote(days, careDay, availableDay);
+  const note = noteExcerpt(noteDay?.note);
   const confidence = getConfidence(days, availableDay, careDay, trajectory);
   const totalDone = days.filter((day) => day.result === FEEDBACK.DONE).length;
   const totalPartial = days.filter((day) => day.result === FEEDBACK.PARTIAL).length;
@@ -319,7 +339,10 @@ export function generateMockCycleReading(payload = {}) {
   ).length;
   const suggestionArea = careArea?.area || availableArea?.area || payload.currentCycleArea;
   const resultSummary = `${totalDone} ${pluralize(totalDone, 'dia', 'dies')} com a “Fet”, ${totalPartial} amb “Fet amb esforç” i ${totalSkipped} com a “Ho deixo per avui”`;
-  const pattern = `${trajectory.text} En conjunt: ${resultSummary}.`;
+  const noteContext = note
+    ? ` També has deixat una frase sobre el dia ${noteDay.day}: “${note}”${endsWithSentencePunctuation(note) ? ' ' : '. '}Això dona més context a la lectura.`
+    : '';
+  const pattern = `${trajectory.text} En conjunt: ${resultSummary}.${noteContext}`;
 
   return {
     title: buildTitle(trajectory, availableDay, careDay),
@@ -329,6 +352,7 @@ export function generateMockCycleReading(payload = {}) {
     nextCycleSuggestion: buildNextCycleSuggestion(careDay, availableDay, suggestionArea),
     nextActionStyle: buildNextActionStyle(careDay, availableDay),
     confidence,
+    confidenceReason: buildConfidenceReason(confidence, noteDay),
     safetyNote: totalFriction >= 3 || totalSkipped > 0
       ? 'Si una prova no encaixa avui, deixa-la descansar i torna a una opció més suau.'
       : null,

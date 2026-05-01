@@ -63,6 +63,7 @@ describe('cycle readings', () => {
       ],
     });
     expect(payload.days[0].action).toEqual(expect.any(String));
+    expect(payload.days[1].note).toBe('Ha costat una mica.');
     expect(payload.days).toHaveLength(2);
   });
 
@@ -140,7 +141,28 @@ describe('cycle readings', () => {
     expect(reading.carePoint).toContain('Fet amb esforç');
     expect(reading.carePoint).not.toContain('Ho deixo per avui');
     expect(reading.carePoint).toContain('Avui pesava.');
+    expect(reading.pattern).toContain('També has deixat una frase sobre el dia 2');
+    expect(reading.confidenceReason).toContain('una frase escrita');
     expect(reading.nextActionStyle).toContain('menys durada o menys intensitat');
+  });
+
+  it('uses only one short note in the cycle pattern', () => {
+    const payload = buildCycleReadingPayload({
+      cycleNumber: 1,
+      primaryArea: AREAS.STRESS,
+      currentCycleArea: AREAS.STRESS,
+      feedback: [
+        { cycle: 1, day: 1, area: AREAS.STRESS, value: FEEDBACK.DONE, note: 'Va ser fàcil entrar-hi.' },
+        { cycle: 1, day: 2, area: AREAS.STRESS, value: FEEDBACK.DONE, note: 'Ho repetiria.' },
+        { cycle: 1, day: 3, area: AREAS.STRESS, value: FEEDBACK.PARTIAL },
+      ],
+    });
+
+    const reading = generateMockCycleReading(payload);
+
+    expect(reading.pattern).toContain('També has deixat una frase sobre el dia 1');
+    expect(reading.pattern).toContain('Va ser fàcil entrar-hi.');
+    expect(reading.pattern).not.toContain('Ho repetiria.');
   });
 
   it('keeps confidence low when there is not enough data', () => {
