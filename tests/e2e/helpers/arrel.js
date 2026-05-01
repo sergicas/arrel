@@ -52,7 +52,7 @@ export async function advanceClock(page, { days = 0, hours = 0, minutes = 0, sec
 }
 
 export async function startStarterAction(page) {
-  await page.getByText('Triar per on començar', { exact: true }).click();
+  await page.getByText('Comença ara', { exact: true }).click();
   await page.getByRole('button', { name: /Calma/ }).click();
   await expect(page).toHaveURL(/\/app$/);
 }

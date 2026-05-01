@@ -16,7 +16,7 @@ import {
 const FEEDBACK_LABELS = {
   [FEEDBACK.DONE]: 'Fet',
   [FEEDBACK.PARTIAL]: 'Fet amb esforç',
-  [FEEDBACK.SKIPPED]: 'Avui no he pogut',
+  [FEEDBACK.SKIPPED]: 'Ho deixo per avui',
 };
 
 export default function Rest() {

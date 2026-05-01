@@ -4,16 +4,16 @@ export const ACTIONS = {
   [AREAS.PHYSICAL]: [
     { day: 1, duration: '≈ 10 min', text: "Camina deu minuts a un ritme que et faci respirar més fort. No més, no menys." },
     { day: 2, duration: '≈ 3 min', text: "Aixeca't de la cadira i torna-hi cinc vegades, sense ajudar-te amb les mans." },
-    { day: 3, duration: '≈ 4 min', text: "Apreta una bossa pesada o un drap enrotllat amb tota la força durant deu segons. Repeteix-ho tres cops alternant mans." },
+    { day: 3, duration: '≈ 4 min', text: "Apreta una tovallola doblegada fermament, sense forçar, durant deu segons per cada mà." },
     { day: 4, duration: '≈ 3 min', text: "Mantén-te en equilibri sobre una cama durant trenta segons per costat, ulls oberts i prop d'una paret." },
     { day: 5, duration: '≈ 5 min', text: "Mou tres parts del cos cinc cops cadascuna: coll amb girs lents, espatlles enrere i cintura amb girs petits. Sense forçar." },
-    { day: 6, duration: '≈ 10 min', text: "Repeteix la caminada del primer dia. Intenta arribar una mica més lluny." },
+    { day: 6, duration: '≈ 10 min', text: "Repeteix la caminada del primer dia i observa com et sents. No cal anar més lluny." },
   ],
   [AREAS.COGNITIVE]: [
     { day: 1, duration: '≈ 5 min', text: "Aprèn una paraula nova en una llengua que no parlis. Repeteix-la cinc vegades i demà intenta recordar-la sense mirar." },
     { day: 2, duration: '≈ 5 min', text: "Recorda què vas dinar fa tres dies. Anota-ho i, si pots, verifica-ho després amb la nevera, el calendari o algú de casa." },
     { day: 3, duration: '≈ 6 min', text: "Memoritza set objectes que veus a l'habitació. Recita'ls d'aquí cinc minuts." },
-    { day: 4, duration: '≈ 4 min', text: "Calcula mentalment 248 + 167. Sense paper ni calculadora. Després, si vols, verifica-ho." },
+    { day: 4, duration: '≈ 4 min', text: "Calcula mentalment 24 + 15. Sense paper ni calculadora. Després, si vols, verifica-ho." },
     { day: 5, duration: '≈ 5 min', text: "Explica en veu alta un concepte que coneguis, com la teva feina, una afició o una recepta, com si parlessis a algú de vuit anys." },
     { day: 6, duration: '≈ 6 min', text: "Anota tres coses que vas fer ahir, en ordre cronològic. Demà, comprova si te'n recordes sense llegir l'anotació." },
   ],
@@ -26,7 +26,7 @@ export const ACTIONS = {
     { day: 6, duration: '≈ 5 min', text: "Mentre fas una activitat habitual, com rentar plats o caminar, compta cinc respiracions completes sense interrompre l'activitat." },
   ],
   [AREAS.RELATIONAL]: [
-    { day: 1, duration: '≈ 5 min', text: "Truca a algú amb qui no parlis fa més d'un mes. Si no respon o no pot contestar ara, deixa-li un missatge de veu curt o escriu-li un missatge." },
+    { day: 1, duration: '≈ 5 min', text: "Envia un missatge curt a algú amb qui no parlis fa més d'un mes. Si et ve de gust, proposa una trucada breu." },
     { day: 2, duration: '≈ 3 min', text: "Saluda algú que veus sovint però no coneixes. Si no es dona el moment, envia un missatge curt a algú proper." },
     { day: 3, duration: '≈ 4 min', text: "Escriu un missatge curt a algú només per dir-li que l'has pensat. Sense demanar res." },
     { day: 4, duration: '≈ 3 min', text: "Tingues una conversa de tres minuts sense mirar el mòbil. Si no hi ha ningú disponible ara, envia un àudio o un missatge curt amb una pregunta concreta." },
@@ -38,7 +38,7 @@ export const ACTIONS = {
     { day: 2, duration: '≈ 5 min', text: "Agafa un paper i completa dues línies: \"Sovint faig...\" i \"Avui faré una excepció petita: ...\". Fes aquesta excepció abans de tancar el dia." },
     { day: 3, duration: '≈ 4 min', text: "Escriu en un paper una opinió ferma en una frase. A sota, escriu dues raons que defensarien la posició contrària i llegeix-les en veu alta." },
     { day: 4, duration: '≈ 6 min', text: "Escriu el nom d'una activitat que t'agradava fer als trenta. A sota, apunta el primer pas petit per reprendre-la aquesta setmana i deixa'l en un lloc visible." },
-    { day: 5, duration: '≈ 5 min', text: "Surt al carrer amb una cosa que avui no és habitual: una jaqueta diferent, un barret o un mocador. Camina cinc minuts amb ella." },
+    { day: 5, duration: '≈ 5 min', text: "Tria un objecte, llibre o idea que ja no fas servir i pensa a qui li podria servir. Si ho tens clar, prepara'l." },
     { day: 6, duration: '≈ 5 min', text: "Agafa un paper i completa tres frases: \"Aquesta setmana he provat...\", \"M'ha costat...\" i \"Demà repetiré o deixaré descansar...\"." },
   ],
 };

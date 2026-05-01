@@ -43,7 +43,7 @@ describe('Landing v2', () => {
   it('lets the user choose where to start before opening today', async () => {
     renderLanding();
 
-    fireEvent.click(screen.getByText('Triar per on començar'));
+    fireEvent.click(screen.getByText('Comença ara'));
 
     expect(screen.getByRole('button', { name: /Cos/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Memòria/ })).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('Landing v2', () => {
 
     renderLanding();
 
-    fireEvent.click(screen.getByText('Triar per on començar'));
+    fireEvent.click(screen.getByText('Comença ara'));
     fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
 
     expect(screen.getByText('Ja tens un cicle començat.')).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('Landing v2', () => {
 
     renderLanding();
 
-    fireEvent.click(screen.getByText('Triar per on començar'));
+    fireEvent.click(screen.getByText('Comença ara'));
     fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Sí, començar 7 dies de Memòria' }));
 

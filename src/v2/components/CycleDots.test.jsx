@@ -12,6 +12,7 @@ describe('CycleDots', () => {
         feedback={[
           { cycle: 1, day: 1, value: FEEDBACK.DONE },
           { cycle: 1, day: 2, value: FEEDBACK.PARTIAL },
+          { cycle: 1, day: 6, value: FEEDBACK.SKIPPED },
         ]}
       />
     );
@@ -20,6 +21,7 @@ describe('CycleDots', () => {
     expect(screen.getByLabelText('Dia 2: amb esforç')).toBeInTheDocument();
     expect(screen.getByLabelText('Dia 3: avui')).toBeInTheDocument();
     expect(screen.getByLabelText('Dia 4: pendent')).toBeInTheDocument();
+    expect(screen.getByLabelText('Dia 6: ho deixo per avui')).toBeInTheDocument();
     expect(screen.getByLabelText('Dia 7: lectura')).toBeInTheDocument();
   });
 });

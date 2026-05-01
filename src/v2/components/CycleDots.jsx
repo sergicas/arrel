@@ -4,7 +4,7 @@ import { CYCLE_LENGTH, FEEDBACK } from '../lib/types.js';
 const STATUS_LABELS = {
   [FEEDBACK.DONE]: 'hi és',
   [FEEDBACK.PARTIAL]: 'amb esforç',
-  [FEEDBACK.SKIPPED]: 'avui no',
+  [FEEDBACK.SKIPPED]: 'ho deixo per avui',
   today: 'avui',
   rest: 'lectura',
   pending: 'pendent',

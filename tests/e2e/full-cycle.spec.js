@@ -10,7 +10,7 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  await completeCycleDays(page, ['Fet', 'Fet', 'Fet', 'Fet amb esforç', 'Fet amb esforç', 'Avui no he pogut']);
+  await completeCycleDays(page, ['Fet', 'Fet', 'Fet', 'Fet amb esforç', 'Fet amb esforç', 'Ho deixo per avui']);
 
   await expect(page.getByText('Dia 7 · tancament')).toBeVisible();
   await expect(page.getByText('Avui toca revisar el cicle.')).toBeVisible();
@@ -29,7 +29,7 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
 
   await expect(page.getByLabel('Dia 1: hi és')).toBeVisible();
   await expect(page.getByLabel('Dia 4: amb esforç')).toBeVisible();
-  await expect(page.getByLabel('Dia 6: avui no')).toBeVisible();
+  await expect(page.getByLabel('Dia 6: ho deixo per avui')).toBeVisible();
   await expect(page.getByLabel('Dia 7: lectura')).toBeVisible();
   await expect(page.getByRole('button', { name: 'El cicle nou s’obre demà' })).toBeDisabled();
 

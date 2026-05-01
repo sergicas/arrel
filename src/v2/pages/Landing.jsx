@@ -39,7 +39,7 @@ const FEATURES = [
   {
     icon: Compass,
     title: 'Comences amb un focus clar',
-    text: 'Arrel et dona una prova inicial i una lectura simple: hi és, amb esforç o avui no.',
+    text: 'Arrel et dona una prova inicial i una lectura simple: hi és, amb esforç o ho deixo per avui.',
   },
   {
     icon: Timer,
@@ -65,7 +65,7 @@ const APP_MOCKUPS = [
     preview: 'results',
     icon: BadgeCheck,
     title: 'Resultats visibles',
-    text: 'Una lectura clara: hi és, amb esforç o avui no.',
+    text: 'Una lectura clara: hi és, amb esforç o ho deixo per avui.',
   },
 ];
 
@@ -88,7 +88,7 @@ const EXPLAINERS = [
   {
     icon: Lightbulb,
     title: 'Què fas cada dia?',
-    text: 'Obres l’app, fas una prova curta i marques el resultat: hi és, amb esforç o avui no.',
+    text: 'Obres l’app, fas una prova curta i marques el resultat: hi és, amb esforç o ho deixo per avui.',
   },
 ];
 
@@ -115,7 +115,7 @@ const FIRST_DAY_STEPS = [
     step: '04',
     icon: CheckCircle2,
     title: 'Guardes el resultat',
-    text: 'Marques si ha anat bé, si ha demanat esforç o si avui no tocava.',
+    text: 'Marques si ha anat bé, si ha demanat esforç o si ho deixes per avui.',
   },
 ];
 
@@ -217,7 +217,7 @@ function AppPreview({ type = 'action', compact = false }) {
               <div className="landing-preview-checks">
                 <span>Fet</span>
                 <span>Fet amb esforç</span>
-                <span>Avui no he pogut</span>
+                <span>Ho deixo per avui</span>
               </div>
             </>
           ) : null}
@@ -314,7 +314,7 @@ export default function Landing() {
             </p>
             <div className="landing-actions">
               <button type="button" onClick={openStartOptions} className="landing-primary">
-                Triar per on començar
+                Comença ara
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -400,7 +400,7 @@ export default function Landing() {
           <div className="landing-definition">
             <p>
               Obres Arrel, fas una prova curta i marques un resultat: hi és,
-              amb esforç o avui no.
+              amb esforç o ho deixo per avui.
             </p>
           </div>
           <div className="landing-explainer-grid">
@@ -524,12 +524,8 @@ export default function Landing() {
             <h2>Fes una prova i decideix què vols practicar.</h2>
             <p>
               Arrel et proposa una acció curta, tu la fas i marques què ha passat:
-              hi és, amb esforç o avui no.
+              hi és, amb esforç o ho deixo per avui.
             </p>
-            <button type="button" onClick={openStartOptions} className="landing-primary">
-              Veure opcions
-              <ArrowRight size={18} />
-            </button>
           </div>
           <AppPreview type="action" />
         </section>

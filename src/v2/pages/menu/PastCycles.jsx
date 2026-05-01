@@ -7,7 +7,7 @@ import { AREA_LABELS, CYCLE_LENGTH, FEEDBACK, STATUS } from '../../lib/types.js'
 const FEEDBACK_LABEL = {
   [FEEDBACK.DONE]: 'hi és',
   [FEEDBACK.PARTIAL]: 'amb esforç',
-  [FEEDBACK.SKIPPED]: 'avui no',
+  [FEEDBACK.SKIPPED]: 'ho deixo per avui',
 };
 
 function groupByCycle(feedback) {

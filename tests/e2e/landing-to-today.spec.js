@@ -10,7 +10,7 @@ test('landing starts the starter day 1 action without an account', async ({ page
   await expect(page.getByRole('heading', { name: 'Autonomia, capacitat i il·lusió cada dia.' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Privacitat' })).toHaveAttribute('href', '/legal/privacitat');
 
-  await page.getByText('Triar per on començar', { exact: true }).click();
+  await page.getByText('Comença ara', { exact: true }).click();
   await page.getByRole('button', { name: /Calma/ }).click();
   await expect(page).toHaveURL(/\/app$/);
 

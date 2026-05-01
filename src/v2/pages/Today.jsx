@@ -39,8 +39,8 @@ const FEEDBACK_ITEMS = [
   },
   {
     value: FEEDBACK.SKIPPED,
-    label: 'Avui no he pogut',
-    description: 'No l’has fet avui.',
+    label: 'Ho deixo per avui',
+    description: 'La deixes per avui.',
     icon: CircleSlash,
   },
 ];
@@ -224,7 +224,7 @@ export default function Today() {
             <span>Com fer-la</span>
             <p>
               Fes aquesta prova sense buscar nota ni marca. Quan acabis, tria
-              una lectura: hi és, amb esforç o avui no.
+              una lectura: hi és, amb esforç o ho deixo per avui.
             </p>
           </div>
         </section>
@@ -239,7 +239,7 @@ export default function Today() {
               </p>
               {showPhysicalSafetyNote ? (
                 <p className="v2-safety-note">
-                  Avís: Si sents dolor, atura't immediatament i marca «Avui no he pogut».
+                  Avís: Si notes molèstia, atura la prova i marca «Ho deixo per avui».
                 </p>
               ) : null}
               {todayAction?.steps?.length ? (
