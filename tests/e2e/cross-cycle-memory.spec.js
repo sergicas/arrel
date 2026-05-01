@@ -10,8 +10,15 @@ test('coach mentions long-term consistency in cycle 2', async ({ page }) => {
   await prepareFreshPage(page);
   await startStarterAction(page);
 
-  // Cicle 1: Fem 6 dies "Fet"
-  await completeCycleDays(page, 6, 'Fet');
+  // Cicle 1: Fem 6 dies "Fet" amb notes
+  await completeCycleDays(page, [
+    { label: 'Fet', note: 'M’ha anat molt bé.' },
+    { label: 'Fet', note: 'Continuo amb ganes.' },
+    { label: 'Fet', note: 'M’agrada el ritme.' },
+    { label: 'Fet', note: 'Fet sense problemes.' },
+    { label: 'Fet', note: 'Molt fluït avui.' },
+    { label: 'Fet', note: 'Acabo el cicle content.' },
+  ]);
 
   // Tancament de cicle i generació de lectura
   await page.getByRole('button', { name: 'Generar lectura personal' }).click();

@@ -2,6 +2,7 @@ import { getActionForDay, getAreaForCycle } from './engine.js';
 import { durationToMinutes, getAction } from './actions.js';
 import { AREA_LABELS, AREAS, FEEDBACK } from './types.js';
 import { analyzeEvolution } from './evolutionEngine.js';
+import { analyzeUserStyle } from './toneEngine.js';
 
 const LOW_CONFIDENCE_MIN_DAYS = 3;
 const RESULT_SCORE = {
@@ -382,11 +383,17 @@ export function generateMockCycleReading(payload = {}) {
     ? ` També has deixat una frase sobre el dia ${noteDay.day}: “${note}”${endsWithSentencePunctuation(note) ? ' ' : '. '}Això dona més context a la lectura.`
     : '';
   
-  const evolution = Array.isArray(payload.evolutionInsights) && payload.evolutionInsights.length > 0
+  const userStyle = analyzeUserStyle(days);
+
+  const evolution = Array.isArray(payload.evolutionInsights) && payload.evolutionInsights.length > 0 && userStyle !== 'concise'
     ? `\n\nPerspectiva: ${payload.evolutionInsights.join(' ')}`
     : '';
 
-  const pattern = `${trajectory.text} En conjunt: ${resultSummary}.${noteContext}${evolution}`;
+  const trajectoryText = userStyle === 'concise' 
+    ? 'Trajectòria del cicle:' 
+    : trajectory.text;
+
+  const pattern = `${trajectoryText} En conjunt: ${resultSummary}.${noteContext}${evolution}`;
 
   return {
     title: buildTitle(trajectory, availableDay, careDay),

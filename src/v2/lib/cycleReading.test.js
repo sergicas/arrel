@@ -98,9 +98,9 @@ describe('cycle readings', () => {
       primaryArea: AREAS.STRESS,
       currentCycleArea: AREAS.STRESS,
       feedback: [
-        { cycle: 1, day: 1, area: AREAS.STRESS, value: FEEDBACK.DONE },
-        { cycle: 1, day: 2, area: AREAS.STRESS, value: FEEDBACK.DONE },
-        { cycle: 1, day: 3, area: AREAS.STRESS, value: FEEDBACK.DONE },
+        { cycle: 1, day: 1, area: AREAS.STRESS, value: FEEDBACK.DONE, note: 'M’ha anat molt bé avui.' },
+        { cycle: 1, day: 2, area: AREAS.STRESS, value: FEEDBACK.DONE, note: 'Cap problema amb la prova.' },
+        { cycle: 1, day: 3, area: AREAS.STRESS, value: FEEDBACK.DONE, note: 'Fluït i tranquil.' },
         { cycle: 1, day: 4, area: AREAS.STRESS, value: FEEDBACK.PARTIAL },
         { cycle: 1, day: 5, area: AREAS.STRESS, value: FEEDBACK.PARTIAL },
         { cycle: 1, day: 6, area: AREAS.STRESS, value: FEEDBACK.SKIPPED },

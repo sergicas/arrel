@@ -23,6 +23,7 @@ import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePa
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
 import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycleReading.js';
 import { getDailyCoachDecision } from '../lib/dailyCoach.js';
+import { analyzeUserStyle } from '../lib/toneEngine.js';
 
 function hasFeedbackForDay(feedback, cycleNumber, dayInCycle) {
   return feedback.some((entry) => entry.cycle === cycleNumber && entry.day === dayInCycle);
@@ -331,6 +332,11 @@ export function ArrelProvider({ children }) {
     [state]
   );
 
+  const userStyle = useMemo(
+    () => analyzeUserStyle(state.feedback),
+    [state.feedback]
+  );
+
   const todayAction = useMemo(() => {
     if (!state.primaryArea) return null;
     const action = getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
@@ -369,6 +375,7 @@ export function ArrelProvider({ children }) {
     todayArea,
     todayGuidance,
     coachDecision,
+    userStyle,
     hasDiagnostic,
     isToday7,
     dayFeedback,

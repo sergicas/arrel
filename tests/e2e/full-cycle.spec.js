@@ -11,9 +11,9 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await startStarterAction(page);
 
   await completeCycleDays(page, [
-    'Fet',
-    'Fet',
-    'Fet',
+    { label: 'Fet', note: 'Bon inici.' },
+    { label: 'Fet', note: 'Continuo bé.' },
+    { label: 'Fet', note: 'Ritme sostingut.' },
     'Fet amb esforç',
     'Fet amb esforç',
     {
