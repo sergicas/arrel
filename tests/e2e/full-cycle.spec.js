@@ -49,15 +49,16 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await expect(reading.getByText('Arrel pot llegir aquest cicle i proposar-te un següent pas.')).toBeVisible();
   await page.getByRole('button', { name: 'Generar lectura personal' }).click();
 
-  await expect(reading.getByText('Lectura del cicle')).toBeVisible();
-  await expect(reading.getByText(/Amb les dades d’aquest cicle/)).toBeVisible();
+  await expect(reading.getByText('Un cicle que va començar amb més entrada')).toBeVisible();
+  await expect(reading.getByText(/inici va entrar amb més disponibilitat/)).toBeVisible();
+  await expect(reading.getByText(/compta tres respiracions/)).toBeVisible();
 
   await expectStoredState(page, {
     cycleReadings: [
       {
         cycle: 1,
         reading: {
-          title: 'Lectura del cicle',
+          title: 'Un cicle que va començar amb més entrada',
           confidence: 'alta',
         },
       },
@@ -68,6 +69,6 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   expect(stateWithReading.cycleReadings).toHaveLength(1);
 
   await page.reload();
-  await expect(page.getByLabel('Lectura personal').getByText('Lectura del cicle')).toBeVisible();
+  await expect(page.getByLabel('Lectura personal').getByText('Un cicle que va començar amb més entrada')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Actualitzar lectura' })).toBeVisible();
 });

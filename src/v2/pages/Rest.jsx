@@ -123,6 +123,7 @@ export default function Rest() {
                 <p>{cycleReading.pattern}</p>
                 <p>{cycleReading.availableCapacity}</p>
                 <p>{cycleReading.carePoint}</p>
+                {cycleReading.nextCycleSuggestion ? <p>{cycleReading.nextCycleSuggestion}</p> : null}
                 <p>{cycleReading.nextActionStyle}</p>
                 <div className="v2-cycle-reading-confidence">
                   <span>Confiança</span>

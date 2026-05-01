@@ -22,6 +22,21 @@ describe('v2 actions', () => {
     }
   });
 
+  it('adds local metadata for cycle readings to every action', () => {
+    for (const action of getAllActions()) {
+      expect(action.metadata, action.text).toMatchObject({
+        mode: expect.stringMatching(/^(body|memory|calm|social|purpose)$/),
+        setting: expect.stringMatching(/^(inside|outside|either)$/),
+        social: expect.stringMatching(/^(solo|with_person|message|call)$/),
+        intensity: expect.stringMatching(/^(low|medium)$/),
+        autonomySignal: expect.any(String),
+        capacitySignal: expect.any(String),
+        motivationSignal: expect.any(String),
+        nextSmallStep: expect.any(String),
+      });
+    }
+  });
+
   it('returns every action with a short guided structure', () => {
     const action = getAction(AREAS.STRESS, 1);
 

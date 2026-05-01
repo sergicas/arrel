@@ -1,7 +1,13 @@
 import { getActionForDay, getAreaForCycle } from './engine.js';
+import { durationToMinutes, getAction } from './actions.js';
 import { AREA_LABELS, FEEDBACK } from './types.js';
 
 const LOW_CONFIDENCE_MIN_DAYS = 3;
+const RESULT_SCORE = {
+  [FEEDBACK.DONE]: 1,
+  [FEEDBACK.PARTIAL]: 0,
+  [FEEDBACK.SKIPPED]: -1,
+};
 
 function getFeedbackEntries(state) {
   return Array.isArray(state?.feedback) ? state.feedback : [];
@@ -22,6 +28,49 @@ function areaLabel(area) {
 
 function pluralize(count, singular, plural) {
   return count === 1 ? singular : plural;
+}
+
+function scoreDay(day) {
+  return RESULT_SCORE[day.result] ?? 0;
+}
+
+function averageScore(days) {
+  if (days.length === 0) return 0;
+  return days.reduce((total, day) => total + scoreDay(day), 0) / days.length;
+}
+
+function dayList(days) {
+  const labels = days.map((day) => day.day);
+  if (labels.length <= 1) return labels.join('');
+  return `${labels.slice(0, -1).join(', ')} i ${labels.at(-1)}`;
+}
+
+function firstSentence(text) {
+  return text?.split(/[.!?]/)[0]?.trim() || 'aquesta prova';
+}
+
+function shorten(text, max = 86) {
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 3).trim()}...`;
+}
+
+function capitalizeFirst(text) {
+  if (!text) return '';
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
+}
+
+function actionLabel(day) {
+  return `dia ${day.day}, “${shorten(firstSentence(day.action))}”`;
+}
+
+function noteExcerpt(note) {
+  const clean = note?.trim();
+  if (!clean) return null;
+  return clean.length > 96 ? `${clean.slice(0, 93)}...` : clean;
+}
+
+function metadataFor(day) {
+  return day.metadata || {};
 }
 
 function emptyAreaStats(area) {
@@ -55,11 +104,165 @@ function getStrongestArea(stats, metric) {
     })[0] || null;
 }
 
-function getConfidence(days, availableArea, careArea) {
+function getConfidence(days, availableDay, careDay, trajectory) {
   if (days.length < LOW_CONFIDENCE_MIN_DAYS) return 'baixa';
-  const strongestSignal = Math.max(availableArea?.done || 0, careArea?.friction || 0);
-  if (days.length >= 5 && strongestSignal >= 3) return 'alta';
+  if (days.length >= 5 && availableDay && careDay && trajectory.kind !== 'mixed') return 'alta';
   return 'mitjana';
+}
+
+function buildTrajectory(days) {
+  const sorted = [...days].sort((a, b) => a.day - b.day);
+  const doneCount = sorted.filter((day) => day.result === FEEDBACK.DONE).length;
+  const partialCount = sorted.filter((day) => day.result === FEEDBACK.PARTIAL).length;
+  const skippedCount = sorted.filter((day) => day.result === FEEDBACK.SKIPPED).length;
+
+  if (sorted.length < LOW_CONFIDENCE_MIN_DAYS) {
+    return {
+      kind: 'low-data',
+      label: 'poca base',
+      text: 'Amb les dades d’aquest cicle, encara no hi ha prou base per veure una trajectòria clara.',
+    };
+  }
+
+  const midpoint = Math.ceil(sorted.length / 2);
+  const firstHalf = sorted.slice(0, midpoint);
+  const secondHalf = sorted.slice(midpoint);
+  const firstScore = averageScore(firstHalf);
+  const secondScore = averageScore(secondHalf);
+
+  if (firstScore - secondScore >= 0.75) {
+    return {
+      kind: 'started-available',
+      label: 'inici més disponible',
+      text: `Amb les dades d’aquest cicle, l’inici va entrar amb més disponibilitat: els dies ${dayList(firstHalf)} van anar millor que el tram final.`,
+    };
+  }
+
+  if (secondScore - firstScore >= 0.75) {
+    return {
+      kind: 'ended-available',
+      label: 'final més disponible',
+      text: `Amb les dades d’aquest cicle, el final va agafar més entrada: els dies ${dayList(secondHalf)} van quedar més disponibles que l’inici.`,
+    };
+  }
+
+  if (doneCount >= sorted.length - 1) {
+    return {
+      kind: 'steady',
+      label: 'continuïtat',
+      text: `Amb les dades d’aquest cicle, hi ha una continuïtat clara: ${doneCount} ${pluralize(doneCount, 'prova consta', 'proves consten')} com a “Fet”.`,
+    };
+  }
+
+  if (skippedCount > 0) {
+    return {
+      kind: 'interrupted',
+      label: 'pas massa gran en algun moment',
+      text: `Amb les dades d’aquest cicle, no tot demanava el mateix: ${partialCount} ${pluralize(partialCount, 'dia va sortir', 'dies van sortir')} amb esforç i ${skippedCount} ${pluralize(skippedCount, 'dia va quedar', 'dies van quedar')} per avui.`,
+    };
+  }
+
+  if (partialCount > 0) {
+    return {
+      kind: 'with-effort',
+      label: 'continuïtat amb esforç',
+      text: `Amb les dades d’aquest cicle, sembla que hi ha hagut continuïtat, però amb marge: ${partialCount} ${pluralize(partialCount, 'dia va demanar', 'dies van demanar')} més esforç.`,
+    };
+  }
+
+  return {
+    kind: 'mixed',
+    label: 'senyals mixtes',
+    text: 'Amb les dades d’aquest cicle, hi ha senyals barrejades i convé quedar-se amb un pas petit.',
+  };
+}
+
+function getMostAvailableDay(days) {
+  return [...days]
+    .filter((day) => day.result === FEEDBACK.DONE)
+    .sort((a, b) => {
+      const aIntensity = metadataFor(a).intensity === 'low' ? 0 : 1;
+      const bIntensity = metadataFor(b).intensity === 'low' ? 0 : 1;
+      if (aIntensity !== bIntensity) return aIntensity - bIntensity;
+      const aMinutes = durationToMinutes(a.duration) || 99;
+      const bMinutes = durationToMinutes(b.duration) || 99;
+      if (aMinutes !== bMinutes) return aMinutes - bMinutes;
+      return a.day - b.day;
+    })[0] || null;
+}
+
+function getMostCostlyDay(days) {
+  return [...days]
+    .filter((day) => day.result === FEEDBACK.PARTIAL || day.result === FEEDBACK.SKIPPED)
+    .sort((a, b) => {
+      const aDifficulty = a.result === FEEDBACK.SKIPPED ? 2 : 1;
+      const bDifficulty = b.result === FEEDBACK.SKIPPED ? 2 : 1;
+      if (aDifficulty !== bDifficulty) return bDifficulty - aDifficulty;
+      const aMinutes = durationToMinutes(a.duration) || 0;
+      const bMinutes = durationToMinutes(b.duration) || 0;
+      if (aMinutes !== bMinutes) return bMinutes - aMinutes;
+      return b.day - a.day;
+    })[0] || null;
+}
+
+function buildTitle(trajectory, availableDay, careDay) {
+  if (trajectory.kind === 'started-available') return 'Un cicle que va començar amb més entrada';
+  if (trajectory.kind === 'ended-available') return 'Un cicle que va anar trobant entrada';
+  if (trajectory.kind === 'steady') return `Un cicle amb continuïtat en ${areaLabel(availableDay?.area)}`;
+  if (careDay?.result === FEEDBACK.SKIPPED) return 'Un cicle que demana un pas més petit';
+  if (trajectory.kind === 'with-effort') return 'Un cicle fet amb marge';
+  return 'Una lectura prudent del cicle';
+}
+
+function buildAvailableCapacity(availableDay, fallbackArea) {
+  if (!availableDay) return 'Encara no destaca una acció disponible amb prou claredat.';
+
+  const metadata = metadataFor(availableDay);
+  const signal = metadata.capacitySignal || `capacitat de ${areaLabel(availableDay.area || fallbackArea)}`;
+  const motivation = metadata.motivationSignal ? ` ${capitalizeFirst(metadata.motivationSignal)}.` : '';
+
+  return `El que sembla més disponible és aquest format: ${signal}. Ho apunta el ${actionLabel(availableDay)}, marcat com a “Fet”.${motivation}`;
+}
+
+function buildCarePoint(careDay) {
+  if (!careDay) return 'No apareix un punt de cura clar; mantén el següent pas petit i senzill.';
+
+  const metadata = metadataFor(careDay);
+  const note = noteExcerpt(careDay.note);
+  const noteText = note ? ` La nota del dia diu: “${note}”.` : '';
+  const autonomy = metadata.autonomySignal ? ` Aquí pot ajudar recordar que ${metadata.autonomySignal}.` : '';
+
+  if (careDay.result === FEEDBACK.SKIPPED) {
+    return `El punt a cuidar és el salt de mida: el ${actionLabel(careDay)} va quedar com a “Ho deixo per avui”.${noteText} Una versió més curta pot ser suficient.${autonomy}`;
+  }
+
+  return `El punt a cuidar és el marge: el ${actionLabel(careDay)} va sortir com a “Fet amb esforç”.${noteText} No cal repetir-lo igual; convé abaixar-ne una mica la mida.${autonomy}`;
+}
+
+function buildNextCycleSuggestion(careDay, availableDay, fallbackArea) {
+  const sourceDay = careDay || availableDay;
+  const metadata = metadataFor(sourceDay || {});
+  if (metadata.nextSmallStep) {
+    return `Una opció petita per continuar seria: ${metadata.nextSmallStep}.`;
+  }
+  if (fallbackArea) {
+    return `Una opció petita per continuar seria repetir una prova curta de ${areaLabel(fallbackArea)} i ajustar-ne la durada si cal.`;
+  }
+  return 'Una opció petita per continuar seria fer una prova curta i observar com et queda avui.';
+}
+
+function buildNextActionStyle(careDay, availableDay) {
+  if (careDay?.result === FEEDBACK.SKIPPED) {
+    return 'Estil recomanat: una versió mínima, preparada perquè sigui vàlid aturar-se aviat.';
+  }
+  if (careDay?.result === FEEDBACK.PARTIAL) {
+    return 'Estil recomanat: la mateixa direcció, però amb menys durada o menys intensitat.';
+  }
+  if (availableDay) {
+    const metadata = metadataFor(availableDay);
+    if (metadata.intensity === 'low') return 'Estil recomanat: acció curta, baixa intensitat i inici fàcil.';
+  }
+  return 'Estil recomanat: acció curta, concreta i fàcil de començar.';
 }
 
 export function buildCycleReadingPayload(state = {}) {
@@ -75,15 +278,19 @@ export function buildCycleReadingPayload(state = {}) {
     .filter((entry) => entry.cycle === cycleNumber)
     .sort((a, b) => a.day - b.day)
     .map((entry) => {
-      const action = getActionForDay(cycleNumber, entry.day, state.primaryArea, cycleArea);
+      const entryArea = entry.area || cycleArea;
+      const action = entryArea
+        ? getAction(entryArea, entry.day)
+        : getActionForDay(cycleNumber, entry.day, state.primaryArea, cycleArea);
       return {
         day: entry.day,
-        area: entry.area || action?.area || cycleArea,
+        area: entryArea || action?.area || cycleArea,
         action: entry.text || action?.text || null,
         duration: entry.duration || action?.duration || null,
         result: entry.value || null,
         note: entry.note || '',
         completedOn: entry.completedOn || null,
+        metadata: action?.metadata || null,
       };
     });
 
@@ -100,47 +307,29 @@ export function generateMockCycleReading(payload = {}) {
   const stats = getAreaStats(days);
   const availableArea = getStrongestArea(stats, 'done');
   const careArea = getStrongestArea(stats, 'friction');
-  const confidence = getConfidence(days, availableArea, careArea);
+  const trajectory = buildTrajectory(days);
+  const availableDay = getMostAvailableDay(days);
+  const careDay = getMostCostlyDay(days);
+  const confidence = getConfidence(days, availableDay, careDay, trajectory);
   const totalDone = days.filter((day) => day.result === FEEDBACK.DONE).length;
+  const totalPartial = days.filter((day) => day.result === FEEDBACK.PARTIAL).length;
+  const totalSkipped = days.filter((day) => day.result === FEEDBACK.SKIPPED).length;
   const totalFriction = days.filter(
     (day) => day.result === FEEDBACK.PARTIAL || day.result === FEEDBACK.SKIPPED
   ).length;
   const suggestionArea = careArea?.area || availableArea?.area || payload.currentCycleArea;
-
-  let pattern = 'Amb les dades d’aquest cicle, encara no hi ha prou base per veure un patró clar.';
-  if (days.length >= LOW_CONFIDENCE_MIN_DAYS && totalDone > totalFriction) {
-    pattern = 'Amb les dades d’aquest cicle, sembla que algunes proves han estat més fàcils de completar que altres.';
-  } else if (days.length >= LOW_CONFIDENCE_MIN_DAYS && totalFriction > totalDone) {
-    pattern = 'Amb les dades d’aquest cicle, sembla que alguns dies han demanat ajustar el ritme abans de continuar.';
-  } else if (days.length >= LOW_CONFIDENCE_MIN_DAYS) {
-    pattern = 'Amb les dades d’aquest cicle, sembla que hi ha hagut dies còmodes i dies amb més esforç.';
-  }
-
-  const availableCapacity = availableArea
-    ? `La capacitat que apareix amb més disponibilitat és ${areaLabel(availableArea.area)}: ${availableArea.done} ${pluralize(availableArea.done, 'prova marcada', 'proves marcades')} com a “Fet”.`
-    : 'Encara no destaca una capacitat disponible amb prou claredat.';
-
-  const carePoint = careArea
-    ? `El punt a cuidar podria ser ${areaLabel(careArea.area)}: concentra més respostes de “Fet amb esforç” o “Ho deixo per avui”.`
-    : 'No apareix un punt de cura clar; mantén el següent pas petit i senzill.';
-
-  const nextCycleSuggestion = suggestionArea
-    ? `Una opció petita per continuar seria repetir una prova curta de ${areaLabel(suggestionArea)} i ajustar-ne la durada si cal.`
-    : 'Una opció petita per continuar seria fer una prova curta i observar com et queda avui.';
-
-  const nextActionStyle = totalFriction > totalDone
-    ? 'Tria una acció de 3 a 5 minuts, amb marge per deixar-la a mitges i tornar-hi un altre dia.'
-    : 'Tria una acció curta, concreta i fàcil de començar.';
+  const resultSummary = `${totalDone} ${pluralize(totalDone, 'dia', 'dies')} com a “Fet”, ${totalPartial} amb “Fet amb esforç” i ${totalSkipped} com a “Ho deixo per avui”`;
+  const pattern = `${trajectory.text} En conjunt: ${resultSummary}.`;
 
   return {
-    title: 'Lectura del cicle',
+    title: buildTitle(trajectory, availableDay, careDay),
     pattern,
-    availableCapacity,
-    carePoint,
-    nextCycleSuggestion,
-    nextActionStyle,
+    availableCapacity: buildAvailableCapacity(availableDay, payload.currentCycleArea),
+    carePoint: buildCarePoint(careDay),
+    nextCycleSuggestion: buildNextCycleSuggestion(careDay, availableDay, suggestionArea),
+    nextActionStyle: buildNextActionStyle(careDay, availableDay),
     confidence,
-    safetyNote: totalFriction >= 3
+    safetyNote: totalFriction >= 3 || totalSkipped > 0
       ? 'Si una prova no encaixa avui, deixa-la descansar i torna a una opció més suau.'
       : null,
   };
