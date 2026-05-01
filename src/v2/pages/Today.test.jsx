@@ -33,6 +33,7 @@ function renderToday(overrides = {}) {
     },
     todayArea: AREAS.STRESS,
     todayGuidance: 'Avui busquem una pausa concreta.',
+    coachDecision: { difficulty: 'standard', insight: 'Bon dia.' },
     hasDiagnostic: false,
     currentDayCompleted: false,
     canAdvanceDay: false,
@@ -94,6 +95,23 @@ describe('Today v2', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Guardar la lectura' }));
 
     expect(submitFeedback).toHaveBeenCalledWith(FEEDBACK.DONE, '');
+  });
+
+  it('displays the adaptive coach message and adapts the action when yesterday was tough', () => {
+    renderToday({
+      coachDecision: {
+        difficulty: 'easy',
+        insight: 'Ahir vas notar que la prova de Cos demanava força.',
+      },
+      todayAction: {
+        text: 'fes dues aixecades de cadira',
+        isAdapted: true,
+      },
+    });
+
+    expect(screen.getByText(/Ahir vas notar que la prova/)).toBeInTheDocument();
+    expect(screen.getByText('Prova adaptada')).toBeInTheDocument();
+    expect(screen.getByText(/fes dues aixecades de cadira/)).toBeInTheDocument();
   });
 
   it('shows the safety note only for physical actions', () => {

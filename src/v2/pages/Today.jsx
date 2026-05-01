@@ -86,6 +86,7 @@ export default function Today() {
     todayAction,
     todayArea,
     todayGuidance,
+    coachDecision,
     hasDiagnostic,
     dayFeedback,
     currentDayCompleted,
@@ -215,6 +216,20 @@ export default function Today() {
   return (
     <Shell showBack backTo="/inici" className="v2-ritual-shell">
       <div className="v2-ritual-day" style={areaStyle}>
+        {coachDecision?.insight && !currentDayCompleted ? (
+          <div className="v2-coach-message animate-in fade-in slide-in-from-top-4 duration-700">
+            <div className="v2-coach-avatar">
+              <Sparkles size={16} className="text-[var(--area-accent)]" />
+            </div>
+            <div className="v2-coach-bubble">
+              <p>{coachDecision.insight}</p>
+              {todayAction?.isAdapted ? (
+                <span className="v2-coach-tag">Prova adaptada</span>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+
         <section className="v2-day-ledger" aria-label="Prova d’avui">
           <div className="v2-day-mascot" data-mood={mascotMood}>
             <ArrelMascot mood={mascotMood} />

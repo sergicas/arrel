@@ -22,6 +22,7 @@ import { AREA_GUIDANCE, AREAS, STATUS, INITIAL_GUIDED_CYCLES } from '../lib/type
 import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePace } from '../lib/pace.js';
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
 import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycleReading.js';
+import { getDailyCoachDecision } from '../lib/dailyCoach.js';
 
 function hasFeedbackForDay(feedback, cycleNumber, dayInCycle) {
   return feedback.some((entry) => entry.cycle === cycleNumber && entry.day === dayInCycle);
@@ -325,10 +326,26 @@ export function ArrelProvider({ children }) {
     setState({ ...initialState });
   }, []);
 
+  const coachDecision = useMemo(
+    () => getDailyCoachDecision(state),
+    [state]
+  );
+
   const todayAction = useMemo(() => {
     if (!state.primaryArea) return null;
-    return getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
-  }, [state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea]);
+    const action = getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
+
+    if (coachDecision.difficulty === 'easy' && action?.metadata?.nextSmallStep) {
+      return {
+        ...action,
+        originalText: action.text,
+        text: action.metadata.nextSmallStep,
+        isAdapted: true,
+      };
+    }
+
+    return action;
+  }, [state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea, coachDecision]);
 
   const todayArea = useMemo(() => {
     if (!state.primaryArea) return null;
@@ -351,6 +368,7 @@ export function ArrelProvider({ children }) {
     todayAction,
     todayArea,
     todayGuidance,
+    coachDecision,
     hasDiagnostic,
     isToday7,
     dayFeedback,
