@@ -1,6 +1,6 @@
 import { getActionForDay, getAreaForCycle } from './engine.js';
 import { durationToMinutes, getAction } from './actions.js';
-import { AREA_LABELS, FEEDBACK } from './types.js';
+import { AREA_LABELS, AREAS, FEEDBACK } from './types.js';
 
 const LOW_CONFIDENCE_MIN_DAYS = 3;
 const RESULT_SCORE = {
@@ -250,16 +250,53 @@ function buildCarePoint(careDay) {
   return `El punt a cuidar és el marge: el ${actionLabel(careDay)} va sortir com a “Fet amb esforç”.${noteText} No cal repetir-lo igual; convé abaixar-ne una mica la mida.${autonomy}`;
 }
 
-function buildNextCycleSuggestion(careDay, availableDay, fallbackArea) {
+function detectSentiment(days) {
+  const notes = days.map((d) => (d.note || '').toLowerCase()).join(' ');
+  const fatigueKeywords = ['costat', 'cansat', 'pesat', 'difícil', 'poca ganes', 'esforç', 'prou'];
+  const momentumKeywords = ['bé', 'fàcil', 'ganes', 'm’ha agradat', 'repetir', 'fluït', 'tranquil'];
+
+  const hasFatigue = fatigueKeywords.some((word) => notes.includes(word));
+  const hasMomentum = momentumKeywords.some((word) => notes.includes(word));
+
+  if (hasFatigue && !hasMomentum) return 'fatigue';
+  if (hasMomentum && !hasFatigue) return 'momentum';
+  return 'neutral';
+}
+
+function buildNextCycleSuggestion(days, careDay, availableDay, fallbackArea) {
+  const sentiment = detectSentiment(days);
+  const frictionCount = days.filter(
+    (day) => day.result === FEEDBACK.PARTIAL || day.result === FEEDBACK.SKIPPED
+  ).length;
+  const doneCount = days.filter((day) => day.result === FEEDBACK.DONE).length;
+
+  // Cas de Fatiga o molta fricció: Consolidació
+  if (sentiment === 'fatigue' || frictionCount >= 3) {
+    return {
+      label: 'Consolidació',
+      text: `Sembla que algunes proves han demanat força energia. Et proposo un cicle de consolidació en l’àrea de ${areaLabel(fallbackArea)}: repetir proves curtes per guanyar comoditat sense pressa.`,
+    };
+  }
+
+  // Cas d'Impuls: Exploració o Reptes més alts
+  if (sentiment === 'momentum' || doneCount >= 5) {
+    return {
+      label: 'Exploració',
+      text: `Has anat amb molt bon ritme. És un bon moment per explorar una àrea nova o provar un format diferent per mantenir l’estímul viu. Què et sembla provar una setmana de ${areaLabel(fallbackArea === AREAS.PHYSICAL ? AREAS.COGNITIVE : AREAS.PHYSICAL)}?`,
+    };
+  }
+
+  // Cas per defecte: Continuïtat
   const sourceDay = careDay || availableDay;
   const metadata = metadataFor(sourceDay || {});
-  if (metadata.nextSmallStep) {
-    return `Una opció petita per continuar seria: ${metadata.nextSmallStep}.`;
-  }
-  if (fallbackArea) {
-    return `Una opció petita per continuar seria repetir una prova curta de ${areaLabel(fallbackArea)} i ajustar-ne la durada si cal.`;
-  }
-  return 'Una opció petita per continuar seria fer una prova curta i observar com et queda avui.';
+  const suggestion = metadata.nextSmallStep
+    ? `continuar amb un pas com: ${metadata.nextSmallStep}`
+    : `repetir una prova curta de ${areaLabel(fallbackArea)} i ajustar-ne la durada si cal`;
+
+  return {
+    label: 'Continuïtat',
+    text: `El cicle ha estat equilibrat. Una bona opció seria ${suggestion}.`,
+  };
 }
 
 function buildNextActionStyle(careDay, availableDay) {
@@ -349,7 +386,7 @@ export function generateMockCycleReading(payload = {}) {
     pattern,
     availableCapacity: buildAvailableCapacity(availableDay, payload.currentCycleArea),
     carePoint: buildCarePoint(careDay),
-    nextCycleSuggestion: buildNextCycleSuggestion(careDay, availableDay, suggestionArea),
+    nextCycleSuggestion: buildNextCycleSuggestion(days, careDay, availableDay, suggestionArea),
     nextActionStyle: buildNextActionStyle(careDay, availableDay),
     confidence,
     confidenceReason: buildConfidenceReason(confidence, noteDay),

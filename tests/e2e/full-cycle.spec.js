@@ -62,7 +62,10 @@ test('six proof days lead to a day 7 reading summary with feedback dots', async 
   await expect(reading.getByText('Un cicle que va començar amb més entrada')).toBeVisible();
   await expect(reading.getByText(/inici va entrar amb més disponibilitat/)).toBeVisible();
   await expect(reading.getByText(/M’ha costat mantenir-ho mentre feia altres coses/).first()).toBeVisible();
-  await expect(reading.getByText(/compta tres respiracions/)).toBeVisible();
+  
+  const proposal = reading.locator('.v2-next-proposal');
+  await expect(proposal.getByText('Consolidació').first()).toBeVisible();
+  await expect(proposal.getByText(/proves han demanat força energia/)).toBeVisible();
 
   await expectStoredState(page, {
     cycleReadings: [

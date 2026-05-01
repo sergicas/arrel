@@ -119,8 +119,46 @@ describe('cycle readings', () => {
     expect(reading.availableCapacity).toContain('dia 1');
     expect(reading.carePoint).toContain('dia 6');
     expect(reading.carePoint).toContain('Ho deixo per avui');
-    expect(reading.nextCycleSuggestion).toContain('compta tres respiracions');
+    expect(reading.nextCycleSuggestion.label).toBe('Consolidació');
+    expect(reading.nextCycleSuggestion.text).toContain('força energia');
     expect(reading.nextActionStyle).toContain('versió mínima');
+  });
+
+  it('suggests exploration when the user has momentum', () => {
+    const payload = buildCycleReadingPayload({
+      cycleNumber: 1,
+      primaryArea: AREAS.PHYSICAL,
+      currentCycleArea: AREAS.PHYSICAL,
+      feedback: [
+        { cycle: 1, day: 1, area: AREAS.PHYSICAL, value: FEEDBACK.DONE, note: 'M’ha agradat molt.' },
+        { cycle: 1, day: 2, area: AREAS.PHYSICAL, value: FEEDBACK.DONE, note: 'Fluït.' },
+        { cycle: 1, day: 3, area: AREAS.PHYSICAL, value: FEEDBACK.DONE, note: 'Ganes de més.' },
+        { cycle: 1, day: 4, area: AREAS.PHYSICAL, value: FEEDBACK.DONE },
+        { cycle: 1, day: 5, area: AREAS.PHYSICAL, value: FEEDBACK.DONE },
+      ],
+    });
+
+    const reading = generateMockCycleReading(payload);
+
+    expect(reading.nextCycleSuggestion.label).toBe('Exploració');
+    expect(reading.nextCycleSuggestion.text).toContain('molt bon ritme');
+  });
+
+  it('suggests consolidation when notes show fatigue', () => {
+    const payload = buildCycleReadingPayload({
+      cycleNumber: 1,
+      primaryArea: AREAS.PHYSICAL,
+      currentCycleArea: AREAS.PHYSICAL,
+      feedback: [
+        { cycle: 1, day: 1, area: AREAS.PHYSICAL, value: FEEDBACK.DONE, note: 'M’ha costat una mica.' },
+        { cycle: 1, day: 2, area: AREAS.PHYSICAL, value: FEEDBACK.DONE, note: 'Cansat.' },
+      ],
+    });
+
+    const reading = generateMockCycleReading(payload);
+
+    expect(reading.nextCycleSuggestion.label).toBe('Consolidació');
+    expect(reading.nextCycleSuggestion.text).toContain('força energia');
   });
 
   it('treats effort differently from leaving a day for today', () => {

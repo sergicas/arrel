@@ -1817,7 +1817,16 @@ body {
     line-height: 1.2;
   }
 
+  .v2-next-proposal h3 {
+    color: var(--text-primary);
+  }
+
+  .v2-next-proposal p {
+    color: var(--text-secondary);
+  }
+
   .v2-cycle-reading-confidence {
+    margin-top: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;

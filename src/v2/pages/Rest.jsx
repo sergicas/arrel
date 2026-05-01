@@ -123,8 +123,24 @@ export default function Rest() {
                 <p>{cycleReading.pattern}</p>
                 <p>{cycleReading.availableCapacity}</p>
                 <p>{cycleReading.carePoint}</p>
-                {cycleReading.nextCycleSuggestion ? <p>{cycleReading.nextCycleSuggestion}</p> : null}
-                <p>{cycleReading.nextActionStyle}</p>
+
+                {cycleReading.nextCycleSuggestion ? (
+                  <div className="v2-next-proposal mt-6 p-4 rounded-2xl bg-[var(--area-soft)] border border-[var(--area-accent)] border-opacity-20">
+                    <p className="v2-panel-label text-[var(--area-accent)] mb-2">Proposta per al següent cicle</p>
+                    <h3 className="text-lg font-bold mb-2">
+                      {typeof cycleReading.nextCycleSuggestion === 'string'
+                        ? 'Continuïtat'
+                        : cycleReading.nextCycleSuggestion.label}
+                    </h3>
+                    <p className="text-sm leading-relaxed mb-4">
+                      {typeof cycleReading.nextCycleSuggestion === 'string'
+                        ? cycleReading.nextCycleSuggestion
+                        : cycleReading.nextCycleSuggestion.text}
+                    </p>
+                    <p className="text-xs font-medium opacity-70 italic">{cycleReading.nextActionStyle}</p>
+                  </div>
+                ) : null}
+
                 <div className="v2-cycle-reading-confidence">
                   <span>Confiança</span>
                   <strong>{cycleReading.confidence}</strong>
