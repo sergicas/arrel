@@ -24,6 +24,7 @@ import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js'
 import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycleReading.js';
 import { getDailyCoachDecision } from '../lib/dailyCoach.js';
 import { analyzeUserStyle } from '../lib/toneEngine.js';
+import { assessBurnoutRisk } from '../lib/riskEngine.js';
 
 function hasFeedbackForDay(feedback, cycleNumber, dayInCycle) {
   return feedback.some((entry) => entry.cycle === cycleNumber && entry.day === dayInCycle);
@@ -337,6 +338,11 @@ export function ArrelProvider({ children }) {
     [state.feedback]
   );
 
+  const burnoutRisk = useMemo(
+    () => assessBurnoutRisk(state),
+    [state]
+  );
+
   const todayAction = useMemo(() => {
     if (!state.primaryArea) return null;
     const action = getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
@@ -376,6 +382,7 @@ export function ArrelProvider({ children }) {
     todayGuidance,
     coachDecision,
     userStyle,
+    burnoutRisk,
     hasDiagnostic,
     isToday7,
     dayFeedback,

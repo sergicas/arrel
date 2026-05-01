@@ -34,6 +34,8 @@ function renderToday(overrides = {}) {
     todayArea: AREAS.STRESS,
     todayGuidance: 'Avui busquem una pausa concreta.',
     coachDecision: { difficulty: 'standard', insight: 'Bon dia.' },
+    userStyle: 'balanced',
+    burnoutRisk: { risk: 'low', message: null },
     hasDiagnostic: false,
     currentDayCompleted: false,
     canAdvanceDay: false,
@@ -112,6 +114,17 @@ describe('Today v2', () => {
     expect(screen.getByText(/Ahir vas notar que la prova/)).toBeInTheDocument();
     expect(screen.getByText('Prova adaptada')).toBeInTheDocument();
     expect(screen.getByText(/fes dues aixecades de cadira/)).toBeInTheDocument();
+  });
+
+  it('displays the burnout prevention banner when risk is detected', () => {
+    renderToday({
+      burnoutRisk: {
+        risk: 'high',
+        message: 'Sembla que el ritme d’aquests últims tres dies demana molta energia.',
+      },
+    });
+
+    expect(screen.getByText(/ritme d’aquests últims tres dies/)).toBeInTheDocument();
   });
 
   it('shows the safety note only for physical actions', () => {

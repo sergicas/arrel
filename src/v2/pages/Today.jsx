@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
+  AlertTriangle,
   Check,
   CirclePause,
   CirclePlay,
@@ -87,6 +88,8 @@ export default function Today() {
     todayArea,
     todayGuidance,
     coachDecision,
+    userStyle,
+    burnoutRisk,
     hasDiagnostic,
     dayFeedback,
     currentDayCompleted,
@@ -226,6 +229,17 @@ export default function Today() {
               {todayAction?.isAdapted ? (
                 <span className="v2-coach-tag">Prova adaptada</span>
               ) : null}
+            </div>
+          </div>
+        ) : null}
+
+        {burnoutRisk?.risk !== 'low' && !currentDayCompleted ? (
+          <div className={`v2-risk-banner is-${burnoutRisk.risk} animate-in zoom-in-95 duration-500`}>
+            <div className="v2-risk-icon">
+              <AlertTriangle size={18} />
+            </div>
+            <div className="v2-risk-content">
+              <p>{burnoutRisk.message}</p>
             </div>
           </div>
         ) : null}
