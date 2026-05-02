@@ -25,6 +25,7 @@ import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycle
 import { getDailyCoachDecision } from '../lib/dailyCoach.js';
 import { analyzeUserStyle } from '../lib/toneEngine.js';
 import { assessBurnoutRisk } from '../lib/riskEngine.js';
+import { synthesizeIdentity } from '../lib/identityEngine.js';
 
 function hasFeedbackForDay(feedback, cycleNumber, dayInCycle) {
   return feedback.some((entry) => entry.cycle === cycleNumber && entry.day === dayInCycle);
@@ -343,6 +344,11 @@ export function ArrelProvider({ children }) {
     [state]
   );
 
+  const userIdentity = useMemo(
+    () => synthesizeIdentity(state),
+    [state]
+  );
+
   const todayAction = useMemo(() => {
     if (!state.primaryArea) return null;
     const action = getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
@@ -383,6 +389,7 @@ export function ArrelProvider({ children }) {
     coachDecision,
     userStyle,
     burnoutRisk,
+    userIdentity,
     hasDiagnostic,
     isToday7,
     dayFeedback,
