@@ -19,5 +19,5 @@ test('app detects burnout risk after 3 days of friction and shows a warning', as
   await openNextActionDay(page);
 
   // Dia 4: Verifiquem que apareix el banner de risc alt
-  await expect(page.getByText(/ritme d’aquests últims tres dies demana molta energia/)).toBeVisible();
+  await expect(page.getByText(/ritme d’aquests últims dies demana força energia/)).toBeVisible();
 });

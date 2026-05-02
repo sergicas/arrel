@@ -22,9 +22,9 @@ test('app synthesizes a user identity after one cycle', async ({ page }) => {
   // Generem lectura
   await page.getByRole('button', { name: 'Generar lectura personal' }).click();
 
-  // Anem al menú (Mapa) i després a Identitat
+  // Anem al menú (Mapa) i després a El meu camí
   await page.getByLabel('Mapa').click();
-  await page.getByText('La meva identitat').click();
+  await page.getByText('El meu camí').click();
 
   // Verifiquem que som a la pàgina d'identitat i l'arquetip és correcte
   await expect(page.getByText('Observador Atent')).toBeVisible();

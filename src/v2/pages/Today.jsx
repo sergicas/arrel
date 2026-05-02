@@ -88,7 +88,6 @@ export default function Today() {
     todayArea,
     todayGuidance,
     coachDecision,
-    userStyle,
     burnoutRisk,
     hasDiagnostic,
     dayFeedback,

@@ -13,7 +13,7 @@ export function assessBurnoutRisk(state) {
 
   if (currentCycleFeedback.length < 3) return { risk: 'low', reason: null };
 
-  // 1. Detecció de fricció consecutiva (3 dies)
+  // 1. Detecció de dificultat sostinguda (3 dies)
   const lastThree = currentCycleFeedback.slice(0, 3);
   const consecutiveFriction = lastThree.every(
     (f) => f.value === FEEDBACK.PARTIAL || f.value === FEEDBACK.SKIPPED
@@ -23,17 +23,17 @@ export function assessBurnoutRisk(state) {
     return {
       risk: 'high',
       type: 'friction',
-      message: 'Sembla que el ritme d’aquests últims tres dies demana molta energia. Et recomanem fer una pausa o triar una versió molt suau avui per mantenir la il·lusió.',
+      message: 'Sembla que el ritme d’aquests últims dies demana força energia. Escolta el que necessites avui: potser una pausa o una versió molt suau t’ajudaran a mantenir el rumb.',
     };
   }
 
-  // 2. Detecció de sentiment negatiu acumulat
+  // 2. Detecció de cansament acumulat a les notes
   const fatigueNotes = currentCycleFeedback.filter((f) => detectSentiment(f.note)).length;
   if (fatigueNotes >= 2 && currentCycleFeedback.length >= 4) {
     return {
       risk: 'medium',
       type: 'sentiment',
-      message: 'Hem detectat que algunes proves t’estan costant una mica més del normal. Avui és un bon dia per escoltar el cos i anar sense cap pressa.',
+      message: 'Notem que algunes proves t’estan costant una mica més. Avui és un bon dia per anar sense cap pressa i prioritzar la teva comoditat.',
     };
   }
 

@@ -4,8 +4,7 @@ import { AREAS } from './types.js';
 
 describe('Identity Engine', () => {
   it('returns null if there is not enough history', () => {
-    const identity = synthesizeIdentity({ feedback: [], cycleReadings: [] });
-    expect(identity).toBeNull();
+    expect(synthesizeIdentity({ feedback: [], cycleReadings: [] })).toBeNull();
   });
 
   it('detects a Practicant Decidit after one cycle', () => {
@@ -55,7 +54,6 @@ describe('Identity Engine', () => {
       { cycle: 1, day: 2, value: 'done', note: '' },
       { cycle: 1, day: 3, value: 'skipped', note: '' },
     ];
-    const identity = synthesizeIdentity({ feedback, cycleNumber: 1 });
     // Ha de funcionar si té fites (aquí no en té prou per arquetip avançat però simulem)
     const result = synthesizeIdentity({ feedback: [...feedback, ...feedback, ...feedback], cycleNumber: 1 });
     expect(result.totalProves).toBe(6);

@@ -155,29 +155,81 @@ export function ArrelProvider({ children }) {
     }));
   }, []);
 
-  const submitFeedback = useCallback((value, note = '') => {
-    setState((s) => {
-      if (s.feedbackJustGiven || hasFeedbackForDay(s.feedback, s.cycleNumber, s.dayInCycle)) return s;
-      const action = getActionForDay(s.cycleNumber, s.dayInCycle, s.primaryArea, s.currentCycleArea);
-      const entry = {
-        cycle: s.cycleNumber,
-        day: s.dayInCycle,
-        text: action?.text || null,
-        duration: action?.duration || null,
-        area: action?.area || null,
-        value,
-        note,
-        at: Date.now(),
-        completedOn: getLocalDateKey(),
-      };
-      return {
-        ...s,
-        feedback: [...s.feedback, entry],
-        feedbackJustGiven: true,
-        nextDayAvailableAt: getNextStepAvailableAt(s.pace, new Date()),
-      };
-    });
+  const restartFromDiagnostic = useCallback(() => {
+    setState((s) => ({
+      ...s,
+      diagnosisJustCompleted: false,
+      cycleJustEnded: false,
+    }));
   }, []);
+
+  const resetAll = useCallback(() => {
+    void clearDurableState();
+    setState({ ...initialState });
+  }, []);
+
+  const coachDecision = useMemo(
+    () => getDailyCoachDecision(state),
+    [state]
+  );
+
+  const userStyle = useMemo(
+    () => analyzeUserStyle(state.feedback),
+    [state.feedback]
+  );
+
+  const burnoutRisk = useMemo(
+    () => assessBurnoutRisk(state),
+    [state]
+  );
+
+  const userIdentity = useMemo(
+    () => synthesizeIdentity(state),
+    [state]
+  );
+
+  const todayAction = useMemo(() => {
+    if (!state.primaryArea) return null;
+    const action = getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
+
+    if (coachDecision.difficulty === 'easy' && action?.metadata?.nextSmallStep) {
+      return {
+        ...action,
+        originalText: action.text,
+        text: action.metadata.nextSmallStep,
+        isAdapted: true,
+      };
+    }
+
+    return action;
+  }, [state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea, coachDecision]);
+
+  const submitFeedback = useCallback(
+    (value, note = '') => {
+      setState((s) => {
+        if (s.feedbackJustGiven || hasFeedbackForDay(s.feedback, s.cycleNumber, s.dayInCycle)) return s;
+        const action = todayAction;
+        const entry = {
+          cycle: s.cycleNumber,
+          day: s.dayInCycle,
+          text: action?.text || null,
+          duration: action?.duration || null,
+          area: action?.area || null,
+          value,
+          note,
+          at: Date.now(),
+          completedOn: getLocalDateKey(),
+        };
+        return {
+          ...s,
+          feedback: [...s.feedback, entry],
+          feedbackJustGiven: true,
+          nextDayAvailableAt: getNextStepAvailableAt(s.pace, new Date()),
+        };
+      });
+    },
+    [todayAction]
+  );
 
   const advanceDay = useCallback(() => {
     setState((s) => {
@@ -315,55 +367,6 @@ export function ArrelProvider({ children }) {
       };
     });
   }, []);
-
-  const restartFromDiagnostic = useCallback(() => {
-    setState((s) => ({
-      ...s,
-      diagnosisJustCompleted: false,
-      cycleJustEnded: false,
-    }));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    void clearDurableState();
-    setState({ ...initialState });
-  }, []);
-
-  const coachDecision = useMemo(
-    () => getDailyCoachDecision(state),
-    [state]
-  );
-
-  const userStyle = useMemo(
-    () => analyzeUserStyle(state.feedback),
-    [state.feedback]
-  );
-
-  const burnoutRisk = useMemo(
-    () => assessBurnoutRisk(state),
-    [state]
-  );
-
-  const userIdentity = useMemo(
-    () => synthesizeIdentity(state),
-    [state]
-  );
-
-  const todayAction = useMemo(() => {
-    if (!state.primaryArea) return null;
-    const action = getActionForDay(state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea);
-
-    if (coachDecision.difficulty === 'easy' && action?.metadata?.nextSmallStep) {
-      return {
-        ...action,
-        originalText: action.text,
-        text: action.metadata.nextSmallStep,
-        isAdapted: true,
-      };
-    }
-
-    return action;
-  }, [state.cycleNumber, state.dayInCycle, state.primaryArea, state.currentCycleArea, coachDecision]);
 
   const todayArea = useMemo(() => {
     if (!state.primaryArea) return null;

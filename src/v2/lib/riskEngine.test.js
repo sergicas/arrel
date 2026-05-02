@@ -17,7 +17,7 @@ describe('Risk Engine', () => {
     const risk = assessBurnoutRisk({ cycleNumber: 1, feedback });
     expect(risk.risk).toBe('high');
     expect(risk.type).toBe('friction');
-    expect(risk.message).toContain('ritme d’aquests últims tres dies');
+    expect(risk.message).toContain('ritme d’aquests últims dies');
   });
 
   it('detects medium risk after multiple fatigue notes', () => {

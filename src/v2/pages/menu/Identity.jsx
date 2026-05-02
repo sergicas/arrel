@@ -14,8 +14,8 @@ export default function Identity() {
             <User className="text-[var(--area-accent)]" size={32} />
           </div>
           <div>
-            <h1 className="text-xl font-bold mb-2">La teva Identitat Arrel</h1>
-            <p className="text-[var(--text-secondary)]">Encara és aviat per definir el teu perfil. Continua completant proves per descobrir com Arrel et llegeix.</p>
+            <h1 className="text-xl font-bold mb-2">El meu camí</h1>
+            <p className="text-[var(--text-secondary)]">Encara és aviat per observar un patró. Continua avançant en les teves proves per veure’n l’evolució.</p>
           </div>
           <Link to="/app" className="btn btn-primary w-full">Començar la prova d’avui</Link>
         </div>
@@ -30,7 +30,7 @@ export default function Identity() {
           <div className="v2-identity-avatar mx-auto mb-4">
             <User size={48} className="text-[var(--area-accent)]" />
           </div>
-          <p className="v2-panel-label mb-1">Perfil Arrel</p>
+          <p className="v2-panel-label mb-1">El meu camí</p>
           <h1 className="text-2xl font-bold">{userIdentity.archetype}</h1>
           <p className="mt-2 text-[var(--text-secondary)] leading-relaxed max-w-xs mx-auto">
             {userIdentity.description}
@@ -45,14 +45,14 @@ export default function Identity() {
           </div>
           <div className="v2-stat-card p-4 rounded-2xl bg-white border border-gray-100">
             <Shield size={18} className="mb-2 text-[var(--area-accent)]" />
-            <p className="text-xs text-[var(--text-tertiary)] uppercase font-semibold">Resiliència</p>
+            <p className="text-xs text-[var(--text-tertiary)] uppercase font-semibold">Recuperació</p>
             <p className="text-sm font-bold text-[var(--text-primary)]">{userIdentity.resilienceLevel}</p>
           </div>
         </section>
 
         <section className="v2-identity-achievements p-5 rounded-3xl bg-white border border-gray-100 shadow-sm">
           <h2 className="text-sm font-bold mb-4 uppercase text-[var(--text-tertiary)] flex items-center gap-2">
-            <Award size={16} /> Fites de creixement
+            <Award size={16} /> Evolució
           </h2>
           {userIdentity.milestones.length > 0 ? (
             <ul className="flex flex-col gap-4">
