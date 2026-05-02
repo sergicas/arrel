@@ -3,6 +3,7 @@ import { durationToMinutes, getAction } from './actions.js';
 import { AREA_LABELS, AREAS, FEEDBACK } from './types.js';
 import { analyzeEvolution } from './evolutionEngine.js';
 import { analyzeUserStyle } from './toneEngine.js';
+import { identifyPatterns } from './patternEngine.js';
 
 const LOW_CONFIDENCE_MIN_DAYS = 3;
 const RESULT_SCORE = {
@@ -357,6 +358,7 @@ export function buildCycleReadingPayload(state = {}) {
     currentCycleArea: cycleArea || null,
     days,
     evolutionInsights: analyzeEvolution(state),
+    wellBeingPatterns: identifyPatterns(state.feedback),
   };
 }
 
@@ -389,11 +391,15 @@ export function generateMockCycleReading(payload = {}) {
     ? `\n\nPerspectiva: ${payload.evolutionInsights.join(' ')}`
     : '';
 
+  const patterns = Array.isArray(payload.wellBeingPatterns) && payload.wellBeingPatterns.length > 0
+    ? `\n\nPatró d’èxit: ${payload.wellBeingPatterns.map(p => p.text).join(' ')}`
+    : '';
+
   const trajectoryText = userStyle === 'concise' 
     ? 'Trajectòria del cicle:' 
     : trajectory.text;
 
-  const pattern = `${trajectoryText} En conjunt: ${resultSummary}.${noteContext}${evolution}`;
+  const pattern = `${trajectoryText} En conjunt: ${resultSummary}.${noteContext}${evolution}${patterns}`;
 
   return {
     title: buildTitle(trajectory, availableDay, careDay),
