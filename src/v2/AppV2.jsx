@@ -13,7 +13,7 @@ import Rest from './pages/Rest.jsx';
 import Transition from './pages/Transition.jsx';
 import Menu from './pages/Menu.jsx';
 import Paywall from './pages/Paywall.jsx';
-import Identity from './pages/menu/Identity.jsx';
+import Identity from './pages/menu/ElMeuCami.jsx';
 import PastCycles from './pages/menu/PastCycles.jsx';
 import Areas from './pages/menu/Areas.jsx';
 import About from './pages/menu/About.jsx';
@@ -145,7 +145,7 @@ export default function AppV2() {
           <Route path="/app" element={<StateRoot />} />
           <Route path="/diagnostic" element={<Diagnostic />} />
           <Route path="/menu" element={<Menu />} />
-          <Route path="/menu/identitat" element={<Identity />} />
+          <Route path="/menu/cami" element={<Identity />} />
           <Route path="/menu/cicles" element={<PastCycles />} />
           <Route path="/menu/arees" element={<Areas />} />
           <Route path="/menu/ritme" element={<Pace />} />

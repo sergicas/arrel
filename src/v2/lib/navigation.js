@@ -10,7 +10,7 @@ export const NAV_SECTIONS = [
   {
     title: 'Seguiment',
     items: [
-      { to: '/menu/identitat', label: 'El meu camí', description: 'Com Arrel llegeix la teva evolució.' },
+      { to: '/menu/cami', label: 'El meu camí', description: 'Com Arrel llegeix la teva evolució.' },
       { to: '/menu/cicles', label: 'Històric', description: 'Les proves que ja has tancat.' },
       { to: '/menu/arees', label: 'Capacitats', description: 'Cos, memòria, calma, vincles i propòsit.' },
     ],

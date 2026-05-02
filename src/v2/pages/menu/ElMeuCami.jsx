@@ -30,7 +30,7 @@ export default function Identity() {
           <div className="v2-identity-avatar mx-auto mb-4">
             <User size={48} className="text-[var(--area-accent)]" />
           </div>
-          <p className="v2-panel-label mb-1">El meu camí</p>
+          <p className="v2-panel-label mb-1">Trajectòria</p>
           <h1 className="text-2xl font-bold">{userIdentity.archetype}</h1>
           <p className="mt-2 text-[var(--text-secondary)] leading-relaxed max-w-xs mx-auto">
             {userIdentity.description}
@@ -52,7 +52,7 @@ export default function Identity() {
 
         <section className="v2-identity-achievements p-5 rounded-3xl bg-white border border-gray-100 shadow-sm">
           <h2 className="text-sm font-bold mb-4 uppercase text-[var(--text-tertiary)] flex items-center gap-2">
-            <Award size={16} /> Evolució
+            <Award size={16} /> Evolució observada
           </h2>
           {userIdentity.milestones.length > 0 ? (
             <ul className="flex flex-col gap-4">
