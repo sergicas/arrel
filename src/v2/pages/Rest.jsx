@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Sparkles } from 'lucide-react';
 import { useArrel } from '../state/useArrel.js';
 import Shell from '../components/Shell.jsx';
 import CycleDots from '../components/CycleDots.jsx';
@@ -21,7 +22,9 @@ const FEEDBACK_LABELS = {
 
 export default function Rest() {
   const { state, canAdvanceDay, advanceDay, generateCycleReading } = useArrel();
+  const [isGenerating, setIsGenerating] = useState(false);
   const [now, setNow] = useState(() => new Date());
+  
   const cycleEntries = (state.feedback || [])
     .filter((entry) => entry.cycle === state.cycleNumber)
     .sort((a, b) => a.day - b.day);
@@ -44,6 +47,15 @@ export default function Rest() {
     const interval = window.setInterval(() => setNow(new Date()), 60000);
     return () => window.clearInterval(interval);
   }, [dayCanOpenNow]);
+
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      await generateCycleReading();
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <Shell showBack backTo="/inici">
@@ -105,11 +117,13 @@ export default function Rest() {
 
           <section className="v2-panel v2-cycle-reading mt-5" aria-label="Lectura personal">
             <div className="v2-cycle-reading-head">
-              <p className="v2-panel-label">Lectura personal</p>
-              {cycleReading ? (
+              <p className="v2-panel-label flex items-center gap-1.5">
+                <Sparkles size={14} className="text-[var(--area-accent)]" /> Lectura personal
+              </p>
+              {cycleReading && !isGenerating ? (
                 <button
                   type="button"
-                  onClick={generateCycleReading}
+                  onClick={handleGenerate}
                   className="btn btn-ghost v2-cycle-reading-update"
                 >
                   Actualitzar lectura
@@ -117,7 +131,12 @@ export default function Rest() {
               ) : null}
             </div>
 
-            {cycleReading ? (
+            {isGenerating ? (
+              <div className="v2-cycle-reading-generating py-12 text-center animate-pulse">
+                <Sparkles size={32} className="mx-auto mb-4 text-[var(--area-accent)] opacity-40" />
+                <p className="text-sm font-medium text-[var(--text-secondary)]">Arrel està llegint el teu cicle...</p>
+              </div>
+            ) : cycleReading ? (
               <div className="v2-cycle-reading-body">
                 <h2>{cycleReading.title}</h2>
                 <p>{cycleReading.pattern}</p>
@@ -145,11 +164,16 @@ export default function Rest() {
                   <span>Confiança</span>
                   <strong>{cycleReading.confidence}</strong>
                 </div>
+                {cycleReading.isRealAi ? (
+                  <p className="text-[10px] mt-4 opacity-30 text-center uppercase tracking-widest font-bold">
+                    Generat per Arrel AI
+                  </p>
+                ) : null}
               </div>
             ) : (
               <div className="v2-cycle-reading-empty">
                 <p>Arrel pot llegir aquest cicle i proposar-te un següent pas.</p>
-                <button type="button" onClick={generateCycleReading} className="btn btn-primary w-full">
+                <button type="button" onClick={handleGenerate} className="btn btn-primary w-full">
                   Generar lectura personal
                 </button>
               </div>

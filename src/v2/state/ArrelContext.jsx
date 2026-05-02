@@ -22,7 +22,7 @@ import { AREA_GUIDANCE, AREAS, STATUS, INITIAL_GUIDED_CYCLES } from '../lib/type
 import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePace } from '../lib/pace.js';
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
 import { buildCycleReadingPayload } from '../lib/cycleReading.js';
-import { getAiReading } from '../lib/aiService.js';
+import { getAiReading, getDailyCoachInsight } from '../lib/aiService.js';
 import { getDailyCoachDecision } from '../lib/dailyCoach.js';
 import { analyzeUserStyle } from '../lib/toneEngine.js';
 import { assessBurnoutRisk } from '../lib/riskEngine.js';
@@ -169,10 +169,13 @@ export function ArrelProvider({ children }) {
     setState({ ...initialState });
   }, []);
 
-  const coachDecision = useMemo(
-    () => getDailyCoachDecision(state),
-    [state]
-  );
+  const [coachDecision, setCoachDecision] = useState(() => getDailyCoachDecision(state));
+
+  useEffect(() => {
+    if (state.status === STATUS.ACTIVE && !isRestDay(state.dayInCycle)) {
+      getDailyCoachInsight(state).then(setCoachDecision);
+    }
+  }, [state.cycleNumber, state.dayInCycle, state.status, state.feedback]);
 
   const userStyle = useMemo(
     () => analyzeUserStyle(state.feedback),
@@ -352,7 +355,7 @@ export function ArrelProvider({ children }) {
 
   const generateCycleReading = useCallback(async () => {
     const payload = buildCycleReadingPayload(state);
-    const reading = await getAiReading(payload);
+    const reading = await getAiReading(payload, state);
     
     setState((s) => {
       const cycleReadings = Array.isArray(s.cycleReadings) ? s.cycleReadings : [];
