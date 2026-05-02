@@ -9,6 +9,7 @@ const STORAGE_KEY = 'arrel-v2-state';
 describe('AppV2 routing', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStorage.setItem('arrel-v2-clean-boot', 'true');
     window.history.pushState({}, '', '/');
   });
 

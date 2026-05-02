@@ -38,6 +38,7 @@ function renderLanding() {
 describe('Landing v2', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStorage.setItem('arrel-v2-clean-boot', 'true');
   });
 
   it('lets the user choose where to start before opening today', async () => {

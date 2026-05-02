@@ -25,6 +25,7 @@ export async function prepareFreshPage(page, path = '/inici', time = START_TIME)
     const clearFlag = `${key}-fresh-cleared`;
     if (window.sessionStorage.getItem(clearFlag)) return;
     window.localStorage.removeItem(key);
+    window.localStorage.setItem('arrel-v2-clean-boot', 'true');
     window.sessionStorage.setItem(clearFlag, 'true');
   }, STORAGE_KEY);
   await page.goto(path);
@@ -36,6 +37,7 @@ export async function seedState(page, state, path = '/app', time = START_TIME) {
     ([key, value]) => {
       if (!window.localStorage.getItem(key)) {
         window.localStorage.setItem(key, JSON.stringify(value));
+        window.localStorage.setItem('arrel-v2-clean-boot', 'true');
       }
     },
     [STORAGE_KEY, state]

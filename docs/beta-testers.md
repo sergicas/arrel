@@ -1,12 +1,12 @@
 # Guia per a beta testers d'Arrel
 
-Build: `1.0.0 (1)`
+Build: `1.1.0 (1)`
 
-Gràcies per provar Arrel abans que sigui pública. No busquem una opinió perfecta ni que ho facis tot "bé": ens interessa veure si l'app s'entén, si et ve de gust tornar-hi i on es trenca la confiança.
+Gràcies per provar la nova versió d'Arrel abans que sigui pública. No busquem una opinió perfecta ni que ho facis tot "bé": ens interessa veure si l'app s'entén, si et ve de gust tornar-hi i on es trenca la confiança.
 
 ## Què és Arrel
 
-Arrel et proposa proves curtes per frenar l'envelliment quotidià cuidant cos, memòria, calma, vincles i identitat. Funciona en cicles de 7 dies: 6 dies de prova i 1 dia de descans/resum. Pots anar a ritme lent, regular o accelerat.
+Arrel et proposa proves curtes per cuidar autonomia, capacitat i il·lusió treballant cinc àrees: cos, memòria, calma, vincles i el teu camí. Funciona en cicles de 7 dies: 6 dies de prova i 1 dia de descans/resum. Pots anar a ritme lent, regular o accelerat.
 
 La beta guarda el progrés al teu dispositiu. No hi ha compte d'usuari ni sincronització al núvol en aquesta versió.
 
@@ -16,21 +16,21 @@ Si l'app perd el progrés sense que tu l'hagis esborrat des de `Sobre Arrel`, é
 
 ### 1. Entrada i primera prova
 
-Comença des de la landing i toca `Provar sense compte`.
+Comença des de la landing i toca `Triar per on començar`.
 
 Mira si queda clar:
 - què has de fer avui
 - quant dura la prova
-- com has de tancar el dia
+- com has de tancar el dia (els resultats ara són: `Fet`, `Fet amb esforç` o `Ho deixo per avui`)
 
 Flag important:
 - no entenc què m'està demanant
 - el text sona massa dur o massa genèric
 - no tinc clar si puc fer-ho ara mateix
 
-### 2. Diagnosi
+### 2. Focus i diagnòstic
 
-Des de la pantalla d'avui, entra a `Fer diagnosi` o `Personalitzar focus` i respon les 5 preguntes.
+Des de la pantalla d'avui, entra a `Ajustar focus` o `Fer el diagnòstic` i respon les 5 preguntes.
 
 Mira si queda clar:
 - quin focus surt com a principal
@@ -40,19 +40,19 @@ Mira si queda clar:
 Flag important:
 - el resultat no encaixa gens
 - les preguntes són confuses
-- sembla que la diagnosi no ha servit per a res
+- sembla que el focus no ha servit per a res
 
 ### 3. Lectura i ritme
 
-Tanca una prova amb `Hi és`, `Costava` o `Evitat`. Després ves a `Menú > Ritme de proves` i prova els tres ritmes:
+Tanca una prova amb un dels tres resultats. Després ves a `Mapa > Ritme de proves` i prova els tres ritmes:
 
 - `Lent`: una prova al dia
-- `Regular`: següent prova al cap d'unes hores
+- `Regular`: següent prova al cap de 6 hores
 - `Accelerat`: pots continuar sense espera
 
 Mira si queda clar:
 - que pots triar el ritme sense sentir-te obligat a fer més
-- que no hi ha penalització si marques `Costava` o `Evitat`
+- que no hi ha penalització segons el resultat que marquis
 - quin ritme et sembla més útil per tornar a Arrel
 
 Flag important:
@@ -62,7 +62,7 @@ Flag important:
 
 ### 4. Recordatori
 
-Ves a `Menú > Recordatori diari`, activa'l i tria una hora.
+Ves a `Mapa > Recordatori diari`, activa'l i tria una hora.
 
 Aquesta secció només es pot validar si tens Arrel instal·lat via TestFlight. Si l'estàs provant al navegador, només pots comprovar que la preferència queda desada.
 
@@ -76,25 +76,25 @@ Flag important:
 - el recordatori no arriba
 - arriba duplicat o a una hora equivocada
 
-### 5. Dia 7 i resum del cicle
+### 5. Dia 7 i lectura personal
 
 Aquesta secció només la pots validar si proves Arrel un mínim de 7 dies. Si fas una prova curta de cap de setmana, pots saltar-la.
 
-Si arribes al dia 7, revisa el resum.
+Si arribes al dia 7, revisa la `Lectura personal`.
 
 Mira si queda clar:
-- quins dies has marcat
-- quants han estat `Hi és`, `Costava` o `Evitat`
-- si el dia de descans té sentit o se sent buit
+- com Arrel llegeix la teva constància
+- si els missatges d'ajuda i les propostes tenen sentit
+- si el dia de descans té valor o se sent buit
 
 Flag important:
-- el resum no aporta res
-- voldria veure més context
+- la lectura no aporta res o és confusa
+- voldria veure més context o dades
 - no entenc com començar el cicle següent
 
 ### 6. Reset
 
-Ves a `Menú > Sobre Arrel` i prova `Esborrar les dades locals` només si vols reiniciar la beta.
+Ves a `Mapa > Sobre Arrel` i prova `Esborrar les dades locals` només si vols reiniciar la beta.
 
 Mira si queda clar:
 - que el reset esborra el progrés d'aquest dispositiu
@@ -107,7 +107,7 @@ Flag important:
 
 ## Què ens has d'enviar
 
-Envia el feedback a: `[pendent: email, Telegram o formulari]`.
+Envia el feedback a: `[canal de comunicació de l'equip]`.
 
 Quan trobis alguna cosa, envia-ho amb aquest format:
 

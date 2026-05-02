@@ -2,6 +2,21 @@ import { DEFAULT_REMINDER, PACE, STATUS } from './types.js';
 import { normalizePace } from './pace.js';
 
 const KEY = 'arrel-v2-state';
+const CLEAN_BOOT_KEY = 'arrel-v2-clean-boot';
+
+function performCleanBoot() {
+  try {
+    if (typeof localStorage === 'undefined') return;
+    const isClean = localStorage.getItem(CLEAN_BOOT_KEY);
+    if (isClean === 'true') return;
+
+    // Esborrem tot el localStorage per eliminar rastres de la v1
+    localStorage.clear();
+    localStorage.setItem(CLEAN_BOOT_KEY, 'true');
+  } catch {
+    // Silenciós en cas d'error de quota o privacitat
+  }
+}
 
 export function getLocalDateKey(date = new Date()) {
   const year = date.getFullYear();
@@ -93,6 +108,7 @@ async function resolvePreferences() {
 }
 
 export function loadState() {
+  performCleanBoot();
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { ...initialState };

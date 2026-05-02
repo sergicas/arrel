@@ -6,7 +6,21 @@ const STORAGE_KEY = 'arrel-v2-state';
 describe('v2 storage', () => {
   beforeEach(() => {
     localStorage.clear();
+    localStorage.setItem('arrel-v2-clean-boot', 'true'); // Per defecte els tests assumeixen entorn ja netejat
     delete window.Capacitor;
+  });
+
+  it('clears v1 garbage on first run (clean boot)', () => {
+    localStorage.clear(); // Forcem entorn realment buit (sense el flag de clean boot)
+    localStorage.setItem('supabase-key', 'old-token');
+    localStorage.setItem('stripe-id', 'cus_123');
+
+    // Al carregar l'estat per primera vegada
+    loadState();
+
+    expect(localStorage.getItem('supabase-key')).toBeNull();
+    expect(localStorage.getItem('stripe-id')).toBeNull();
+    expect(localStorage.getItem('arrel-v2-clean-boot')).toBe('true');
   });
 
   it('migrates the old subscribed flag to continuedAfterInitialPeriod', () => {
