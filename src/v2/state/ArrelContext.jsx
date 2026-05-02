@@ -21,7 +21,8 @@ import {
 import { AREA_GUIDANCE, AREAS, STATUS, INITIAL_GUIDED_CYCLES } from '../lib/types.js';
 import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePace } from '../lib/pace.js';
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
-import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycleReading.js';
+import { buildCycleReadingPayload } from '../lib/cycleReading.js';
+import { getAiReading } from '../lib/aiService.js';
 import { getDailyCoachDecision } from '../lib/dailyCoach.js';
 import { analyzeUserStyle } from '../lib/toneEngine.js';
 import { assessBurnoutRisk } from '../lib/riskEngine.js';
@@ -349,10 +350,11 @@ export function ArrelProvider({ children }) {
     }
   }, []);
 
-  const generateCycleReading = useCallback(() => {
+  const generateCycleReading = useCallback(async () => {
+    const payload = buildCycleReadingPayload(state);
+    const reading = await getAiReading(payload);
+    
     setState((s) => {
-      const payload = buildCycleReadingPayload(s);
-      const reading = generateMockCycleReading(payload);
       const cycleReadings = Array.isArray(s.cycleReadings) ? s.cycleReadings : [];
       return {
         ...s,
@@ -366,7 +368,7 @@ export function ArrelProvider({ children }) {
         ],
       };
     });
-  }, []);
+  }, [state]);
 
   const todayArea = useMemo(() => {
     if (!state.primaryArea) return null;
