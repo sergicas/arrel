@@ -19,13 +19,19 @@ export async function getAiReading(payload, state) {
     })),
   };
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segons de timeout
+
   // 1. Intentem demanar la lectura a la IA Real (Backend)
   try {
     const response = await fetch('/.netlify/functions/process-ai-insight', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(enrichedPayload),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -35,7 +41,9 @@ export async function getAiReading(payload, state) {
       };
     }
   } catch {
-    console.info('Arrel AI: Utilitzant model local per absència de connexió o backend.');
+    console.info('Arrel AI: Utilitzant model local per absència de connexió, timeout o backend.');
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   // 2. Fallback al model local determinístic si falla la xarxa o el backend
@@ -59,12 +67,18 @@ export async function getDailyCoachInsight(state) {
     yesterday,
   };
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segons per al coach
+
   try {
     const response = await fetch('/.netlify/functions/process-daily-coach', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (response.ok) {
       const data = await response.json();
@@ -76,6 +90,8 @@ export async function getDailyCoachInsight(state) {
     }
   } catch {
     // Silenciós: fallback a local
+  } finally {
+    clearTimeout(timeoutId);
   }
 
   return {

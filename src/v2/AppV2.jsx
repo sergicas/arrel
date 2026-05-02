@@ -21,19 +21,8 @@ import Reminder from './pages/menu/Reminder.jsx';
 import Pace from './pages/menu/Pace.jsx';
 import Legal from './pages/Legal.jsx';
 
-function AppLoading() {
-  return (
-    <main className="v2-app-loading" aria-label="Carregant Arrel">
-      <div className="v2-app-loading-mark" aria-hidden="true">A</div>
-      <p>Carregant Arrel...</p>
-    </main>
-  );
-}
-
 function StateRoot() {
-  const { state, isToday7, storageReady } = useArrel();
-
-  if (!storageReady) return <AppLoading />;
+  const { state, isToday7 } = useArrel();
 
   if (state.cycleJustEnded) return <Transition />;
   if (state.diagnosisJustCompleted) return <DiagnosticResult />;
@@ -53,8 +42,7 @@ function StateRoot() {
 }
 
 function RootRoute() {
-  const { state, storageReady } = useArrel();
-  if (!storageReady) return <AppLoading />;
+  const { state } = useArrel();
   return state.status === STATUS.NEW ? <Landing /> : <Navigate to="/app" replace />;
 }
 

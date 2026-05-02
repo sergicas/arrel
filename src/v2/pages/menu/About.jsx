@@ -4,7 +4,7 @@ import Shell from '../../components/Shell.jsx';
 
 export default function About() {
   const navigate = useNavigate();
-  const { restartFromDiagnostic, resetAll } = useArrel();
+  const { state, restartFromDiagnostic, resetAll, setAiEnabled } = useArrel();
 
   const handleRestart = () => {
     if (
@@ -55,6 +55,31 @@ export default function About() {
               Tria una capacitat principal, escull un ritme lent o regular,
               fes sis proves i reserva el setè dia per revisar els resultats.
             </p>
+          </div>
+
+          <div className="v2-panel">
+            <p className="v2-panel-label">Lectures profundes (IA)</p>
+            <div className="flex flex-col gap-4">
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                Arrel pot utilitzar models d’intel·ligència avançada per llegir les teves notes i descobrir patrons d’èxit. 
+                Si ho actives, les teves notes del cicle s’enviaran de forma anònima al núvol per ser analitzades.
+              </p>
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--area-soft)]">
+                <input
+                  type="checkbox"
+                  id="ai-toggle"
+                  className="w-5 h-5 accent-[var(--area-accent)]"
+                  checked={state.aiEnabled}
+                  onChange={(e) => setAiEnabled(e.target.checked)}
+                />
+                <label htmlFor="ai-toggle" className="text-sm font-bold cursor-pointer">
+                  Activar lectures amb IA
+                </label>
+              </div>
+              <p className="text-[10px] text-[var(--text-tertiary)] italic">
+                Les dades s’analitzen sense cap vincle amb la teva identitat real.
+              </p>
+            </div>
           </div>
 
           <div className="v2-panel">

@@ -1,11 +1,9 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { ArrelContext } from './arrelContextValue.js';
 import {
-  loadState,
   loadDurableState,
   saveDurableState,
   clearDurableState,
-  shouldUseNativePreferences,
   initialState,
   getLocalDateKey,
 } from '../lib/storage.js';
@@ -21,7 +19,7 @@ import {
 import { AREA_GUIDANCE, AREAS, STATUS, INITIAL_GUIDED_CYCLES } from '../lib/types.js';
 import { getNextStepAvailableAt, isAcceleratedPace, isStepAvailable, normalizePace } from '../lib/pace.js';
 import { cancelDailyReminder, scheduleDailyReminder } from '../lib/reminders.js';
-import { buildCycleReadingPayload } from '../lib/cycleReading.js';
+import { buildCycleReadingPayload, generateMockCycleReading } from '../lib/cycleReading.js';
 import { getAiReading, getDailyCoachInsight } from '../lib/aiService.js';
 import { getDailyCoachDecision } from '../lib/dailyCoach.js';
 import { analyzeUserStyle } from '../lib/toneEngine.js';
@@ -57,41 +55,23 @@ function nextCycleAfterCurrentProgress(state) {
 }
 
 export function ArrelProvider({ children }) {
-  const [state, setState] = useState(loadState);
-  const [storageReady, setStorageReady] = useState(() => !shouldUseNativePreferences());
+  const [state, setState] = useState(initialState);
+  const [storageReady, setStorageReady] = useState(false);
 
   useEffect(() => {
-    if (storageReady) return undefined;
-
     let active = true;
-    let completed = false;
 
-    const finishLoading = (durableState) => {
-      if (!active || completed) return;
-      completed = true;
-      setState(durableState);
-      setStorageReady(true);
-    };
+    async function init() {
+      const durableState = await loadDurableState();
+      if (active) {
+        setState(durableState);
+        setStorageReady(true);
+      }
+    }
 
-    const timeout = window.setTimeout(() => {
-      finishLoading(loadState());
-    }, 2500);
-
-    loadDurableState()
-      .then((durableState) => {
-        window.clearTimeout(timeout);
-        finishLoading(durableState);
-      })
-      .catch(() => {
-        window.clearTimeout(timeout);
-        finishLoading(loadState());
-      });
-
-    return () => {
-      active = false;
-      window.clearTimeout(timeout);
-    };
-  }, [storageReady]);
+    void init();
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     if (!storageReady) return;
@@ -169,13 +149,31 @@ export function ArrelProvider({ children }) {
     setState({ ...initialState });
   }, []);
 
-  const [coachDecision, setCoachDecision] = useState(() => getDailyCoachDecision(state));
+  const setAiEnabled = useCallback((enabled) => {
+    setState((s) => ({ ...s, aiEnabled: Boolean(enabled) }));
+  }, []);
+
+  const localCoachDecision = useMemo(
+    () => getDailyCoachDecision(state),
+    [state]
+  );
+
+  const [aiCoachDecision, setAiCoachDecision] = useState(null);
 
   useEffect(() => {
-    if (state.status === STATUS.ACTIVE && !isRestDay(state.dayInCycle)) {
-      getDailyCoachInsight(state).then(setCoachDecision);
+    let active = true;
+    if (state.status === STATUS.ACTIVE && !isRestDay(state.dayInCycle) && state.aiEnabled) {
+      getDailyCoachInsight(state).then((insight) => {
+        if (active) setAiCoachDecision(insight);
+      });
     }
-  }, [state.cycleNumber, state.dayInCycle, state.status, state.feedback]);
+    return () => { 
+      active = false;
+      setAiCoachDecision(null); 
+    };
+  }, [state.cycleNumber, state.dayInCycle, state.status, state.aiEnabled]);
+
+  const coachDecision = aiCoachDecision || localCoachDecision;
 
   const userStyle = useMemo(
     () => analyzeUserStyle(state.feedback),
@@ -355,7 +353,9 @@ export function ArrelProvider({ children }) {
 
   const generateCycleReading = useCallback(async () => {
     const payload = buildCycleReadingPayload(state);
-    const reading = await getAiReading(payload, state);
+    const reading = state.aiEnabled
+      ? await getAiReading(payload, state)
+      : { ...generateMockCycleReading(payload), isRealAi: false };
     
     setState((s) => {
       const cycleReadings = Array.isArray(s.cycleReadings) ? s.cycleReadings : [];
@@ -403,6 +403,7 @@ export function ArrelProvider({ children }) {
     dayFeedback,
     currentDayCompleted,
     canAdvanceDay,
+    setAiEnabled,
     startDiagnostic,
     startStarterCycle,
     completeDiagnostic,
@@ -418,5 +419,14 @@ export function ArrelProvider({ children }) {
     resetAll,
   };
 
-  return <ArrelContext.Provider value={value}>{children}</ArrelContext.Provider>;
+  return (
+    <ArrelContext.Provider value={value}>
+      {storageReady ? children : (
+        <main className="v2-app-loading" aria-label="Carregant Arrel">
+          <div className="v2-app-loading-mark" aria-hidden="true">A</div>
+          <p>Carregant Arrel...</p>
+        </main>
+      )}
+    </ArrelContext.Provider>
+  );
 }

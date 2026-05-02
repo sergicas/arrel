@@ -28,6 +28,7 @@ test('web reminder stores the preference with the installed-app fallback copy', 
   });
 
   await page.reload();
+  await expect(page.getByLabel('Carregant Arrel')).not.toBeVisible();
 
   await expect(page.getByRole('checkbox')).toBeChecked();
   await expect(page.getByLabel('Hora del recordatori')).toHaveValue('09:00');

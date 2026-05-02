@@ -1,7 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 /**
- * Funció de Backend d'Arrel: Processament d'IA Real amb Memòria.
+ * Funció de Backend d'Arrel: Processament d'IA Real amb Memòria i Seguretat.
  */
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -21,42 +21,37 @@ exports.handler = async (event) => {
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Preparació d'un Prompt narratiu que utilitza l'historial
+    // Preparació d'un Prompt segur i prudent
     const prompt = `
       Ets l'assistent d'IA de l'app "Arrel", centrada en l'autonomia de persones de 55 a 75 anys.
       La teva missió és generar una LECTURA PERSONAL del cicle de 7 dies.
       
       PERFIL DE L'USUARI:
       - Arquetip: ${payload.userProfile?.archetype || 'Usuari nou'}
-      - Descripció: ${payload.userProfile?.description || 'Començant el camí'}
       - Fortalesa: ${payload.userProfile?.strongestArea || 'Pendent'}
       
       DADES DEL CICLE ACTUAL (últims 7 dies):
       ${JSON.stringify(payload.days)}
       
-      HISTORIAL DE CICLES PASSATS:
-      ${JSON.stringify(payload.pastReadingsSummary)}
+      INSTRUCCIONS DE SEGURETAT I TO:
+      1. Utilitza català sobri, planer i adult. Frases curtes.
+      2. No citis literalment les notes de l'usuari si expressen símptomes greus o sentiments molt negatius. Reformula amb suavitat.
+      3. Connecta el que ha passat aquesta setmana amb el seu historial si n'hi ha.
+      4. Evita absolutament paraules mèdiques, diagnòstics o llenguatge de "pèrdua/deteriorament".
       
-      INSTRUCCIONS NARRATIVES:
-      1. Utilitza català sobri, planer i molt respectuós.
-      2. Connecta el que ha passat aquesta setmana amb el seu perfil i historial.
-      3. Si el cicle actual mostra molta "friction" (partial/skipped), detecta si és un patró o una excepció i anima amb prudència.
-      4. Si hi ha notes, cita-les o referencia-les per demostrar escolta real.
-      5. Evita qualsevol paraula mèdica, diagnòstic o llenguatge de "pèrdua/declivi".
-      
-      FORMAT DE RESPOSTA (JSON pur):
+      FORMAT DE RESPOSTA (respon EXCLUSIVAMENT amb JSON pur, sense text fora del JSON):
       {
         "title": "Títol vital (max 5 paraules)",
-        "pattern": "Resum narratiu de la setmana integrant les notes i el context històric.",
-        "availableCapacity": "Quina capacitat veus més forta avui basant-te en els 'Fet'.",
-        "carePoint": "On posar l'atenció basant-te en els 'Fet amb esforç' o salts.",
+        "pattern": "Resum narratiu de la setmana.",
+        "availableCapacity": "Quina capacitat veus més forta avui.",
+        "carePoint": "On posar l'atenció sense jutjar.",
         "nextCycleSuggestion": {
           "label": "Continuïtat | Exploració | Consolidació",
-          "text": "Proposta concreta pel següent cicle."
+          "text": "Proposta concreta."
         },
-        "nextActionStyle": "Consell breu sobre l'estil de la prova de demà (ex: versió suau, atenció plena...)",
+        "nextActionStyle": "Consell breu sobre l'estil de la prova de demà.",
         "confidence": "alta | mitjana | baixa",
-        "confidenceReason": "Per què creus que la teva lectura és precisa."
+        "confidenceReason": "Breu motiu tècnic de la precisió."
       }
     `;
 
@@ -75,7 +70,7 @@ exports.handler = async (event) => {
   } catch {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Error en el processament de la lectura." }),
+      body: JSON.stringify({ error: "Error en el processament." }),
     };
   }
 };

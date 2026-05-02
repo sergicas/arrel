@@ -4,17 +4,27 @@ import { normalizePace } from './pace.js';
 const KEY = 'arrel-v2-state';
 const CLEAN_BOOT_KEY = 'arrel-v2-clean-boot';
 
-function performCleanBoot() {
+/**
+ * Neteja de seguretat per a la versió 1.0.
+ * Esborra localStorage i, si és possible, les Preferences de Capacitor.
+ */
+async function performCleanBoot() {
   try {
     if (typeof localStorage === 'undefined') return;
     const isClean = localStorage.getItem(CLEAN_BOOT_KEY);
     if (isClean === 'true') return;
 
-    // Esborrem tot el localStorage per eliminar rastres de la v1
     localStorage.clear();
+
+    const Capacitor = window.Capacitor;
+    if (Capacitor && (Capacitor.isNativePlatform?.() || Capacitor.getPlatform?.() !== 'web')) {
+      const { Preferences } = await import('@capacitor/preferences');
+      await Preferences.clear();
+    }
+
     localStorage.setItem(CLEAN_BOOT_KEY, 'true');
   } catch {
-    // Silenciós en cas d'error de quota o privacitat
+    // Silenciós
   }
 }
 
@@ -38,6 +48,7 @@ export const initialState = {
   feedback: [],
   cycleReadings: [],
   pace: PACE.SLOW,
+  aiEnabled: false, // Per defecte desactivat (Privacitat)
   continuedAfterInitialPeriod: false,
   reminder: DEFAULT_REMINDER,
   feedbackJustGiven: false,
@@ -107,8 +118,11 @@ async function resolvePreferences() {
   return Preferences;
 }
 
+/**
+ * Carrega l'estat del localStorage de forma síncrona per a l'arrencada immediata.
+ * NO executa el clean boot aquí per evitar trencar el caràcter síncron de la UI.
+ */
 export function loadState() {
-  performCleanBoot();
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { ...initialState };
@@ -137,15 +151,21 @@ export function clearState() {
   }
 }
 
+/**
+ * Carrega l'estat asíncron (Durable), executant primer la neteja de seguretat.
+ */
 export async function loadDurableState() {
+  await performCleanBoot();
+  
   if (!shouldUseNativePreferences()) return loadState();
 
   try {
     const Preferences = await resolvePreferences();
     const { value } = await Preferences.get({ key: KEY });
-    if (!value) return loadState();
-
     const localState = loadState();
+
+    if (!value) return localState;
+
     const preferencesState = normalizeState(JSON.parse(value));
     const state = getUpdatedAt(localState) > getUpdatedAt(preferencesState)
       ? localState

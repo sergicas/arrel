@@ -26,10 +26,11 @@ describe('AppV2 routing', () => {
       </HelmetProvider>
     );
 
+    // Esperem que l'app s'hagi carregat i hagi redirigit a /inici mostrant el títol principal
     await waitFor(() => {
       expect(window.location.pathname).toBe('/inici');
-    });
-    expect(screen.getByRole('heading', { name: 'Autonomia, capacitat i il·lusió cada dia.' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Autonomia, capacitat i il·lusió cada dia.' })).toBeInTheDocument();
+    }, { timeout: 3000 });
   });
 
   it('opens a new diagnostic cycle without mixing existing feedback', async () => {
@@ -42,6 +43,7 @@ describe('AppV2 routing', () => {
       dayInCycle: 2,
       currentDayAvailableOn: '2026-04-27',
       feedback: [{ cycle: 1, day: 1, area: AREAS.STRESS, value: 'done' }],
+      updatedAt: Date.now(),
     }));
     window.history.pushState({}, '', '/diagnostic');
 

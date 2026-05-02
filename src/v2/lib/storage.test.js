@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { loadState, saveState, shouldUseNativePreferences } from './storage.js';
+import { loadDurableState, loadState, saveState, shouldUseNativePreferences } from './storage.js';
 
 const STORAGE_KEY = 'arrel-v2-state';
 
@@ -10,13 +10,13 @@ describe('v2 storage', () => {
     delete window.Capacitor;
   });
 
-  it('clears v1 garbage on first run (clean boot)', () => {
+  it('clears v1 garbage on first run (clean boot)', async () => {
     localStorage.clear(); // Forcem entorn realment buit (sense el flag de clean boot)
     localStorage.setItem('supabase-key', 'old-token');
     localStorage.setItem('stripe-id', 'cus_123');
 
-    // Al carregar l'estat per primera vegada
-    loadState();
+    // El clean boot ara s'executa dins de loadDurableState
+    await loadDurableState();
 
     expect(localStorage.getItem('supabase-key')).toBeNull();
     expect(localStorage.getItem('stripe-id')).toBeNull();

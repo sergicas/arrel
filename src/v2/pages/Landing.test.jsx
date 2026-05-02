@@ -11,7 +11,9 @@ const STORAGE_KEY = 'arrel-v2-state';
 
 function StateProbe() {
   const location = useLocation();
-  const { state, todayAction } = useArrel();
+  const { state, todayAction, storageReady } = useArrel();
+
+  if (!storageReady) return <output data-testid="loading">Carregant...</output>;
 
   return (
     <output data-testid="state">
@@ -43,6 +45,7 @@ describe('Landing v2', () => {
 
   it('lets the user choose where to start before opening today', async () => {
     renderLanding();
+    await waitFor(() => expect(screen.queryByTestId('loading')).not.toBeInTheDocument());
 
     fireEvent.click(screen.getByText('Comença ara'));
 
@@ -67,10 +70,12 @@ describe('Landing v2', () => {
       cycleNumber: 1,
       dayInCycle: 2,
       currentDayAvailableOn: '2026-04-27',
-      feedback: [{ cycle: 1, day: 1, value: 'done' }],
+      feedback: [{ cycle: 1, day: 1, area: AREAS.STRESS, value: 'done' }],
+      updatedAt: Date.now(),
     }));
 
     renderLanding();
+    await waitFor(() => expect(screen.queryByTestId('loading')).not.toBeInTheDocument());
 
     fireEvent.click(screen.getByText('Comença ara'));
     fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
@@ -94,10 +99,12 @@ describe('Landing v2', () => {
       cycleNumber: 1,
       dayInCycle: 2,
       currentDayAvailableOn: '2026-04-27',
-      feedback: [{ cycle: 1, day: 1, value: 'done' }],
+      feedback: [{ cycle: 1, day: 1, area: AREAS.STRESS, value: 'done' }],
+      updatedAt: Date.now(),
     }));
 
     renderLanding();
+    await waitFor(() => expect(screen.queryByTestId('loading')).not.toBeInTheDocument());
 
     fireEvent.click(screen.getByText('Comença ara'));
     fireEvent.click(screen.getByRole('button', { name: /Memòria/ }));
@@ -110,16 +117,18 @@ describe('Landing v2', () => {
     });
   });
 
-  it('exposes privacy and terms before the user starts', () => {
+  it('exposes privacy and terms before the user starts', async () => {
     renderLanding();
+    await waitFor(() => expect(screen.queryByTestId('loading')).not.toBeInTheDocument());
 
     expect(screen.getByRole('link', { name: 'Privacitat' })).toHaveAttribute('href', '/legal/privacitat');
     expect(screen.getByRole('link', { name: 'Termes' })).toHaveAttribute('href', '/legal/termes');
     expect(screen.getByRole('link', { name: 'Contacte' })).toHaveAttribute('href', 'mailto:hola@arrel.eu');
   });
 
-  it('links each capacity to its details section', () => {
+  it('links each capacity to its details section', async () => {
     renderLanding();
+    await waitFor(() => expect(screen.queryByTestId('loading')).not.toBeInTheDocument());
 
     expect(screen.getByRole('link', { name: 'Veure Cos' })).toHaveAttribute('href', '/menu/arees#cos');
     expect(screen.getByRole('link', { name: 'Veure Propòsit' })).toHaveAttribute('href', '/menu/arees#proposit');
